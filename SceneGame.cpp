@@ -236,7 +236,7 @@ void SceneGame::OnCreate()
 	context.textureAllocator = &textureAllocator;
 	context.window = &window;
 	
-	
+	//update the context with mylog
 	context.imguilog = mylog;
 
 	
