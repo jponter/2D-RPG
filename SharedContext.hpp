@@ -8,7 +8,11 @@
 #include "Window.hpp"
 #include "ImGuiLog.hpp"
 
+
+
 class ObjectCollection;
+class Scene;
+class TileMapParser;
 
 struct SharedContext
 {
@@ -18,6 +22,9 @@ struct SharedContext
 	ResourceAllocator<sf::Texture>* textureAllocator;
 	Window* window;
 	ImGuiLog* imguilog;
+	Scene* currentScene;
+	//Scene* currentScene = nullptr;
+	TileMapParser* mapParser;
 };
 
 #endif /* SharedContext_hpp */

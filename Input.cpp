@@ -34,6 +34,10 @@ void Input::Update()
 
 	//shoot
 	thisFrameKeys.SetBit((int)Key::E, sf::Keyboard::isKeyPressed(sf::Keyboard::E));
+
+	thisFrameKeys.SetBit((int)Key::R, sf::Keyboard::isKeyPressed(sf::Keyboard::R));
+
+	thisFrameKeys.SetBit((int)Key::T, sf::Keyboard::isKeyPressed(sf::Keyboard::T));
 }
 
 // Return true if the specified key is currently being pressed.

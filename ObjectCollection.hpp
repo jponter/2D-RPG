@@ -22,6 +22,8 @@ public:
 	void ProcessNewObjects(); // 1
 	void ProcessRemovals();
 
+	void Clear();
+
 	int size();
 
 	std::vector<std::shared_ptr<Object>>& get();

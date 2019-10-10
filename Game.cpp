@@ -13,6 +13,7 @@ Game::Game() : window("2D Game Engine")
 
 	unsigned int splashScreenID = sceneStateMachine.Add(splashScreen); //2
 	unsigned int gameSceneID = sceneStateMachine.Add(gameScene);
+	
 
 	splashScreen->SetSwitchToScene(gameSceneID); //3
 

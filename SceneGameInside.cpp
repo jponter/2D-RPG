@@ -234,8 +234,6 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 	case 0:
 	{
 		objects.Clear();
-		//textureAllocator.Clear();
-		
 		
 		sf::Vector2i mapOffset(-50, 128);
 
@@ -256,8 +254,7 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 	{
 
 
-		objects.Clear();
-		//textureAllocator.Clear();
+		//objects.Clear();
 		sf::Vector2i mapOffset(-50, 128);
 
 		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Interior.tmx"
@@ -281,13 +278,6 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 	
 	
 
-}
-
-void SceneGame::ChangeLevel1(int id)
-{
-	//ChangeLevel(id, objects, mapParser);
-	change = true;
-	switchto = id;
 }
 
 void SceneGame::OnCreate()
@@ -314,10 +304,10 @@ void SceneGame::OnCreate()
 	
 	//SceneGame::ChangeLevel(1, objects, mapParser);
 
-	ChangeLevel(0, objects, mapParser);
+	this->ChangeLevel(1, objects, mapParser);
 	
-	
-	//ChangeLevel(1, objects, mapParser);
+
+
 
 	//Add the world
 	//sf::Vector2i mapOffset(-100, 128);
@@ -370,11 +360,7 @@ void SceneGame::ProcessInput()
 
 void SceneGame::Update(float deltaTime)
 {
-	if (change == true) {
-		change = false;
-		ChangeLevel(switchto, objects, mapParser);
 
-	}
 	
 	objects.ProcessNewObjects();
 	
@@ -395,12 +381,6 @@ void SceneGame::LateUpdate(float deltaTime)
 {
 	objects.LateUpdate(deltaTime);
 }
-
-//void SceneGame::SetSwitchToScene(unsigned int id)
-//{
-//	// Stores the id of the scene that we will transition to.
-//	switchToState = id;
-//}
 
 void SceneGame::Draw(Window& window)
 {

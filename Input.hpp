@@ -18,7 +18,9 @@ public:
 		Esc = 5,
 		LBracket = 6,
 		RBracket = 7,
-		E = 8
+		E = 8,
+		R = 9,
+		T = 10
 	};
 
 	

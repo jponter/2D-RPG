@@ -32,7 +32,6 @@ public:
 		Window& window);
 
 	void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
-	void ChangeLevel1(int id);
 
 	void OnCreate() override;
 	void OnDestroy() override;
@@ -58,8 +57,6 @@ private:
 	void CreatePlayer();
 	void CreateFriend();
 
-	void SetSwitchToScene(unsigned int id);
-
 	void AddAnimationComponent(std::shared_ptr<Object> object, const int textureID);
 	
 	ResourceAllocator<sf::Texture>& textureAllocator;
@@ -73,9 +70,6 @@ private:
 	Window& window;
 
 	SharedContext context;
-	bool change = false;
-	int switchto = 0;
-	//unsigned int switchToState;
 	
 };
 

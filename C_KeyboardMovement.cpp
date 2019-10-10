@@ -1,6 +1,7 @@
 #include "C_KeyboardMovement.hpp"
 #include "Object.hpp"
 #include <imgui.h>
+#include "SceneGame.hpp"
 
 C_KeyboardMovement::C_KeyboardMovement(Object* owner)
 	: Component(owner), moveSpeed(300.0f) {}
@@ -26,6 +27,7 @@ void C_KeyboardMovement::SetMovementSpeed(float moveSpeed)
 void C_KeyboardMovement::Update(float deltaTime)
 {
 	
+
 
 	//TODO: keyboardmovement should not interact with animation component.
 	if (animation->GetAnimationState() == AnimationState::Projectile)
@@ -56,5 +58,16 @@ void C_KeyboardMovement::Update(float deltaTime)
 
 	velocity->Set(xMove, yMove);
 
+	if (owner->context->input->IsKeyPressed(Input::Key::R))
+	{
+		
+		owner->context->currentScene->ChangeLevel1(1);
+	}
+
+	if (owner->context->input->IsKeyPressed(Input::Key::T))
+	{
+
+		owner->context->currentScene->ChangeLevel1(0);
+	}
 	
 }

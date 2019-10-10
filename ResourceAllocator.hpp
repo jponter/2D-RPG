@@ -61,6 +61,12 @@ public:
 		return (Get(id) != nullptr);
 	}
 
+	void Clear()
+	{
+		resources.clear();
+		currentId = 0;
+	}
+
 private:
 	int currentId;
 	std::map<std::string, std::pair<int, std::shared_ptr<T>>> resources;

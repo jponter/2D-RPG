@@ -34,6 +34,24 @@ void ObjectCollection::Add(std::vector<std::shared_ptr<Object>>& otherObjects)
 	newObjects.insert(newObjects.end(), otherObjects.begin(), otherObjects.end());
 }
 
+void ObjectCollection::Clear()
+{
+	bool removed = false;
+	 auto objIterator = objects.begin();
+	while (objIterator != objects.end())
+	{
+		auto& obj = **objIterator;
+
+		obj.QueueForRemoval();
+			Debug::Log("ObjectCollection::ProcessRemovals Object Queued for Removal - " + std::to_string(obj.instanceID->Get()));
+			Debug::Log("\n ObjectQueuedRemoval = " + std::to_string(obj.IsQueuedForRemoval()) + "\n");
+			
+			objIterator++;
+		
+	}
+	ProcessRemovals();
+}
+
 void ObjectCollection::ProcessNewObjects()
 {
 	if (newObjects.size() > 0)

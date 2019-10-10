@@ -4,6 +4,9 @@
 #define Scene_hpp
 
 #include "Window.hpp"
+#include "ObjectCollection.hpp"
+#include "TileMapParser.hpp"
+
 
 class Scene
 {
@@ -28,6 +31,8 @@ public:
 	virtual void Update(float deltaTime) {};
 	virtual void LateUpdate(float deltaTime) {};
 	virtual void Draw(Window& window) {};
+	virtual void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser) {};
+	virtual void ChangeLevel1(int id) {};
 };
 
 

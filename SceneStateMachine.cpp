@@ -1,4 +1,5 @@
 #include "SceneStateMachine.hpp"
+#include "SharedContext.hpp"
 
 
 
@@ -81,7 +82,9 @@ void SceneStateMachine::SwitchTo(unsigned int id)
 
 		// Setting the current scene ensures that it is updated and drawn.
 		curScene = it->second;
+		
 
 		curScene->OnActivate();
+		
 	}
 }
