@@ -58,6 +58,15 @@ void C_Sprite::SetScale(float x, float y)
 void C_Sprite::Draw(Window& window)
 {
 	window.Draw(sprite);
+	//sf::Vector2f rec = sprite.getPosition();
+	/*sf::RectangleShape rec;
+	
+	rec.setFillColor(sf::Color::Transparent);
+	rec.setOutlineColor(sf::Color::White);
+	rec.setSize(sf::Vector2f(64,64));
+	rec.setPosition(sprite.getPosition());
+	window.Draw(rec);*/
+	
 }
 
 

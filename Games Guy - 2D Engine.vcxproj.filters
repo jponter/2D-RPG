@@ -141,6 +141,9 @@
     <ClCompile Include="ImGuiLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C_WarpLevelOnCollision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -258,6 +261,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiLog.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C_WarpLevelOnCollision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

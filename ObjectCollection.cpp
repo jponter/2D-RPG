@@ -41,13 +41,19 @@ void ObjectCollection::Clear()
 	while (objIterator != objects.end())
 	{
 		auto& obj = **objIterator;
-
-		obj.QueueForRemoval();
-			Debug::Log("ObjectCollection::ProcessRemovals Object Queued for Removal - " + std::to_string(obj.instanceID->Get()));
-			Debug::Log("\n ObjectQueuedRemoval = " + std::to_string(obj.IsQueuedForRemoval()) + "\n");
+		if (obj.isPersistant() == false)
+		{
+			obj.QueueForRemoval();
+			//Debug::Log("ObjectCollection::ProcessRemovals Object Queued for Removal - " + std::to_string(obj.instanceID->Get()));
+			//Debug::Log("\n ObjectQueuedRemoval = " + std::to_string(obj.IsQueuedForRemoval()) + "\n");
 			
 			objIterator++;
-		
+		}
+		else
+		{
+			//Debug::Log("Object persitant " + std::to_string(obj.instanceID->Get()));
+			objIterator++;
+		}
 	}
 	ProcessRemovals();
 }
@@ -85,7 +91,7 @@ void ObjectCollection::ProcessRemovals()
 
 		if (obj.IsQueuedForRemoval())
 		{
-			Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
+			//Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
 			objIterator = objects.erase(objIterator);
 			removed = true;
 		}

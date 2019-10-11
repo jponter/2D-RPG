@@ -25,6 +25,7 @@ struct Tile
 	std::shared_ptr<TileInfo> properties;
 	int x;
 	int y;
+	int warp = -1;
 };
 
 #endif /* Tile_h */class Tile

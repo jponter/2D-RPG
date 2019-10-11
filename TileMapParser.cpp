@@ -1,5 +1,7 @@
 #include "TileMapParser.hpp"
 #include "Utilities.hpp"
+#include "C_WarpLevelOnCollision.hpp"
+#include <iostream>
 
 
 TileMapParser::TileMapParser(ResourceAllocator<sf::Texture>& textureAllocator, SharedContext& context)
@@ -85,6 +87,20 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				collider->SetCollidable(sf::FloatRect(left, top, width, height));
 				collider->SetLayer(CollisionLayer::Tile);
 			}
+			/*if (layer.first == "Warps")
+			{
+				
+				auto collider = tileObject->AddComponent<C_BoxCollider>();
+				float left = x - (tileSizeX * tileScale) * 0.5f;
+				float top = y - (tileSizeY * tileScale) * 0.5f;
+				float width = tileSizeX * tileScale;
+				float height = tileSizeY * tileScale;
+				collider->SetCollidable(sf::FloatRect(left, top, width, height));
+				collider->SetLayer(CollisionLayer::Tile);
+				auto warp1 = tileObject->AddComponent<C_WarpLevelOnCollision>();
+				warp1->warplevel = 1;
+
+			}*/
 
 			// Add new tile Object to the collection.
 			tileObjects.emplace_back(tileObject);
@@ -92,6 +108,97 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 		//decrement the layer count
 		layerCount--;
 	}
+
+	//here i want to go through the objects layer and extract warp points
+	int objX;
+	int objY;
+	int objWidth = 32;
+	int objHeight = 32;
+	int objToLevel = -1;
+	xml_node<> *node = doc.first_node("map");
+	node = node->first_node("objectgroup");
+	//node = node->first_node("object");
+	
+	if (node  != NULL)
+	{
+		for (node = node->first_node("object"); node; node = node->next_sibling())
+		{
+			//copy back the node
+			xml_node<>* nodecopy = node;
+			//node = node->first_node("object");
+			std::cout << "Node Object Group has value " << node->name() << "\n";
+			if (std::string(node->first_attribute("name")->value()) == "Warp Point")
+			{
+				std::cout << "Warp Point found!" << std::endl;
+				objX = std::atoi(node->first_attribute("x")->value());
+				objY = std::atoi(node->first_attribute("y")->value());
+				objWidth = 32;
+				objHeight = 32;
+
+
+				std::cout << "X = " << objX << std::endl;
+				std::cout << "Y = " << objY << std::endl;
+				std::cout << "Height = " << objHeight << std::endl;
+				std::cout << "Width = " << objWidth << std::endl;
+
+
+
+				for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
+				{
+					std::cout << "node Object Group has attribute " << attr->name() << " ";
+					std::cout << "with value " << attr->value() << "\n";
+
+				}
+				node = node->first_node("properties");
+				node = node->first_node("property");
+				std::cout << "Node Property has value " << node->value() << "\n";
+				int toLevel = std::atoi(node->first_attribute("value")->value());
+				std::cout << "Warp to Level = " << toLevel << std::endl;
+				objToLevel = toLevel;
+
+				/*for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
+				{
+					std::cout << "node Property has attribute " << attr->name() << " ";
+					std::cout << "with value " << attr->value() << "\n";
+
+				}*/
+			}
+			node = nodecopy;
+
+			//add the tile object
+			std::shared_ptr<Object> tileObject = std::make_shared<Object>(&context);
+			const unsigned int tileScale = 2;
+
+			// Calculate world position.
+			//objects are in world space - not in tile offsets - so we need to convert
+			//float x = ((objX)/32) * 32* tileScale + offset.x;
+			//float y = ((objY)/32) * 32* tileScale + offset.y;
+
+			float x = objX * tileScale + offset.x;
+			float y = objY * tileScale + offset.y;
+			
+			tileObject->transform->SetPosition(x ,y);
+
+			auto collider = tileObject->AddComponent<C_BoxCollider>();
+			//float left = (x - (tileSizeX * tileScale)) - (tileSizeX* tileScale);
+			//float top = y - (tileSizeY * tileScale);
+			float width = tileSizeX * tileScale;
+			float height = tileSizeY * tileScale;
+			float left = x - (tileSizeX * tileScale) * 0.5f;
+			float top = y - (tileSizeY * tileScale) * 0.5f;
+			collider->SetCollidable(sf::FloatRect(left , top, width, height));
+			collider->SetLayer(CollisionLayer::Tile);
+			auto warp1 = tileObject->AddComponent<C_WarpLevelOnCollision>();
+			warp1->warplevel = objToLevel;
+
+
+
+			// Add new tile Object to the collection.
+			tileObjects.emplace_back(tileObject);
+
+
+		}
+	}//end if checking for object layer
 
 	return tileObjects;
 }
@@ -238,7 +345,7 @@ TileMapParser::BuildLayer(xml_node<>* layerNode,
 
 			// Bind properties of a tile from a set.
 			tile->properties = itr->second; // 7
-			tile->x = count % width - 1;
+			tile->x = count % width ; //removed -1 here as we are missing some tiles
 			tile->y = count / width;
 
 

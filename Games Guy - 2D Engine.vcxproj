@@ -150,6 +150,7 @@
     <ClCompile Include="C_Sprite.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="C_Velocity.cpp" />
+    <ClCompile Include="C_WarpLevelOnCollision.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="imgui-SFML.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="C_Sprite.hpp" />
     <ClInclude Include="C_Transform.hpp" />
     <ClInclude Include="C_Velocity.hpp" />
+    <ClInclude Include="C_WarpLevelOnCollision.hpp" />
     <ClInclude Include="Debug.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="ImGuiLog.hpp" />

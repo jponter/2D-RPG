@@ -30,6 +30,10 @@ public:
 	bool IsQueuedForRemoval();
 	void QueueForRemoval();
 
+	bool isPersistant();
+	void makePersistant();
+	
+
 
 	std::shared_ptr<C_Transform> transform;
 	std::shared_ptr<C_Drawable> GetDrawable();
@@ -107,6 +111,7 @@ private:
 	std::shared_ptr<C_Drawable> drawable;
 	std::vector<std::shared_ptr<C_Collidable>> collidables;
 	bool queuedForRemoval;
+	bool persistant;
 };
 
 #endif /* Object_hpp */

@@ -30,6 +30,8 @@ void Window::BeginDraw() // 4
 void Window::Draw(const sf::Drawable& drawable)
 {
 	window.draw(drawable);
+	
+	
 }
 
 void Window::Draw(const sf::Vertex* vertices,

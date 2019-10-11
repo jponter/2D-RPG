@@ -20,6 +20,7 @@
 #include "C_MovementAnimation.hpp"
 #include "SharedContext.hpp"
 #include "ImGuiLog.hpp"
+#include "C_WarpLevelOnCollision.hpp"
 
 
 
@@ -44,6 +45,7 @@ public:
 
 	 //std::shared_ptr<Object>& playerPtr;
 	std::shared_ptr<Object> player;
+	std::shared_ptr<Object> npc;
 	
 	
 

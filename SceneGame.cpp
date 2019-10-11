@@ -98,6 +98,8 @@ void SceneGame::CreatePlayer()
 	//add the direction component
 	player->AddComponent<C_Direction>();
 
+	player->makePersistant();
+
 	//add the player
 	objects.Add(player);
 
@@ -107,7 +109,7 @@ void SceneGame::CreatePlayer()
 
 void SceneGame::CreateFriend()
 {
-	std::shared_ptr<Object> npc = std::make_shared<Object>(&context);
+	npc = std::make_shared<Object>(&context);
 
 	npc->transform->SetPosition(500, 900);
 
@@ -128,9 +130,13 @@ void SceneGame::CreateFriend()
 	collider->SetOffset(0.f, 14.f);
 	collider->SetLayer(CollisionLayer::NPC);
 
+	/*auto warp1 = npc->AddComponent<C_WarpLevelOnCollision>();
+	warp1->warplevel = 1;*/
+
 	npc->AddComponent<C_Velocity>();
 	npc->AddComponent<C_MovementAnimation>();
 	npc->AddComponent<C_Direction>();
+	npc->makePersistant();
 
 	objects.Add(npc);
 
@@ -233,22 +239,24 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 	{
 	case 0:
 	{
+		
 		objects.Clear();
 		//textureAllocator.Clear();
 		
 		
-		sf::Vector2i mapOffset(-50, 128);
+		sf::Vector2i mapOffset(0, 0);
 
-		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior.tmx"
+		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
 			, mapOffset);
 
 
 		objects.Add(levelTiles);
 		//create our player
-		CreatePlayer();
+		//CreatePlayer();
 		//create our friend
-		CreateFriend();
-
+		//CreateFriend();
+		player->transform->SetPosition(320, 560);
+		npc->transform->SetPosition(660, 700);
 		objects.ProcessNewObjects();
 		break;
 	}
@@ -260,16 +268,17 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 		//textureAllocator.Clear();
 		sf::Vector2i mapOffset(-50, 128);
 
-		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Interior.tmx"
+		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Interior New.tmx"
 			, mapOffset);
 
 
 		objects.Add(levelTiles);
 		//create our player
-		CreatePlayer();
+		//CreatePlayer();
 		//create our friend
-		CreateFriend();
-
+		//CreateFriend();
+		player->transform->SetPosition(680, 1200);
+		npc->transform->SetPosition(680, 800);
 		objects.ProcessNewObjects();
 		break;
 	}
@@ -313,6 +322,9 @@ void SceneGame::OnCreate()
 #endif
 	
 	//SceneGame::ChangeLevel(1, objects, mapParser);
+	CreatePlayer();
+	CreateFriend();
+
 
 	ChangeLevel(0, objects, mapParser);
 	
@@ -429,6 +441,7 @@ void SceneGame::Draw(Window& window)
 	int numObjects = objects.size();
 
 	sf::Vector2f playerpos = player->transform->GetPosition();
+	
 	
 	/*sf::Sprite tmpsprite;
 	std::shared_ptr<sf::Texture> texture = textureAllocator.Get(3);

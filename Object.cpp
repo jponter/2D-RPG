@@ -1,6 +1,6 @@
 #include "Object.hpp"
 
-Object::Object(SharedContext* context) : context(context) , queuedForRemoval(false)
+Object::Object(SharedContext* context) : context(context) , queuedForRemoval(false), persistant(false)
 {
 	transform = AddComponent<C_Transform>();
 	instanceID = AddComponent<C_InstanceID>();
@@ -46,6 +46,16 @@ void Object::Draw(Window& window)
 void Object::QueueForRemoval()
 {
 	queuedForRemoval = true;
+}
+
+void Object::makePersistant()
+{
+	persistant = true;
+}
+
+bool Object::isPersistant()
+{
+	return persistant;
 }
 
 bool Object::IsQueuedForRemoval()
