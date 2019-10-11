@@ -15,3 +15,5 @@ any questions, please ask - I am still a total noob so these additions and fixes
 
 
 LPC sprites GPL3 and CC-BY-SA3 - credit if you use any of them!
+
+![level warp image](https://raw.githubusercontent.com/jponter/Games-Guy---2D/master/levelwarp.gif)
