@@ -255,7 +255,7 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 		//CreatePlayer();
 		//create our friend
 		//CreateFriend();
-		player->transform->SetPosition(320, 560);
+		player->transform->SetPosition(320, 440);
 		npc->transform->SetPosition(660, 700);
 		objects.ProcessNewObjects();
 		break;
@@ -277,8 +277,8 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 		//CreatePlayer();
 		//create our friend
 		//CreateFriend();
-		player->transform->SetPosition(680, 1200);
-		npc->transform->SetPosition(680, 800);
+		player->transform->SetPosition(760, 1360);
+		npc->transform->SetPosition(760, 800);
 		objects.ProcessNewObjects();
 		break;
 	}

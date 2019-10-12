@@ -2,6 +2,7 @@
 #include "Utilities.hpp"
 #include "C_WarpLevelOnCollision.hpp"
 #include <iostream>
+#include "WorkingDirectory.hpp"
 
 
 TileMapParser::TileMapParser(ResourceAllocator<sf::Texture>& textureAllocator, SharedContext& context)
@@ -178,6 +179,21 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			float y = objY * tileScale + offset.y;
 			
 			tileObject->transform->SetPosition(x ,y);
+
+#ifdef _DEBUG
+			// add a debug red square
+			const int textureID = textureAllocator.Add(context.workingDir->Get() + "Red Square.png");
+			auto sprite = tileObject->AddComponent<C_Sprite>();
+			//sprite->SetTextureAllocator(&textureAllocator);
+			sprite->Load(textureID);
+			//sprite->SetTextureRect(tileInfo->textureRect);
+			sprite->SetScale(tileScale, tileScale);
+			//set the sort order for the tile based on layer
+			sprite->SetSortOrder(layerCount);
+			// Set the tiles layer to background for now
+			sprite->SetDrawLayer(DrawLayer::Entities);
+
+#endif
 
 			auto collider = tileObject->AddComponent<C_BoxCollider>();
 			//float left = (x - (tileSizeX * tileScale)) - (tileSizeX* tileScale);
