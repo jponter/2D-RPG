@@ -21,6 +21,7 @@ public:
 
 	void ProcessNewObjects(); // 1
 	void ProcessRemovals();
+	void RemoveAllQueued();
 
 	void Clear();
 

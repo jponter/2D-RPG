@@ -36,6 +36,7 @@ void ObjectCollection::Add(std::vector<std::shared_ptr<Object>>& otherObjects)
 
 void ObjectCollection::Clear()
 {
+	Debug::Log("ObjectCollection::Clear()");
 	bool removed = false;
 	 auto objIterator = objects.begin();
 	while (objIterator != objects.end())
@@ -56,11 +57,8 @@ void ObjectCollection::Clear()
 			objIterator++;
 		}
 	}
-	
-	drawables.BGClear();
-	collidables.BGClear();
-
-	ProcessRemovals();
+	Debug::Log("ObjectCollection::RemoveAllQueued()");
+	RemoveAllQueued();
 }
 
 void ObjectCollection::ProcessNewObjects()
@@ -96,6 +94,7 @@ void ObjectCollection::ProcessRemovals()
 
 		if (obj.IsQueuedForRemoval())
 		{
+			
 			Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
 			objIterator = objects.erase(objIterator);
 			removed = true;
@@ -111,6 +110,34 @@ void ObjectCollection::ProcessRemovals()
 		drawables.ProcessRemovals();
 		collidables.ProcessRemovals();
 	}
+}
+
+void ObjectCollection::RemoveAllQueued()
+{
+	
+	Debug::Log("ObjectCollection::RemoveAllQueued::drawbles.ProcessRemovals()");
+	drawables.ProcessRemovals();
+	Debug::Log("ObjectCollection::RemoveAllQueued::collidables.ProcessRemovals()");
+	collidables.ProcessRemovals();
+	auto objIterator = objects.begin();
+	while (objIterator != objects.end())
+	{
+		auto obj = **objIterator;
+
+		if (obj.IsQueuedForRemoval())
+		{
+
+			Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
+			objIterator = objects.erase(objIterator);
+			
+		}
+		else
+		{
+			++objIterator;
+		}
+	}
+
+	
 }
 
 int ObjectCollection::size()
