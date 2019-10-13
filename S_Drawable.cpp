@@ -1,4 +1,6 @@
 #include "S_Drawable.hpp"
+#include "Debug.hpp"
+
 
 
 void S_Drawable::Add(std::vector<std::shared_ptr<Object>>& objects)
@@ -66,7 +68,7 @@ void S_Drawable::ProcessRemovals()
 		while (objIterator != layer.second.end())
 		{
 			auto obj = *objIterator;
-
+			
 			if (!obj->ContinueToDraw())
 			{
 				objIterator = layer.second.erase(objIterator);
@@ -78,6 +80,32 @@ void S_Drawable::ProcessRemovals()
 		}
 	}
 }
+
+
+void S_Drawable::BGClear()
+{
+	for (auto& layer : drawables)
+	{
+		if (layer.first != DrawLayer::Entities)
+		{
+			
+			Debug::Log("S_Drawable::BGClear - Layer Erase ");
+
+			auto objIterator = layer.second.begin();
+			while (objIterator != layer.second.end())
+			{
+				auto obj = *objIterator;
+
+				Debug::Log("S_Drawable::BGClear() - drawable erase");
+				objIterator = layer.second.erase(objIterator);
+
+
+
+			}
+		}
+	}
+}
+
 
 bool S_Drawable::LayerSort(std::shared_ptr<C_Drawable> a,
 							std::shared_ptr<C_Drawable> b)

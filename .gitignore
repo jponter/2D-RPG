@@ -10,6 +10,9 @@
 *.userosscache
 *.sln.docstates
 
+#James' old files
+*.old
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

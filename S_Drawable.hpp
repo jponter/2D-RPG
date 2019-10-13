@@ -13,6 +13,7 @@ public:
 	void Add(std::vector<std::shared_ptr<Object>>& object);
 
 	void ProcessRemovals();
+	void BGClear();
 
 	void Draw(Window& window);
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="5">
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="6">
  <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="Red Square.png" width="32" height="32"/>
   <tile id="0">
@@ -365,6 +365,11 @@
   <object id="2" name="Warp Point" x="160.666" y="194" width="32" height="32">
    <properties>
     <property name="toLevel" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="5" name="Warp Point" x="320.999" y="446" width="32" height="32">
+   <properties>
+    <property name="toLevel" type="int" value="2"/>
    </properties>
   </object>
  </objectgroup>

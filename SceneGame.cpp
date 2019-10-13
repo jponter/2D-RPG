@@ -233,10 +233,12 @@ void SceneGame::AddAnimationComponent(std::shared_ptr<Object> object, const int 
 
 void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser)
 {
-
+	std::vector<std::shared_ptr<Object>> levelTiles;
 
 	switch (level)
 	{
+
+		
 	case 0:
 	{
 		
@@ -246,7 +248,7 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 		
 		sf::Vector2i mapOffset(0, 0);
 
-		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
+		 levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
 			, mapOffset);
 
 
@@ -263,12 +265,12 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 	case 1:
 	{
 
-
+		
 		objects.Clear();
 		//textureAllocator.Clear();
-		sf::Vector2i mapOffset(-50, 128);
+		sf::Vector2i mapOffset(0, 0);
 
-		std::vector<std::shared_ptr<Object>> levelTiles = mapParser.Parse(workingDir.Get() + "House Interior New.tmx"
+		levelTiles = mapParser.Parse(workingDir.Get() + "House Interior New.tmx"
 			, mapOffset);
 
 
@@ -279,6 +281,26 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 		//CreateFriend();
 		player->transform->SetPosition(760, 1360);
 		npc->transform->SetPosition(760, 800);
+		objects.ProcessNewObjects();
+		break;
+	}
+	case 2: //dungeon
+	{
+		objects.Clear();
+		//textureAllocator.Clear();
+		sf::Vector2i mapOffset(0, 0);
+
+		levelTiles = mapParser.Parse(workingDir.Get() + "Dungeon.tmx"
+			, mapOffset);
+
+
+		objects.Add(levelTiles);
+		//create our player
+		//CreatePlayer();
+		//create our friend
+		//CreateFriend();
+		player->transform->SetPosition(100, 340);
+		npc->transform->SetPosition(280, 340);
 		objects.ProcessNewObjects();
 		break;
 	}

@@ -21,6 +21,7 @@ public:
 
 	void Add(std::vector<std::shared_ptr<Object>>& objects);
 	void ProcessRemovals();
+	void BGClear();
 	void Update();
 	void Resolve();
 	void UpdatePositions(std::vector<std::shared_ptr<Object>>& objects);

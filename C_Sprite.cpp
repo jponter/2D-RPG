@@ -1,5 +1,6 @@
 #include "C_Sprite.hpp"
 #include "Object.hpp"
+#include "Debug.hpp"
 
 
 C_Sprite::C_Sprite(Object* owner) : 
@@ -83,5 +84,8 @@ void C_Sprite::LateUpdate(float deltaTime)
 
 bool C_Sprite::ContinueToDraw() const
 {
+	//int id = owner->instanceID->Get();
+	//Debug::Log("Continue to Draw ID: " + std::to_string(id));
 	return !owner->IsQueuedForRemoval();
+	
 }

@@ -63,6 +63,29 @@ void S_Collidable::ProcessRemovals()
     }
 }
 
+void S_Collidable::BGClear()
+{
+	for (auto& layer : collidables)
+	{
+		if (layer.first == CollisionLayer::Default || layer.first == CollisionLayer::Tile)
+		{
+
+
+			auto objIterator = layer.second.begin();
+			while (objIterator != layer.second.end())
+			{
+				auto obj = *objIterator;
+
+
+				objIterator = layer.second.erase(objIterator);
+
+
+
+			}
+		}
+	}
+}
+
 void S_Collidable::UpdatePositions(std::vector<std::shared_ptr<Object>>& objects)
 {
     for (auto o : objects)
