@@ -7,7 +7,8 @@ Original code and full credit to Robert Wells - http://thatgamesguy.co.uk/game-e
 added: IMGUI - debug log
 added: C_WarpLevelOnCollision - collider componenent - that makes use of a modification of the TileMapParser to read (badly) the object layer from tiled and set some level warps based on the tiled object properties (have a look at the NEW maps in tiled to see what I mean).
 
-added: ChangeLevel to SceneGame to well, change the level - I set a flag to do this so i can process the change at a safe point
+15/10/2019 
+changes: moved from in scene level warp to new scenes per level! 
 
 fix/change: I noticed the house exterior was missing some tiles on the left hand side, modified the code to make sure those were added and drawn (they had a -1 for their X position previously).
 
