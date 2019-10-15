@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SceneGame_hpp
-#define SceneGame_hpp
+#ifndef SceneDungeon_hpp
+#define SceneDungeon_hpp
 
 #include "Scene.hpp"
 #include "Input.hpp"
@@ -22,14 +22,15 @@
 #include "ImGuiLog.hpp"
 #include "C_WarpLevelOnCollision.hpp"
 #include "SceneStateMachine.hpp"
+#include "Game.hpp"
 
 
 
 
-class SceneGame : public Scene
+class SceneDungeon : public Scene
 {
 public:
-	SceneGame(WorkingDirectory& workingDir,
+	SceneDungeon(WorkingDirectory& workingDir,
 		ResourceAllocator<sf::Texture>& textureAllocator,
 		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog);
 
@@ -52,7 +53,7 @@ public:
 
 	//const ImGuiLog::ExampleAppLog& GetLog() const;
 
-
+	void SetSwitchToScene(unsigned int id);
 
 	
 
@@ -61,7 +62,7 @@ private:
 	void CreatePlayer();
 	void CreateFriend();
 
-	void SetSwitchToScene(unsigned int id);
+	
 
 	void AddAnimationComponent(std::shared_ptr<Object> object, const int textureID);
 	
@@ -69,20 +70,20 @@ private:
 
 	WorkingDirectory& workingDir;
 	Input input;
+	SceneStateMachine& stateMachine;
 
 	ObjectCollection objects;
 	TileMapParser mapParser;
-	SceneStateMachine& stateMachine;
 
 	Window& window;
-	ImGuiLog& mylog;
-
+	
 	SharedContext context;
 	bool change = false;
 	int switchto = 0;
-	//unsigned int switchToState;
+	unsigned int switchToState;
 	std::string nameLevel;
+	ImGuiLog& mylog;
 	
 };
 
-#endif /* SceneGame_hpp */
+#endif /* SceneDungeon_hpp */

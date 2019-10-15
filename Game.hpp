@@ -8,7 +8,11 @@
 #include "SceneStateMachine.hpp" // New
 #include "SceneSplashScreen.hpp" // New
 #include "SceneGame.hpp" // New
+#include "SceneDungeon.hpp"
 #include "ResourceAllocator.hpp"
+#include "ImGuiLog.hpp"
+#include "imgui.h"
+#include "SharedContext.hpp"
 
 
 
@@ -26,6 +30,10 @@ public:
 	bool IsRunning() const;
 	void CalculateDeltaTime();
 	void CaptureInput();
+	ImGuiLog* GetLog();
+
+	//const ImGuiLog::ExampleAppLog& GetLog() const;
+	ImGuiLog mylog;
 
 private:
 	Window window;
@@ -36,6 +44,11 @@ private:
 
 	SceneStateMachine sceneStateMachine;
 	ResourceAllocator<sf::Texture> textureAllocator;
+
+	
+
+	//store a lookup of the scene names with their ID's
+	
 
 	
 	

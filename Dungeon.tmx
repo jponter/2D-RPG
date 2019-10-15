@@ -336,7 +336,7 @@
  <objectgroup id="7" name="Object Layer 1">
   <object id="1" name="Warp Point" x="64.3333" y="64.3333" width="32" height="32">
    <properties>
-    <property name="toLevel" type="int" value="0"/>
+    <property name="toLevel" value="gameScene"/>
    </properties>
   </object>
  </objectgroup>

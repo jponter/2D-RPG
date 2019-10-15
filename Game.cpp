@@ -1,5 +1,8 @@
 #include "Game.hpp"
 
+static auto mylog = new ImGuiLog;
+
+
 
 Game::Game() : window("2D Game Engine")
 {
@@ -9,18 +12,35 @@ Game::Game() : window("2D Game Engine")
 			window,textureAllocator); //1
 
 	std::shared_ptr<SceneGame> gameScene =
-		std::make_shared<SceneGame>(workingDir,textureAllocator,window);
+		std::make_shared<SceneGame>(workingDir,textureAllocator,window, sceneStateMachine, mylog);
+
+	std::shared_ptr<SceneDungeon> dungeonScene =
+		std::make_shared<SceneDungeon>(workingDir, textureAllocator, window, sceneStateMachine, mylog);
+
+
+
 
 	unsigned int splashScreenID = sceneStateMachine.Add(splashScreen); //2
 	unsigned int gameSceneID = sceneStateMachine.Add(gameScene);
+	unsigned int dungeonSceneID = sceneStateMachine.Add(dungeonScene);
 	
+	sceneStateMachine.AddSceneName("gameScene", gameSceneID);
+	sceneStateMachine.AddSceneName("dungeonScene", dungeonSceneID);
 
-	splashScreen->SetSwitchToScene(gameSceneID); //3
+	splashScreen->SetSwitchToScene(dungeonSceneID); //3
+	dungeonScene->SetSwitchToScene(gameSceneID);
 
 	sceneStateMachine.SwitchTo(splashScreenID); //4
 
 	deltaTime = clock.restart().asSeconds();
 
+	
+
+}
+
+ImGuiLog* GetLog()
+{
+	return mylog;
 }
 
 
@@ -42,6 +62,73 @@ void Game::Draw()
 	// add drawing code
 
 	sceneStateMachine.Draw(window);
+
+
+#ifdef _DEBUG
+	Debug::Draw(window);
+	// put in the IMGUI stuff here - on future iterations may move this up the class list
+	//window.resetGLStates(); // call it if you only draw ImGui. Otherwise not needed.
+	sf::Clock deltaClock;
+	window.pollEvent();
+	window.imGuiUpdate(deltaClock);
+
+
+	//Debug::LogIM("test \n", mylog);
+
+	mylog.mylog.Draw("Debug Log");
+	
+
+
+	ImGui::Begin("Window 1"); // begin window
+
+
+	int numObjects = 0;//context.objects.size();
+
+	//sf::Vector2f playerpos = player->transform->GetPosition();
+
+
+	/*sf::Sprite tmpsprite;
+	std::shared_ptr<sf::Texture> texture = textureAllocator.Get(3);
+	tmpsprite.setTexture(*texture);*/
+
+	/*
+	for (auto& o : objects.get())
+	{
+		int instance = o->instanceID->Get();
+		std::cout << instance << std::endl;
+	}
+	*/
+
+
+	//ImGui::Text("Player X = %f, Y = %f", playerpos.x, playerpos.y);
+
+	//sf::Vector2u playerCoords;
+	//playerCoords = playerTexture->getSize();
+
+
+	//ImGui::Image(tmpsprite);
+	//context.objects;
+
+	// bool checkBox = false;
+	//ImGui::Checkbox("Toggle", &checkBox);
+
+	//ImGui::ShowDemoWindow();
+
+	ImGui::End(); // end window
+
+
+	window.imGuiRender();
+
+
+
+
+
+
+#endif  // end _DEBUG
+
+
+
+	
 
 	// end drawing code
 	window.EndDraw();

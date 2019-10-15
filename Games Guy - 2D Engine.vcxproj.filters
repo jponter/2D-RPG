@@ -144,6 +144,9 @@
     <ClCompile Include="C_WarpLevelOnCollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneDungeon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -264,6 +267,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C_WarpLevelOnCollision.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDungeon.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

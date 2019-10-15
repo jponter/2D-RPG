@@ -362,14 +362,9 @@
 </data>
  </layer>
  <objectgroup id="18" name="Objects">
-  <object id="2" name="Warp Point" x="160.666" y="194" width="32" height="32">
-   <properties>
-    <property name="toLevel" type="int" value="1"/>
-   </properties>
-  </object>
   <object id="5" name="Warp Point" x="320.999" y="446" width="32" height="32">
    <properties>
-    <property name="toLevel" type="int" value="2"/>
+    <property name="toLevel" value="dungeonScene"/>
    </properties>
   </object>
  </objectgroup>

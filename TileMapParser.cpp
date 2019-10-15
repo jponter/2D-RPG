@@ -115,7 +115,7 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 	int objY;
 	int objWidth = 32;
 	int objHeight = 32;
-	int objToLevel = -1;
+	std::string objToLevel = "";
 	xml_node<> *node = doc.first_node("map");
 	node = node->first_node("objectgroup");
 	//node = node->first_node("object");
@@ -153,7 +153,7 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				node = node->first_node("properties");
 				node = node->first_node("property");
 				std::cout << "Node Property has value " << node->value() << "\n";
-				int toLevel = std::atoi(node->first_attribute("value")->value());
+				std::string toLevel = node->first_attribute("value")->value();
 				std::cout << "Warp to Level = " << toLevel << std::endl;
 				objToLevel = toLevel;
 

@@ -58,16 +58,16 @@ void C_KeyboardMovement::Update(float deltaTime)
 
 	velocity->Set(xMove, yMove);
 
-	if (owner->context->input->IsKeyPressed(Input::Key::R))
-	{
-		
-		owner->context->currentScene->ChangeLevel1(1);
-	}
+	//if (owner->context->input->IsKeyPressed(Input::Key::R))
+	//{
+	//	
+	//	owner->context->currentScene->ChangeLevel1(1);
+	//}
 
-	if (owner->context->input->IsKeyPressed(Input::Key::T))
-	{
+	//if (owner->context->input->IsKeyPressed(Input::Key::T))
+	//{
 
-		owner->context->currentScene->ChangeLevel1(0);
-	}
-	
+	//	owner->context->currentScene->ChangeLevel1(0);
+	//}
+	//
 }

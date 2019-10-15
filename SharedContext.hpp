@@ -7,6 +7,7 @@
 #include "ResourceAllocator.hpp"
 #include "Window.hpp"
 #include "ImGuiLog.hpp"
+//#include "Game.hpp"
 
 
 
@@ -25,6 +26,9 @@ struct SharedContext
 	Scene* currentScene;
 	//Scene* currentScene = nullptr;
 	TileMapParser* mapParser;
+	//SceneStateMachine* sceneStateMachine;
+	//Game* thisGame;
+	
 };
 
 #endif /* SharedContext_hpp */

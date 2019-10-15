@@ -5,6 +5,8 @@
 
 SceneStateMachine::SceneStateMachine() : scenes(0), curScene(0), insertedSceneID(0) { }
 
+
+
 void SceneStateMachine::ProcessInput()
 {
 	if (curScene)
@@ -46,6 +48,31 @@ unsigned int SceneStateMachine::Add(std::shared_ptr<Scene> scene)
 	inserted.first->second->OnCreate();
 
 	return insertedSceneID - 1;
+}
+
+void SceneStateMachine::AddSceneName(std::string name, int id)
+{
+
+	sceneMap.insert(std::make_pair(name, id));
+	
+	
+}
+
+
+
+
+
+int SceneStateMachine::GetSceneByName(std::string name)
+{
+	for (auto it = sceneMap.begin(); it != sceneMap.end(); ++it)
+	{
+		if (it->first == name)
+		{
+			return it->second;
+		}
+	}
+
+	return -1;
 }
 
 void SceneStateMachine::Remove(unsigned int id)

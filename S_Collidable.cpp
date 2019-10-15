@@ -140,12 +140,16 @@ void S_Collidable::Resolve()
                     
                     if(m.colliding)
                     {
+						
+#ifdef _DEBUG
 						Debug::Log("Entered S_Collidable::Resolve - m.colliding -Collidable = " + std::to_string(collidable->owner->instanceID->Get()) + " collision: " + std::to_string(collision->owner->instanceID->Get()));
 						auto string = "Entered S_Collidable::Resolve - m.colliding -Collidable = " + std::to_string(collidable->owner->instanceID->Get()) + " collision: " + std::to_string(collision->owner->instanceID->Get());
 						string += "\n";
 						auto imgcontext = collidable->owner->context->imguilog;
 						imgcontext->mylog.AddLog(string.c_str());
-                        auto collisionPair = objectsColliding.emplace(std::make_pair(collidable, collision));
+#endif _DEBUG                        
+						
+						auto collisionPair = objectsColliding.emplace(std::make_pair(collidable, collision));
                         
                         if(collisionPair.second)
                         {
@@ -178,8 +182,9 @@ void S_Collidable::Resolve()
 void S_Collidable::Update()
 {
 	
+#ifdef _DEBUG
     collisionTree.DrawDebug();
-    
+#endif    
     
 	collisionTree.Clear();
     
@@ -202,10 +207,10 @@ void S_Collidable::ProcessCollidingObjects()
     {
         auto pair = *itr;
 		Debug::Log(" Called S_Collidable::ProcessCollidingObjects Size of: " + std::to_string(objectsColliding.size()));
-		auto imgcontext = pair.first->owner->context->imguilog;
-		auto string = " Called S_Collidable::ProcessCollidingObjects Size of: " + std::to_string(objectsColliding.size());
-		string += "\n";
-		imgcontext->mylog.AddLog(string.c_str());
+		//auto imgcontext = pair.first->owner->context->imguilog;
+		//auto string = " Called S_Collidable::ProcessCollidingObjects Size of: " + std::to_string(objectsColliding.size());
+		//string += "\n";
+		//imgcontext->mylog.AddLog(string.c_str());
 		//Debug::LogIM(" S_Collidable", imguilog);
         //std::shared_ptr<C_BoxCollider> first = pair.first;
         //std::shared_ptr<C_BoxCollider> second = pair.second;

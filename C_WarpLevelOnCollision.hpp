@@ -13,7 +13,7 @@ public:
 	void OnCollisionEnter(std::shared_ptr<C_BoxCollider> other) override;
 
 
-	int warplevel;
+	std::string warplevel;
 
 private:
 	//SharedContext& context;

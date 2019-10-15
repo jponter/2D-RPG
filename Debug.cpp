@@ -1,5 +1,6 @@
 #include "Debug.hpp"
 #include "SceneGame.hpp"
+#include "SceneDungeon.hpp"
 #include <string>
 
 std::vector<sf::RectangleShape> Debug::rects = {};

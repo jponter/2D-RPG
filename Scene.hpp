@@ -32,7 +32,7 @@ public:
 	virtual void LateUpdate(float deltaTime) {};
 	virtual void Draw(Window& window) {};
 	virtual void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser) {};
-	virtual void ChangeLevel1(int id) {};
+	virtual void ChangeLevel1(std::string id) {};
 };
 
 

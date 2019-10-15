@@ -163,6 +163,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="ResourceAllocator.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneDungeon.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneSplashScreen.cpp" />
     <ClCompile Include="SceneStateMachine.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Quadtree.hpp" />
     <ClInclude Include="ResourceAllocator.hpp" />
     <ClInclude Include="Scene.hpp" />
+    <ClInclude Include="SceneDungeon.hpp" />
     <ClInclude Include="SceneGame.hpp" />
     <ClInclude Include="SceneSplashScreen.hpp" />
     <ClInclude Include="SceneStateMachine.hpp" />

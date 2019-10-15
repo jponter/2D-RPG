@@ -95,7 +95,7 @@ void ObjectCollection::ProcessRemovals()
 		if (obj.IsQueuedForRemoval())
 		{
 			
-			Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
+			//Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
 			objIterator = objects.erase(objIterator);
 			removed = true;
 		}
@@ -127,7 +127,7 @@ void ObjectCollection::RemoveAllQueued()
 		if (obj.IsQueuedForRemoval())
 		{
 
-			Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
+			//Debug::Log("ObjectCollection::ProcessRemovals Object Removed - " + std::to_string(obj.instanceID->Get()));
 			objIterator = objects.erase(objIterator);
 			
 		}

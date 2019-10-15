@@ -1,4 +1,4 @@
-#include "SceneGame.hpp"
+#include "SceneDungeon.hpp"
 #include <imgui.h>
 #include <imgui-SFML.h>
 
@@ -7,7 +7,6 @@
 #include <SFML/Window/Event.hpp>
 #include "SharedContext.hpp"
 #include "C_Direction.hpp"
-using namespace std;
 
 
 
@@ -16,17 +15,17 @@ using namespace std;
 
 
 //constructor
-SceneGame::SceneGame(WorkingDirectory& workingDir,
+SceneDungeon::SceneDungeon(WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator,
 	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog)
 
 	: workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine),mylog(mylog){}
+	window(window), stateMachine(stateMachine), mylog(mylog){}
 
 
-void SceneGame::CreatePlayer()
+void SceneDungeon::CreatePlayer()
 {
 
 	//std::shared_ptr<Object> player = std::make_shared<Object>(&context);
@@ -108,7 +107,7 @@ void SceneGame::CreatePlayer()
 
 }
 
-void SceneGame::CreateFriend()
+void SceneDungeon::CreateFriend()
 {
 	npc = std::make_shared<Object>(&context);
 
@@ -145,7 +144,7 @@ void SceneGame::CreateFriend()
 
 }
 
-void SceneGame::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID)
+void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID)
 {
 
 	auto animation = object->AddComponent<C_Animation>();
@@ -232,7 +231,7 @@ void SceneGame::AddAnimationComponent(std::shared_ptr<Object> object, const int 
 
 }
 
-void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser)
+void SceneDungeon::ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser)
 {
 	std::vector<std::shared_ptr<Object>> levelTiles;
 
@@ -315,14 +314,15 @@ void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser&
 
 }
 
-void SceneGame::ChangeLevel1(std::string id)
+void SceneDungeon::ChangeLevel1(std::string id)
 {
 	//ChangeLevel(id, objects, mapParser);
 	change = true;
 	nameLevel = id;
+	//switchto = id;
 }
 
-void SceneGame::OnCreate()
+void SceneDungeon::OnCreate()
 {
 	//set the context
 	context.input = &input;
@@ -337,7 +337,23 @@ void SceneGame::OnCreate()
 	context.currentScene = this;
 	context.mapParser = &mapParser;
 	
+	sf::Vector2i mapOffset(0, 0);
 
+	std::vector<std::shared_ptr<Object>> levelTiles;
+
+	levelTiles = mapParser.Parse(workingDir.Get() + "Dungeon.tmx"
+		, mapOffset);
+
+
+	objects.Add(levelTiles);
+	//create our player
+	CreatePlayer();
+	//create our friend
+	//CreateFriend();
+
+	player->transform->SetPosition(100, 340);
+	//npc->transform->SetPosition(280, 340);
+	objects.ProcessNewObjects();
 	
 
 #ifdef _DEBUG
@@ -345,12 +361,12 @@ void SceneGame::OnCreate()
 	window.imGuiInit();
 #endif
 	
-	//SceneGame::ChangeLevel(1, objects, mapParser);
-	CreatePlayer();
-	CreateFriend();
+	//SceneDungeon::ChangeLevel(1, objects, mapParser);
+	//CreatePlayer();
+	//CreateFriend();
 
 
-	ChangeLevel(0, objects, mapParser);
+	//ChangeLevel(2, objects, mapParser);
 	
 	
 	//ChangeLevel(1, objects, mapParser);
@@ -391,12 +407,12 @@ void SceneGame::OnCreate()
 //	log.Draw("Example: Log", p_open);
 //}
 
-void SceneGame::OnDestroy()
+void SceneDungeon::OnDestroy()
 {
 
 }
 
-void SceneGame::ProcessInput()
+void SceneDungeon::ProcessInput()
 {
 	if (window.HasFocus())
 	{
@@ -404,7 +420,7 @@ void SceneGame::ProcessInput()
 	}
 }
 
-void SceneGame::Update(float deltaTime)
+void SceneDungeon::Update(float deltaTime)
 {
 	if (change == true) {
 		change = false;
@@ -417,8 +433,8 @@ void SceneGame::Update(float deltaTime)
 			stateMachine.SwitchTo(id);
 		}
 		else Debug::LogError("Level switch ID not found");
-		
 	}
+	
 	
 	objects.ProcessNewObjects();
 	
@@ -435,20 +451,23 @@ void SceneGame::Update(float deltaTime)
 	
 }
 
-void SceneGame::LateUpdate(float deltaTime)
+void SceneDungeon::LateUpdate(float deltaTime)
 {
 	objects.LateUpdate(deltaTime);
 }
 
-//void SceneGame::SetSwitchToScene(unsigned int id)
-//{
-//	// Stores the id of the scene that we will transition to.
-//	switchToState = id;
-//}
+void SceneDungeon::SetSwitchToScene(unsigned int id)
+{
+	// Stores the id of the scene that we will transition to.
+	switchToState = id;
+}
 
-void SceneGame::Draw(Window& window)
+void SceneDungeon::Draw(Window& window)
 {
 	objects.Draw(window);
+	
+	
+
 
 
 }
