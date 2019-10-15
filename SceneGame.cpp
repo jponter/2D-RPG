@@ -7,6 +7,9 @@
 #include <SFML/Window/Event.hpp>
 #include "SharedContext.hpp"
 #include "C_Direction.hpp"
+
+
+
 using namespace std;
 
 
@@ -31,7 +34,14 @@ void SceneGame::CreatePlayer()
 
 	//std::shared_ptr<Object> player = std::make_shared<Object>(&context);
 	player = std::make_shared<Object>(&context);
-
+	
+	//get the address of the player object and add it to the imgui debug
+#ifdef _DEBUG
+	std::stringstream buffer;
+	buffer << &player << endl;
+	std::string message = "Created a Player at 0x" + buffer.str() ;
+	context.imguilog->mylog.AddLog(message.c_str());
+#endif
 	//sf::Vector2f playerpos = player->transform->GetPosition();
 
 	//playerPtr = player;
@@ -232,88 +242,88 @@ void SceneGame::AddAnimationComponent(std::shared_ptr<Object> object, const int 
 
 }
 
-void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser)
-{
-	std::vector<std::shared_ptr<Object>> levelTiles;
-
-	switch (level)
-	{
-
-		
-	case 0:
-	{
-		
-		objects.Clear();
-		//textureAllocator.Clear();
-		
-		
-		sf::Vector2i mapOffset(0, 0);
-
-		 levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
-			, mapOffset);
-
-
-		objects.Add(levelTiles);
-		//create our player
-		//CreatePlayer();
-		//create our friend
-		//CreateFriend();
-		player->transform->SetPosition(320, 440);
-		npc->transform->SetPosition(660, 700);
-		objects.ProcessNewObjects();
-		break;
-	}
-	case 1:
-	{
-
-		
-		objects.Clear();
-		//textureAllocator.Clear();
-		sf::Vector2i mapOffset(0, 0);
-
-		levelTiles = mapParser.Parse(workingDir.Get() + "House Interior New.tmx"
-			, mapOffset);
-
-
-		objects.Add(levelTiles);
-		//create our player
-		//CreatePlayer();
-		//create our friend
-		//CreateFriend();
-		player->transform->SetPosition(760, 1360);
-		npc->transform->SetPosition(760, 800);
-		objects.ProcessNewObjects();
-		break;
-	}
-	case 2: //dungeon
-	{
-		objects.Clear();
-		//textureAllocator.Clear();
-		sf::Vector2i mapOffset(0, 0);
-
-		levelTiles = mapParser.Parse(workingDir.Get() + "Dungeon.tmx"
-			, mapOffset);
-
-
-		objects.Add(levelTiles);
-		//create our player
-		//CreatePlayer();
-		//create our friend
-		//CreateFriend();
-		player->transform->SetPosition(100, 340);
-		npc->transform->SetPosition(280, 340);
-		objects.ProcessNewObjects();
-		break;
-	}
-	
-	}// end switch
-
-	
-
-	
-	
-
-}
+//void SceneGame::ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser)
+//{
+//	std::vector<std::shared_ptr<Object>> levelTiles;
+//
+//	switch (level)
+//	{
+//
+//		
+//	case 0:
+//	{
+//		
+//		objects.Clear();
+//		//textureAllocator.Clear();
+//		
+//		
+//		sf::Vector2i mapOffset(0, 0);
+//
+//		 levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
+//			, mapOffset);
+//
+//
+//		objects.Add(levelTiles);
+//		//create our player
+//		//CreatePlayer();
+//		//create our friend
+//		//CreateFriend();
+//		player->transform->SetPosition(320, 440);
+//		npc->transform->SetPosition(660, 700);
+//		objects.ProcessNewObjects();
+//		break;
+//	}
+//	case 1:
+//	{
+//
+//		
+//		objects.Clear();
+//		//textureAllocator.Clear();
+//		sf::Vector2i mapOffset(0, 0);
+//
+//		levelTiles = mapParser.Parse(workingDir.Get() + "House Interior New.tmx"
+//			, mapOffset);
+//
+//
+//		objects.Add(levelTiles);
+//		//create our player
+//		//CreatePlayer();
+//		//create our friend
+//		//CreateFriend();
+//		player->transform->SetPosition(760, 1360);
+//		npc->transform->SetPosition(760, 800);
+//		objects.ProcessNewObjects();
+//		break;
+//	}
+//	case 2: //dungeon
+//	{
+//		objects.Clear();
+//		//textureAllocator.Clear();
+//		sf::Vector2i mapOffset(0, 0);
+//
+//		levelTiles = mapParser.Parse(workingDir.Get() + "Dungeon.tmx"
+//			, mapOffset);
+//
+//
+//		objects.Add(levelTiles);
+//		//create our player
+//		//CreatePlayer();
+//		//create our friend
+//		//CreateFriend();
+//		player->transform->SetPosition(100, 340);
+//		npc->transform->SetPosition(280, 340);
+//		objects.ProcessNewObjects();
+//		break;
+//	}
+//	
+//	}// end switch
+//
+//	
+//
+//	
+//	
+//
+//}
 
 void SceneGame::ChangeLevel1(std::string id)
 {
@@ -338,19 +348,32 @@ void SceneGame::OnCreate()
 	context.mapParser = &mapParser;
 	
 
-	
+	sf::Vector2i mapOffset(0, 0);
 
-#ifdef _DEBUG
-	//initialise IMGUI
-	window.imGuiInit();
-#endif
+	std::vector<std::shared_ptr<Object>> levelTiles;
+
+
+	levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
+		, mapOffset);
+
+
+	objects.Add(levelTiles);
+	//create our player
+	CreatePlayer();
+	//create our friend
+	CreateFriend();
+	player->transform->SetPosition(320, 440);
+	npc->transform->SetPosition(660, 700);
+	objects.ProcessNewObjects();
+
+
 	
 	//SceneGame::ChangeLevel(1, objects, mapParser);
-	CreatePlayer();
-	CreateFriend();
+	/*CreatePlayer();
+	CreateFriend();*/
 
 
-	ChangeLevel(0, objects, mapParser);
+
 	
 	
 	//ChangeLevel(1, objects, mapParser);

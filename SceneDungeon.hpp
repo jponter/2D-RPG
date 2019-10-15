@@ -34,7 +34,7 @@ public:
 		ResourceAllocator<sf::Texture>& textureAllocator,
 		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog);
 
-	void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
+	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
 	void ChangeLevel1(std::string id);
 
 	void OnCreate() override;

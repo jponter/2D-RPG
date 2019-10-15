@@ -34,7 +34,7 @@ Game::Game() : window("2D Game Engine")
 
 	deltaTime = clock.restart().asSeconds();
 
-	
+	window.imGuiInit();
 
 }
 
