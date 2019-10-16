@@ -58,7 +58,22 @@ void C_Sprite::SetScale(float x, float y)
 
 void C_Sprite::Draw(Window& window)
 {
-	window.Draw(sprite);
+	bool culling = false;
+	
+	if (culling)
+	{
+		sf::FloatRect view = window.GetViewSpace();
+		sf::Vector2f sprobject = owner->transform->GetPosition();
+
+		if (view.contains(sprobject))
+		{
+			window.Draw(sprite);
+		}
+	}
+	else
+	{
+		window.Draw(sprite);
+	}
 	//sf::Vector2f rec = sprite.getPosition();
 	/*sf::RectangleShape rec;
 	

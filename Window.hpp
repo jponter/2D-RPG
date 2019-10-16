@@ -27,6 +27,8 @@ public:
 	const sf::View& GetView() const;
 	void SetView(const sf::View& view);
 
+	void SetTitle(std::string title);
+
 	void resetGLStates();
 	void pollEvent();
 	void imGuiUpdate(sf::Clock clock);

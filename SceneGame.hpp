@@ -22,6 +22,7 @@
 #include "ImGuiLog.hpp"
 #include "C_WarpLevelOnCollision.hpp"
 #include "SceneStateMachine.hpp"
+#include "HeroClass.h"
 
 
 
@@ -31,7 +32,7 @@ class SceneGame : public Scene
 public:
 	SceneGame(WorkingDirectory& workingDir,
 		ResourceAllocator<sf::Texture>& textureAllocator,
-		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog);
+		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero);
 
 	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
 	void ChangeLevel1(std::string id);
@@ -82,6 +83,7 @@ private:
 	int switchto = 0;
 	//unsigned int switchToState;
 	std::string nameLevel;
+	HeroClass& hero;
 	
 };
 

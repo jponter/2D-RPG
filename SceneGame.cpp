@@ -21,12 +21,12 @@ using namespace std;
 //constructor
 SceneGame::SceneGame(WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator,
-	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog)
+	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero)
 
 	: workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine),mylog(mylog){}
+	window(window), stateMachine(stateMachine),mylog(mylog), hero(hero){}
 
 
 void SceneGame::CreatePlayer()
@@ -429,6 +429,8 @@ void SceneGame::ProcessInput()
 
 void SceneGame::Update(float deltaTime)
 {
+	hero.pos = player->transform->GetPosition();
+
 	if (change == true) {
 		change = false;
 		//ChangeLevel(switchto, objects, mapParser);

@@ -153,6 +153,7 @@
     <ClCompile Include="C_WarpLevelOnCollision.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HeroClass.cpp" />
     <ClCompile Include="imgui-SFML.cpp" />
     <ClCompile Include="ImGuiLog.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="C_WarpLevelOnCollision.hpp" />
     <ClInclude Include="Debug.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="HeroClass.h" />
     <ClInclude Include="ImGuiLog.hpp" />
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Object.hpp" />

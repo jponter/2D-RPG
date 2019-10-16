@@ -12,6 +12,8 @@ Window::Window(const std::string& windowName)
 
 void Window::Update()
 {
+	
+
 	sf::Event event; // 3
 	if (window.pollEvent(event))
 	{
@@ -20,6 +22,11 @@ void Window::Update()
 			window.close();
 		}
 	}
+}
+
+void Window::SetTitle(std::string title)
+{
+	window.setTitle(title);
 }
 
 void Window::BeginDraw() // 4

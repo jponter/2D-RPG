@@ -17,12 +17,12 @@
 //constructor
 SceneDungeon::SceneDungeon(WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator,
-	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog)
+	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero)
 
 	: workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine), mylog(mylog){}
+	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero){}
 
 
 void SceneDungeon::CreatePlayer()
@@ -427,6 +427,8 @@ void SceneDungeon::ProcessInput()
 
 void SceneDungeon::Update(float deltaTime)
 {
+	hero.pos = player->transform->GetPosition();
+
 	if (change == true) {
 		change = false;
 		//ChangeLevel(switchto, objects, mapParser);
@@ -469,6 +471,9 @@ void SceneDungeon::SetSwitchToScene(unsigned int id)
 
 void SceneDungeon::Draw(Window& window)
 {
+	//we really want to do a quad tree search here for objects within our view
+
+	
 	objects.Draw(window);
 	
 	

@@ -1,7 +1,7 @@
 #include "Game.hpp"
 
 static auto mylog = new ImGuiLog;
-
+auto hero = new HeroClass;
 
 
 Game::Game() : window("2D Game Engine")
@@ -12,10 +12,10 @@ Game::Game() : window("2D Game Engine")
 			window,textureAllocator); //1
 
 	std::shared_ptr<SceneGame> gameScene =
-		std::make_shared<SceneGame>(workingDir,textureAllocator,window, sceneStateMachine, mylog);
+		std::make_shared<SceneGame>(workingDir,textureAllocator,window, sceneStateMachine, mylog, hero);
 
 	std::shared_ptr<SceneDungeon> dungeonScene =
-		std::make_shared<SceneDungeon>(workingDir, textureAllocator, window, sceneStateMachine, mylog);
+		std::make_shared<SceneDungeon>(workingDir, textureAllocator, window, sceneStateMachine, mylog, hero);
 
 
 
@@ -46,6 +46,10 @@ ImGuiLog* GetLog()
 
 void Game::Update()
 {
+	float fps = 1.0f / deltaTime;
+	
+	std::string title = "2D Game Engine - FPS: " + std::to_string(fps);
+	window.SetTitle(title);
 	window.Update();
 	sceneStateMachine.Update(deltaTime);
 
@@ -100,7 +104,8 @@ void Game::Draw()
 	*/
 
 
-	//ImGui::Text("Player X = %f, Y = %f", playerpos.x, playerpos.y);
+	ImGui::Text("Player X = %f, Y = %f\n", hero.pos.x, hero.pos.y);
+	ImGui::Text("Player Health = %i", hero.health);
 
 	//sf::Vector2u playerCoords;
 	//playerCoords = playerTexture->getSize();

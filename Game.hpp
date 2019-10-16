@@ -13,6 +13,7 @@
 #include "ImGuiLog.hpp"
 #include "imgui.h"
 #include "SharedContext.hpp"
+#include "HeroClass.h"
 
 
 
@@ -44,6 +45,7 @@ private:
 
 	SceneStateMachine sceneStateMachine;
 	ResourceAllocator<sf::Texture> textureAllocator;
+	HeroClass hero;
 
 	
 
