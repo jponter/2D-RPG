@@ -8,6 +8,13 @@
 #include "SharedContext.hpp"
 #include "C_Direction.hpp"
 
+//MACROS
+/*current commands
+X(moveTo(object, float target x, float target y, float timetotake)
+X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing here?"})
+*/
+#define X(n) m_script.AddCommand(new S_Command_ ## n) // shorthand for adding scripts to the script engine
+
 
 
 
@@ -434,8 +441,8 @@ void SceneDungeon::ProcessInput()
 	{
 		Debug::Log("T Key Pressed - executing script");
 		//m_script.AddCommand(new S_Command_MoveTo(player, 600, 600, 5.0f));
-		m_script.AddCommand(new S_Command_ShowDialog({ "Hello!" }, Dialog, window));
-		m_script.AddCommand(new S_Command_ShowDialog({ "What Are you Doing?", "Are you insane?", "Line 3", "Line 4"}, Dialog, window));
+		X(ShowDialog({ "Hello!" }, Dialog, window));
+		X(ShowDialog({ "What Are you Doing?", "Are you insane?", "Line 3", "Line 4"}, Dialog, window));
 
 
 	}
@@ -514,7 +521,7 @@ void SceneDungeon::Draw(Window& window)
 	
 	if (Dialog.m_bShowDialog)
 	{
-		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, player->transform->GetPosition().x -300, player->transform->GetPosition().y - 300);
+		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, player->transform->GetPosition().x -200, player->transform->GetPosition().y - 200);
 		
 	}
 	

@@ -5,7 +5,7 @@
 
 
 Window::Window(const std::string& windowName)
-	: window(sf::VideoMode(1200, 1080), windowName, sf::Style::Titlebar) // 1
+	: window(sf::VideoMode(1280, 960), windowName, sf::Style::Titlebar) // 1
 {
 	window.setVerticalSyncEnabled(true); // 2
 }
