@@ -37,6 +37,9 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 	int tileSizeY = std::atoi(rootNode->first_attribute("tileheight")->value());
 	int mapsizeX = std::atoi(rootNode->first_attribute("width")->value());
 	int mapsizeY = std::atoi(rootNode->first_attribute("height")->value());
+	const unsigned int tileScale = 2;
+	WorldX = mapsizeX * tileSizeX * tileScale;
+	WorldY = mapsizeY * tileSizeY * tileScale;
 
 	// This will contain all of our tiles as objects.
 	std::vector<std::shared_ptr<Object>> tileObjects;

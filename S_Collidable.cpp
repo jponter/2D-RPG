@@ -102,6 +102,11 @@ void S_Collidable::UpdatePositions(std::vector<std::shared_ptr<Object>>& objects
     }
 }
 
+void S_Collidable::SetQuadTreeBounds(sf::FloatRect bounds)
+{
+	collisionTree.SetBounds(bounds);
+}
+
 void S_Collidable::Resolve()
 {
 	//Debug::Log("Entered S_Collidable::Resolve");

@@ -15,6 +15,7 @@ void C_WarpLevelOnCollision::OnCollisionEnter(std::shared_ptr<C_BoxCollider> oth
 	{
 		// Remove the projectile when it collides with any other object  
 		Debug::Log("Warp Collision - from PLayer ID: " + std::to_string(owner->instanceID->Get()));
+		owner->context->hero->health -= 1;
 			sf::Vector2f pos = this->owner->transform->GetPosition();
 			Debug::Log("collision at x: " + std::to_string(owner->transform->GetPosition().x) + "y: " + std::to_string(owner->transform->GetPosition().y));
 			//owner->context->currentScene->ChangeLevel1(1);

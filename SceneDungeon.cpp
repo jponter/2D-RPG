@@ -14,6 +14,7 @@
 //auto mylog = new ImGuiLog;
 
 
+
 //constructor
 SceneDungeon::SceneDungeon(WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator,
@@ -339,6 +340,7 @@ void SceneDungeon::OnCreate()
 	context.textureAllocator = &textureAllocator;
 	context.window = &window;
 	context.imguilog = &mylog;
+	context.hero = &hero;
 	
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -352,6 +354,9 @@ void SceneDungeon::OnCreate()
 	levelTiles = mapParser.Parse(workingDir.Get() + "Dungeon.tmx"
 		, mapOffset);
 
+	//set the collision tree bounds
+	sf::FloatRect newbounds = sf::FloatRect(0, 0, context.mapParser->WorldX, context.mapParser->WorldY);
+	context.objects->collidables.SetQuadTreeBounds(newbounds);
 
 	objects.Add(levelTiles);
 	//create our player
@@ -359,11 +364,11 @@ void SceneDungeon::OnCreate()
 	//create our friend
 	//CreateFriend();
 
-	player->transform->SetPosition(100, 340);
+	player->transform->SetPosition(630, 815);
 	//npc->transform->SetPosition(280, 340);
 	objects.ProcessNewObjects();
 	
-
+	
 
 	
 	//SceneDungeon::ChangeLevel(1, objects, mapParser);
@@ -421,12 +426,37 @@ void SceneDungeon::ProcessInput()
 {
 	if (window.HasFocus())
 	{
-		input.Update();
+			input.Update();
+		
+	}
+
+	if (input.IsKeyUp(Input::Key::T))
+	{
+		Debug::Log("T Key Pressed - executing script");
+		//m_script.AddCommand(new S_Command_MoveTo(player, 600, 600, 5.0f));
+		m_script.AddCommand(new S_Command_ShowDialog({ "Hello!" }, Dialog, window));
+		m_script.AddCommand(new S_Command_ShowDialog({ "What Are you Doing?", "Are you insane?", "Line 3", "Line 4"}, Dialog, window));
+
+
+	}
+
+	if (Dialog.m_bShowDialog)
+	{
+		player->userMovementEnabled = false;
+		if (input.IsKeyUp(Input::Key::R))
+		{
+			Dialog.m_bShowDialog = false;
+			m_script.CompleteCommand();
+			player->userMovementEnabled = true;
+		}
 	}
 }
 
 void SceneDungeon::Update(float deltaTime)
 {
+
+	m_script.ProcessCommand(deltaTime);
+
 	hero.pos = player->transform->GetPosition();
 
 	if (change == true) {
@@ -437,6 +467,7 @@ void SceneDungeon::Update(float deltaTime)
 		id = stateMachine.GetSceneByName(name);
 		if (id != -1)
 		{
+			player->transform->SetPosition(320, 440);
 			stateMachine.SwitchTo(id);
 		}
 		else Debug::LogError("Level switch ID not found");
@@ -472,10 +503,20 @@ void SceneDungeon::SetSwitchToScene(unsigned int id)
 void SceneDungeon::Draw(Window& window)
 {
 	//we really want to do a quad tree search here for objects within our view
+	/*sf::FloatRect rect = context.window->GetViewSpace();
+	
+	std::vector<std::shared_ptr<Object>>  o = objects.worldTree.Search(rect);*/
+
+	//edit do it in the drawables collection - 
+
+	objects.Draw(window);
 
 	
-	objects.Draw(window);
-	
+	if (Dialog.m_bShowDialog)
+	{
+		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, player->transform->GetPosition().x -300, player->transform->GetPosition().y - 300);
+		
+	}
 	
 
 

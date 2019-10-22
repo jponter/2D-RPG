@@ -8,6 +8,7 @@
 #include "Object.hpp"
 #include "S_Drawable.hpp"
 #include "S_Collidable.hpp"
+#include "QuadtreeObject.hpp"
 
 class ObjectCollection
 {
@@ -28,13 +29,15 @@ public:
 	int size();
 
 	std::vector<std::shared_ptr<Object>>& get();
-	
+	QuadtreeObject worldTree;
+	S_Collidable collidables;
 
 private:
 	std::vector<std::shared_ptr<Object>> objects;
 	std::vector<std::shared_ptr<Object>> newObjects; // 2
 	S_Drawable drawables;
-	S_Collidable collidables;
+	
+	
 };
 
 #endif /* ObjectCollection_hpp */

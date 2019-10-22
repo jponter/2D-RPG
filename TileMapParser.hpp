@@ -56,6 +56,8 @@ public:
 
 	std::vector<std::shared_ptr<Object>>
 		Parse(const std::string& file, sf::Vector2i offset);
+	float WorldX;
+	float WorldY;
 
 private:
 	

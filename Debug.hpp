@@ -28,11 +28,12 @@ public:
 	static void LogWarning(const std::string& msg);
 	static void LogError(const std::string& msg);
 	static void HandleCameraZoom(Window& window, Input& input);
-	
+	float zoom = 1;
 
 private:
 	static std::vector<std::array<sf::Vertex, 2>> lines;
 	static std::vector<sf::RectangleShape> rects;
+	
 };
 
 #endif /* Debug_hpp */

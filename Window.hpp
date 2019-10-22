@@ -26,6 +26,7 @@ public:
 	//camera stuff
 	const sf::View& GetView() const;
 	void SetView(const sf::View& view);
+	sf::Vector2u GetSize() const;
 
 	void SetTitle(std::string title);
 

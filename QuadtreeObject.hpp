@@ -1,34 +1,34 @@
 #pragma once
-#ifndef QuadTree_hpp
-#define QuadTree_hpp
+#ifndef QuadTreeObject_hpp
+#define QuadTreeObject_hpp
 
 #include <memory>
 #include <vector>
 
-#include "C_BoxCollider.hpp"
+
 #include "Object.hpp"
 #include "Debug.hpp"
 
-class Quadtree
+class QuadtreeObject
 {
 public:
-	Quadtree();
-	Quadtree(int maxObjects, int maxLevels, int level,
-		sf::FloatRect bounds, Quadtree* parent);
+	QuadtreeObject();
+	QuadtreeObject(int maxObjects, int maxLevels, int level,
+		sf::FloatRect bounds, QuadtreeObject* parent);
 
 	// Inserts object into our quadtree.
-	void Insert(std::shared_ptr<C_BoxCollider> object);
+	void Insert(std::shared_ptr<Object> object);
 
 	// Removes object from our quadtree when we no longer need it to collide.
-	void Remove(std::shared_ptr<C_BoxCollider> object);
+	void Remove(std::shared_ptr<Object> object);
 
-	void UpdatePosition(std::shared_ptr<C_BoxCollider> object);
+	void UpdatePosition(std::shared_ptr<Object> object);
 
 	// Removes all objects from tree.
 	void Clear();
 
 	// Returns vector of colliders that intersect with the search area.
-	std::vector<std::shared_ptr<C_BoxCollider>>
+	std::vector<std::shared_ptr<Object>>
 		Search(const sf::FloatRect& area);
 
 	// Returns the bounds of this node.
@@ -36,11 +36,10 @@ public:
 
 	//debug drawing
 	void DrawDebug();
-	void SetBounds(sf::FloatRect);
 
 private:
 	void Search(const sf::FloatRect& area,
-		std::vector<std::shared_ptr<C_BoxCollider>>&
+		std::vector<std::shared_ptr<Object>>&
 		overlappingObjects);
 
 	// Returns the index for the node that will contain 		
@@ -61,11 +60,11 @@ private:
 	int maxLevels;
 
 	// nulptr is this is the base node.
-	Quadtree* parent;
-	std::shared_ptr<Quadtree> children[4];
+	QuadtreeObject* parent;
+	std::shared_ptr<QuadtreeObject> children[4];
 
 	// Stores objects in this node.
-	std::vector<std::shared_ptr<C_BoxCollider>> objects;
+	std::vector<std::shared_ptr<Object>> objects;
 
 	// How deep the current node is from the base node. 
 	// The first node starts at 0 and then its child node 	

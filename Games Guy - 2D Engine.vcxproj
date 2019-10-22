@@ -152,6 +152,7 @@
     <ClCompile Include="C_Velocity.cpp" />
     <ClCompile Include="C_WarpLevelOnCollision.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DrawText.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HeroClass.cpp" />
     <ClCompile Include="imgui-SFML.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectCollection.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="QuadtreeObject.cpp" />
     <ClCompile Include="ResourceAllocator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneDungeon.cpp" />
@@ -170,7 +172,10 @@
     <ClCompile Include="SceneStateMachine.cpp" />
     <ClCompile Include="SharedContext.cpp" />
     <ClCompile Include="S_Collidable.cpp" />
+    <ClCompile Include="S_Command.cpp" />
     <ClCompile Include="S_Drawable.cpp" />
+    <ClCompile Include="S_Locator.cpp" />
+    <ClCompile Include="S_ScriptProcessor.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMapParser.cpp" />
     <ClCompile Include="Utilities.cpp" />
@@ -199,6 +204,7 @@
     <ClInclude Include="C_Velocity.hpp" />
     <ClInclude Include="C_WarpLevelOnCollision.hpp" />
     <ClInclude Include="Debug.hpp" />
+    <ClInclude Include="DrawText.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HeroClass.h" />
     <ClInclude Include="ImGuiLog.hpp" />
@@ -206,6 +212,7 @@
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="ObjectCollection.hpp" />
     <ClInclude Include="Quadtree.hpp" />
+    <ClInclude Include="QuadtreeObject.hpp" />
     <ClInclude Include="ResourceAllocator.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="SceneDungeon.hpp" />
@@ -214,7 +221,10 @@
     <ClInclude Include="SceneStateMachine.hpp" />
     <ClInclude Include="SharedContext.hpp" />
     <ClInclude Include="S_Collidable.hpp" />
+    <ClInclude Include="S_Command.hpp" />
     <ClInclude Include="S_Drawable.hpp" />
+    <ClInclude Include="S_Locator.hpp" />
+    <ClInclude Include="S_ScriptProcessor.hpp" />
     <ClInclude Include="Tile.hpp" />
     <ClInclude Include="TileMapParser.hpp" />
     <ClInclude Include="Utilities.hpp" />

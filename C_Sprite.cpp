@@ -58,12 +58,19 @@ void C_Sprite::SetScale(float x, float y)
 
 void C_Sprite::Draw(Window& window)
 {
-	bool culling = false;
+
+	bool culling = true;
+	sf::FloatRect view = window.GetViewSpace();
+	view.left -= 32 * 2;
+	view.width += 2 * 32 * 2;
+	view.top -= 32 * 2;
+	view.height += 2 * 32 * 32;
 	
 	if (culling)
 	{
-		sf::FloatRect view = window.GetViewSpace();
+		
 		sf::Vector2f sprobject = owner->transform->GetPosition();
+		
 
 		if (view.contains(sprobject))
 		{

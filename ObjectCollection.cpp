@@ -21,6 +21,7 @@ void ObjectCollection::LateUpdate(float deltaTime)
 
 void ObjectCollection::Draw(Window& window)
 {
+
 	drawables.Draw(window);
 }
 
@@ -74,6 +75,8 @@ void ObjectCollection::ProcessNewObjects()
 		{
 			o->Start();
 		}
+
+		
 
 		objects.insert(objects.end(), newObjects.begin(), newObjects.end());
 

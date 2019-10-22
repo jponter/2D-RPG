@@ -5,7 +5,7 @@
 
 
 Window::Window(const std::string& windowName)
-	: window(sf::VideoMode(1920, 1080), windowName, sf::Style::Titlebar) // 1
+	: window(sf::VideoMode(1200, 1080), windowName, sf::Style::Titlebar) // 1
 {
 	window.setVerticalSyncEnabled(true); // 2
 }
@@ -74,6 +74,11 @@ const sf::View& Window::GetView() const
 	return window.getView();
 }
 
+sf::Vector2u Window::GetSize() const
+{
+	return window.getSize();
+}
+
 void Window::SetView(const sf::View& view)
 {
 	window.setView(view);
@@ -89,6 +94,12 @@ void Window::pollEvent()
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		ImGui::SFML::ProcessEvent(event);
+
+		if (event.type == sf::Event::KeyPressed)
+			if (event.key.code == sf::Keyboard::Escape)
+			{
+				window.close();
+			}
 
 		if (event.type == sf::Event::Closed) {
 			window.close();

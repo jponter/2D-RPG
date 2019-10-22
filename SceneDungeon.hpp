@@ -24,6 +24,9 @@
 #include "SceneStateMachine.hpp"
 #include "Game.hpp"
 #include "HeroClass.h"
+#include "S_Command.hpp"
+#include "S_ScriptProcessor.hpp"
+
 
 
 
@@ -85,6 +88,10 @@ private:
 	std::string nameLevel;
 	ImGuiLog& mylog;
 	HeroClass& hero;
+
+	S_ScriptProcessor m_script;
+	DrawText Dialog;
+	
 	
 };
 

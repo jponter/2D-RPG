@@ -1,7 +1,10 @@
 #include "Game.hpp"
 
+
 static auto mylog = new ImGuiLog;
 auto hero = new HeroClass;
+
+
 
 
 Game::Game() : window("2D Game Engine")
@@ -35,6 +38,7 @@ Game::Game() : window("2D Game Engine")
 	deltaTime = clock.restart().asSeconds();
 
 	window.imGuiInit();
+	
 
 }
 
@@ -62,24 +66,35 @@ void Game::LateUpdate()
 
 void Game::Draw()
 {
+
+
+
 	window.BeginDraw();
 	// add drawing code
+	sf::Clock deltaClock;
+	window.pollEvent();
+
 
 	sceneStateMachine.Draw(window);
+
+	
+	
 
 
 #ifdef _DEBUG
 	Debug::Draw(window);
 	// put in the IMGUI stuff here - on future iterations may move this up the class list
 	//window.resetGLStates(); // call it if you only draw ImGui. Otherwise not needed.
-	sf::Clock deltaClock;
-	window.pollEvent();
+	
+
+
 	window.imGuiUpdate(deltaClock);
 
 
 	//Debug::LogIM("test \n", mylog);
 
 	mylog.mylog.Draw("Debug Log");
+	
 	
 
 
@@ -155,3 +170,7 @@ void Game::CaptureInput()
 {
 	sceneStateMachine.ProcessInput();
 }
+
+
+
+

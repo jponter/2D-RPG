@@ -72,12 +72,16 @@ void Debug::HandleCameraZoom(Window& window, Input& input)
 	{
 		sf::View view = window.GetView();
 		view.zoom(1.1f);
+		
+		//Debug::Log("Zoom Out = " + to_string(zoom));
 		window.SetView(view);
 	}
 	else if (input.IsKeyUp(Input::Key::RBracket))
 	{
 		sf::View view = window.GetView();
 		view.zoom(0.9f);
+		//Debug::Log("Zoom In = " + to_string(zoom));
+		
 		window.SetView(view);
 	}
 }

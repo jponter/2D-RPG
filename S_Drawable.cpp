@@ -51,10 +51,13 @@ void S_Drawable::Sort()
 void S_Drawable::Draw(Window& window)
 {
 	Sort();
+
+	
 	for (auto& layer : drawables)
 	{
 		for (auto& drawable : layer.second)
 		{
+			
 			drawable->Draw(window);
 		}
 	}

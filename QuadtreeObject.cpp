@@ -1,25 +1,22 @@
-#include "Quadtree.hpp"
+#include "QuadtreeObject.hpp"
 
 
-Quadtree::Quadtree() : Quadtree(5, 5, 0, { 0.f, 0.f, 1920, 1080 },
+QuadtreeObject::QuadtreeObject() : QuadtreeObject(5, 5, 0, { 0.f, 0.f, 1920, 1080 },
 	nullptr) {}
 
-Quadtree::Quadtree(int maxObjects, int maxLevels, int level,
-	sf::FloatRect bounds, Quadtree* parent)
+QuadtreeObject::QuadtreeObject(int maxObjects, int maxLevels, int level,
+	sf::FloatRect bounds, QuadtreeObject* parent)
 	: maxObjects(maxObjects), maxLevels(maxLevels),
 	level(level), bounds(bounds), parent(parent) {}
 
-void Quadtree::SetBounds(sf::FloatRect newbounds)
-{
-	bounds = newbounds;
-}
-
-void Quadtree::Insert(std::shared_ptr<C_BoxCollider> object)
+void QuadtreeObject::Insert(std::shared_ptr<Object> object)
 {
 	if (children[0] != nullptr) // 1
 	{
+		sf::Vector2f pos = object->transform->GetPosition();
+		sf::FloatRect rect = { pos.x,pos.y,32,32 };
 		int indexToPlaceObject =
-			GetChildIndexForObject(object->GetCollidable()); // 2
+			GetChildIndexForObject(rect); // 2
 
 		if (indexToPlaceObject != thisTree) // 3
 		{
@@ -39,8 +36,10 @@ void Quadtree::Insert(std::shared_ptr<C_BoxCollider> object)
 		while (objIterator != objects.end())
 		{
 			auto obj = *objIterator;
+			sf::Vector2f pos = object->transform->GetPosition();
+			sf::FloatRect rect = { pos.x,pos.y,32,32 };
 			int indexToPlaceObject =
-				GetChildIndexForObject(obj->GetCollidable());
+				GetChildIndexForObject(rect);
 
 			if (indexToPlaceObject != thisTree)
 			{
@@ -56,16 +55,19 @@ void Quadtree::Insert(std::shared_ptr<C_BoxCollider> object)
 	}
 }
 
-void Quadtree::Remove(std::shared_ptr<C_BoxCollider> object)
+void QuadtreeObject::Remove(std::shared_ptr<Object> object)
 {
-	int index = GetChildIndexForObject(object->GetCollidable());
+	sf::Vector2f pos = object->transform->GetPosition();
+	sf::FloatRect rect = { pos.x,pos.y,32,32 };
+
+	int index = GetChildIndexForObject(rect);
 
 	if (index == thisTree || children[index] == nullptr)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
-			if (objects.at(i)->owner->instanceID->Get()
-				== object->owner->instanceID->Get())
+			if (objects.at(i)->instanceID->Get()
+				== object->instanceID->Get())
 			{
 				objects.erase(objects.begin() + i);
 				break;
@@ -78,7 +80,7 @@ void Quadtree::Remove(std::shared_ptr<C_BoxCollider> object)
 	}
 }
 
-void Quadtree::Clear()
+void QuadtreeObject::Clear()
 {
 	objects.clear();
 
@@ -92,16 +94,19 @@ void Quadtree::Clear()
 	}
 }
 
-std::vector<std::shared_ptr<C_BoxCollider>> Quadtree::Search(const sf::FloatRect& area)
+std::vector<std::shared_ptr<Object>> QuadtreeObject::Search(const sf::FloatRect& area)
 {
-	std::vector<std::shared_ptr<C_BoxCollider>> possibleOverlaps; // 1
+	std::vector<std::shared_ptr<Object>> possibleOverlaps; // 1
 	Search(area, possibleOverlaps); // 2
 
-	std::vector<std::shared_ptr<C_BoxCollider>> returnList;
+	std::vector<std::shared_ptr<Object>> returnList;
 
 	for (auto collider : possibleOverlaps)
 	{
-		if (area.intersects(collider->GetCollidable())) // 3
+		sf::Vector2f pos = collider->transform->GetPosition();
+		sf::FloatRect rect = { pos.x,pos.y,32,32 };
+
+		if (area.intersects(rect)) // 3
 		{
 			returnList.emplace_back(collider); // 4
 		}
@@ -110,8 +115,8 @@ std::vector<std::shared_ptr<C_BoxCollider>> Quadtree::Search(const sf::FloatRect
 	return returnList;
 }
 
-void Quadtree::Search(const sf::FloatRect& area,
-	std::vector<std::shared_ptr<C_BoxCollider>>& overlappingObjects)
+void QuadtreeObject::Search(const sf::FloatRect& area,
+	std::vector<std::shared_ptr<Object>>& overlappingObjects)
 {
 	overlappingObjects.insert(overlappingObjects.end(), objects.begin(), objects.end()); // 1
 
@@ -136,12 +141,12 @@ void Quadtree::Search(const sf::FloatRect& area,
 	}
 }
 
-const sf::FloatRect& Quadtree::GetBounds() const
+const sf::FloatRect& QuadtreeObject::GetBounds() const
 {
 	return bounds;
 }
 
-int Quadtree::GetChildIndexForObject(const sf::FloatRect& objectBounds)
+int QuadtreeObject::GetChildIndexForObject(const sf::FloatRect& objectBounds)
 {
 	int index = -1;
 
@@ -181,11 +186,13 @@ int Quadtree::GetChildIndexForObject(const sf::FloatRect& objectBounds)
 	return index;
 }
 
-void Quadtree::UpdatePosition(std::shared_ptr<C_BoxCollider> object)
+void QuadtreeObject::UpdatePosition(std::shared_ptr<Object> object)
 {
-	Quadtree* quadTree = this;
+	QuadtreeObject* quadTree = this;
+	sf::Vector2f pos = object->transform->GetPreviousFramePosition();
+	sf::FloatRect rect = { pos.x,pos.y,32,32 };
 
-	const sf::FloatRect& prevObjectRect = object->GetPreviousFrameCollidable();
+	const sf::FloatRect& prevObjectRect = rect;
 
 	int index = quadTree->GetChildIndexForObject(prevObjectRect);
 
@@ -197,9 +204,11 @@ void Quadtree::UpdatePosition(std::shared_ptr<C_BoxCollider> object)
 
 	for (int i = 0; i < quadTree->objects.size(); i++)
 	{
-		if (quadTree->objects.at(i)->owner->instanceID->Get() == object->owner->instanceID->Get())
+		if (quadTree->objects.at(i)->instanceID->Get() == object->instanceID->Get())
 		{
-			const sf::FloatRect& objectRect = object->GetCollidable();
+			sf::Vector2f pos = object->transform->GetPosition();
+			sf::FloatRect rect = { pos.x,pos.y,32,32 };
+			const sf::FloatRect& objectRect = rect;
 
 			if (!quadTree->GetBounds().intersects(objectRect))
 			{
@@ -223,26 +232,26 @@ void Quadtree::UpdatePosition(std::shared_ptr<C_BoxCollider> object)
 }
 
 
-void Quadtree::Split()
+void QuadtreeObject::Split()
 {
 	const int childWidth = bounds.width / 2;
 	const int childHeight = bounds.height / 2;
 
-	children[childNE] = std::make_shared<Quadtree>(maxObjects, maxLevels, level + 1,
+	children[childNE] = std::make_shared<QuadtreeObject>(maxObjects, maxLevels, level + 1,
 		sf::FloatRect(bounds.left + childWidth, bounds.top, childWidth, childHeight),
 		this);
-	children[childNW] = std::make_shared<Quadtree>(maxObjects, maxLevels, level + 1,
+	children[childNW] = std::make_shared<QuadtreeObject>(maxObjects, maxLevels, level + 1,
 		sf::FloatRect(bounds.left, bounds.top, childWidth, childHeight),
 		this);
-	children[childSW] = std::make_shared<Quadtree>(maxObjects, maxLevels, level + 1,
+	children[childSW] = std::make_shared<QuadtreeObject>(maxObjects, maxLevels, level + 1,
 		sf::FloatRect(bounds.left, bounds.top + childHeight, childWidth, childHeight),
 		this);
-	children[childSE] = std::make_shared<Quadtree>(maxObjects, maxLevels, level + 1,
+	children[childSE] = std::make_shared<QuadtreeObject>(maxObjects, maxLevels, level + 1,
 		sf::FloatRect(bounds.left + childWidth, bounds.top + childHeight, childWidth, childHeight),
 		this);
 }
 
-void Quadtree::DrawDebug()
+void QuadtreeObject::DrawDebug()
 {
 	if (children[0] != nullptr)
 	{

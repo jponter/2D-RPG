@@ -341,11 +341,14 @@ void SceneGame::OnCreate()
 	context.textureAllocator = &textureAllocator;
 	context.window = &window;
 	context.imguilog = &mylog;
+	context.hero = &hero;
 	
 	//update the context with mylog
 	//context.imguilog = mylog;
 	context.currentScene = this;
 	context.mapParser = &mapParser;
+
+	
 	
 
 	sf::Vector2i mapOffset(0, 0);
@@ -356,8 +359,17 @@ void SceneGame::OnCreate()
 	levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
 		, mapOffset);
 
+	//set the collision tree bounds
+	sf::FloatRect newbounds = sf::FloatRect(0, 0, context.mapParser->WorldX, context.mapParser->WorldY);
+	context.objects->collidables.SetQuadTreeBounds(newbounds);
+
 
 	objects.Add(levelTiles);
+
+	//add the level tiles to a rtree here
+	
+
+
 	//create our player
 	CreatePlayer();
 	//create our friend
@@ -439,6 +451,7 @@ void SceneGame::Update(float deltaTime)
 		id = stateMachine.GetSceneByName(name);
 		if (id != -1)
 		{
+			player->transform->SetPosition(100, 340);
 			stateMachine.SwitchTo(id);
 		}
 		else Debug::LogError("Level switch ID not found");

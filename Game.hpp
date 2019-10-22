@@ -14,6 +14,9 @@
 #include "imgui.h"
 #include "SharedContext.hpp"
 #include "HeroClass.h"
+#include "DrawText.h"
+
+
 
 
 
@@ -36,6 +39,8 @@ public:
 	//const ImGuiLog::ExampleAppLog& GetLog() const;
 	ImGuiLog mylog;
 
+	//Logger* logger;
+
 private:
 	Window window;
 	WorkingDirectory workingDir;
@@ -46,6 +51,9 @@ private:
 	SceneStateMachine sceneStateMachine;
 	ResourceAllocator<sf::Texture> textureAllocator;
 	HeroClass hero;
+	
+
+	
 
 	
 

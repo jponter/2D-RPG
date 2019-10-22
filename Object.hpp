@@ -33,6 +33,7 @@ public:
 	bool isPersistant();
 	void makePersistant();
 	
+	
 
 
 	std::shared_ptr<C_Transform> transform;
@@ -40,6 +41,7 @@ public:
 	std::shared_ptr<C_InstanceID> instanceID;
 
 	SharedContext* context;
+	bool userMovementEnabled = true;
 
 
 

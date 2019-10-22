@@ -25,6 +25,7 @@ public:
 	void Update();
 	void Resolve();
 	void UpdatePositions(std::vector<std::shared_ptr<Object>>& objects);
+	void SetQuadTreeBounds(sf::FloatRect bounds);
 
 private:
 	
