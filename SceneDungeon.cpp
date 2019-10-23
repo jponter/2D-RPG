@@ -442,7 +442,7 @@ void SceneDungeon::ProcessInput()
 		Debug::Log("T Key Pressed - executing script");
 		//m_script.AddCommand(new S_Command_MoveTo(player, 600, 600, 5.0f));
 		X(ShowDialog({ "Hello!" }, Dialog, window));
-		X(ShowDialog({ "What Are you Doing?", "Are you insane?", "Line 3", "Line 4"}, Dialog, window));
+		X(ShowDialog({ "OOo. Another RPG with SFML!", "Are you insane?", "Thanks to Javidx9 for", "his videos on script engine!"}, Dialog, window));
 
 
 	}

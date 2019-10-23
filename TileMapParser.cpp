@@ -3,6 +3,7 @@
 #include "C_WarpLevelOnCollision.hpp"
 #include <iostream>
 #include "WorkingDirectory.hpp"
+#include "C_Animation.hpp"
 
 
 TileMapParser::TileMapParser(ResourceAllocator<sf::Texture>& textureAllocator, SharedContext& context)
@@ -183,12 +184,12 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			
 			tileObject->transform->SetPosition(x ,y);
 
-#ifdef _DEBUG
-			// add a debug red square
-			const int textureID = textureAllocator.Add(context.workingDir->Get() + "Red Square.png");
+
+			// now this is a vortex always
+			const int textureID = textureAllocator.Add(context.workingDir->Get() + "vortexanim256.png");
 			auto sprite = tileObject->AddComponent<C_Sprite>();
 			//sprite->SetTextureAllocator(&textureAllocator);
-			sprite->Load(textureID);
+			//sprite->Load(textureID);
 			//sprite->SetTextureRect(tileInfo->textureRect);
 			sprite->SetScale(tileScale, tileScale);
 			//set the sort order for the tile based on layer
@@ -196,7 +197,37 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			// Set the tiles layer to background for now
 			sprite->SetDrawLayer(DrawLayer::Entities);
 
-#endif
+			//we need a direction & velocity at the moment
+			tileObject->AddComponent<C_Direction>();
+			tileObject->AddComponent<C_Velocity>();
+		
+
+			//add the animation to the warp tile
+			auto animation = tileObject->AddComponent<C_Animation>();
+
+			const unsigned int frameWidth = 32;
+			const unsigned int frameHeight = 32;
+
+			const bool idleAnimationLooped = true;
+			const float delayBetweenFrames = 0.1f;
+
+			// sprite tilesheet is 8x8
+
+			std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
+			const int idleFrameCount = 64;
+
+			std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
+			for (int y = 0; y < 8; y++)
+			{
+				for (int x = 0; x < 8; x++)
+				{
+					idleAnimation->AddFrame(textureID, x * frameWidth, y * frameHeight, frameWidth, frameHeight, delayBetweenFrames, idleAnimationLooped);
+				}
+			}
+			idleAnimations.insert(std::make_pair(FacingDirection::Down, idleAnimation));
+
+			animation->AddAnimation(AnimationState::Idle, idleAnimations);
+
 
 			auto collider = tileObject->AddComponent<C_BoxCollider>();
 			//float left = (x - (tileSizeX * tileScale)) - (tileSizeX* tileScale);
