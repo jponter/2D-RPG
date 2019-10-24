@@ -36,6 +36,14 @@ struct Layer
 	bool isVisible;
 };
 
+struct AnimationFrame
+{
+	int tileid;
+	int x;
+	int y;
+	float duration;
+};
+
 
 // Stores layer names with layer.
 using MapTiles = std::vector<std::pair<std::string, std::shared_ptr<Layer>>>;
@@ -66,8 +74,12 @@ private:
 	std::shared_ptr<MapTiles> BuildMapTiles(xml_node<>* rootNode);
 	std::pair<std::string, std::shared_ptr<Layer>> BuildLayer(xml_node<>* layerNode, std::shared_ptr<TileSheets> tileSheets);
 
-	std::map<int, std::vector<std::pair<int, int>>> AnimationIndex;
-	std::map<int, std::vector<std::pair<int, int>>>::iterator AnimationIterator;
+	//std::map<int,  std::vector<std::pair<int, int>>> AnimationIndex;
+	
+	//std::map<int,  std::vector<std::pair<int, int>>>::iterator AnimationIterator;
+
+	std::map<int, std::vector<AnimationFrame>> AnimationIndex;
+	std::map<int, std::vector<AnimationFrame>>::iterator AnimationIterator;
 
 	ResourceAllocator<sf::Texture>& textureAllocator;
 	SharedContext& context;

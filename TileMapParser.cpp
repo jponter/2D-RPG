@@ -114,17 +114,18 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				const unsigned int frameHeight = 32;
 
 				const bool idleAnimationLooped = true;
-				const float delayBetweenFrames = 0.1f;
+				
 				std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
 				const int idleFrameCount = 64;
 
 				std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
-
-				for (auto val : AnimationIterator->second)
+				
+				for (auto frame : AnimationIterator->second)
 				{
 					// we should have animation frame rects
-					std::cout << "Rect: " << val.first << "  " << val.second << std::endl;
-					idleAnimation->AddFrame(tileInfo->textureID, val.first, val.second, frameWidth, frameHeight, delayBetweenFrames, idleAnimationLooped);
+					float delayBetweenFrames = (1.0f / 1000.0f) * frame.duration;
+					std::cout << "Rect: " << frame.x << "  " << frame.y << std::endl;
+					idleAnimation->AddFrame(tileInfo->textureID, frame.x, frame.y, frameWidth, frameHeight, delayBetweenFrames, idleAnimationLooped);
 					
 				}
 				idleAnimations.insert(std::make_pair(FacingDirection::Down, idleAnimation));
@@ -358,7 +359,9 @@ TileMapParser::BuildTileSheetData(xml_node<>* rootNode)
 				if (AnimationNode != nullptr)
 				{
 					std::cout << "Animation found for TileID: " << tile << std::endl;
-					std::vector<std::pair<int, int>> AnimationTiles;
+					std::vector<AnimationFrame> AnimationTiles;
+					
+					//std::vector<std::pair<int, std::pair<int, int>>> AnimationTiles;
 
 					for (xml_node<>* animationFrameNode = AnimationNode->first_node("frame");
 						animationFrameNode;
@@ -366,6 +369,7 @@ TileMapParser::BuildTileSheetData(xml_node<>* rootNode)
 					{
 						if (animationFrameNode != nullptr)
 						{
+							AnimationFrame frame;
 							int tileid = std::atoi(animationFrameNode->first_attribute("tileid")->value());
 							int duration = std::atoi(animationFrameNode->first_attribute("duration")->value());
 							std::cout << "Animation Node Found: ID= ";
@@ -378,7 +382,12 @@ TileMapParser::BuildTileSheetData(xml_node<>* rootNode)
 							int textureY = (tileid) / tileSheetData.columns * tileSheetData.tileSize.y;
 
 							//set the vecotr of Animation tiles
-							AnimationTiles.push_back(std::make_pair(textureX, textureY));
+							//AnimationTiles.push_back(std::make_pair(textureX, textureY));
+							frame.x = textureX;
+							frame.y = textureY;
+							frame.duration = duration;
+
+							AnimationTiles.push_back(frame);
 
 						}
 
