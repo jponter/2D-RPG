@@ -66,6 +66,9 @@ private:
 	std::shared_ptr<MapTiles> BuildMapTiles(xml_node<>* rootNode);
 	std::pair<std::string, std::shared_ptr<Layer>> BuildLayer(xml_node<>* layerNode, std::shared_ptr<TileSheets> tileSheets);
 
+	std::map<int, std::vector<std::pair<int, int>>> AnimationIndex;
+	std::map<int, std::vector<std::pair<int, int>>>::iterator AnimationIterator;
+
 	ResourceAllocator<sf::Texture>& textureAllocator;
 	SharedContext& context;
 };

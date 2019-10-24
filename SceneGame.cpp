@@ -356,7 +356,7 @@ void SceneGame::OnCreate()
 	std::vector<std::shared_ptr<Object>> levelTiles;
 
 
-	levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
+	levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior Animated.tmx"
 		, mapOffset);
 
 	//set the collision tree bounds

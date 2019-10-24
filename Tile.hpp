@@ -18,6 +18,7 @@ struct TileInfo
 	int tileID;
 	int textureID;
 	sf::IntRect textureRect;
+	
 };
 
 struct Tile

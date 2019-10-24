@@ -358,7 +358,7 @@ void SceneDungeon::OnCreate()
 
 	std::vector<std::shared_ptr<Object>> levelTiles;
 
-	levelTiles = mapParser.Parse(workingDir.Get() + "Dungeon.tmx"
+	levelTiles = mapParser.Parse(workingDir.Get() + "dungeon.tmx"
 		, mapOffset);
 
 	//set the collision tree bounds

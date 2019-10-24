@@ -92,20 +92,51 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				collider->SetCollidable(sf::FloatRect(left, top, width, height));
 				collider->SetLayer(CollisionLayer::Tile);
 			}
-			/*if (layer.first == "Warps")
+			
+			// if the tile has an animation set add them now
+			int tileID = tileInfo->tileID;
+			//std::cout << tileID << std::endl;
+			AnimationIterator = AnimationIndex.find(tileID);
+			if (AnimationIterator != AnimationIndex.end())
 			{
-				
-				auto collider = tileObject->AddComponent<C_BoxCollider>();
-				float left = x - (tileSizeX * tileScale) * 0.5f;
-				float top = y - (tileSizeY * tileScale) * 0.5f;
-				float width = tileSizeX * tileScale;
-				float height = tileSizeY * tileScale;
-				collider->SetCollidable(sf::FloatRect(left, top, width, height));
-				collider->SetLayer(CollisionLayer::Tile);
-				auto warp1 = tileObject->AddComponent<C_WarpLevelOnCollision>();
-				warp1->warplevel = 1;
+				int foundTile = AnimationIterator->first;
+				std::cout << "While Building tile objects - found a tile with animation ID: " << foundTile << std::endl;
+				// what are the frames for this animation :| ???
+				//we need a direction & velocity at the moment
+				tileObject->AddComponent<C_Direction>();
+				tileObject->AddComponent<C_Velocity>();
 
-			}*/
+
+				//add the animation to the warp tile
+				auto animation = tileObject->AddComponent<C_Animation>();
+
+				const unsigned int frameWidth = 32;
+				const unsigned int frameHeight = 32;
+
+				const bool idleAnimationLooped = true;
+				const float delayBetweenFrames = 0.1f;
+				std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
+				const int idleFrameCount = 64;
+
+				std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
+
+				for (auto val : AnimationIterator->second)
+				{
+					// we should have animation frame rects
+					std::cout << "Rect: " << val.first << "  " << val.second << std::endl;
+					idleAnimation->AddFrame(tileInfo->textureID, val.first, val.second, frameWidth, frameHeight, delayBetweenFrames, idleAnimationLooped);
+					
+				}
+				idleAnimations.insert(std::make_pair(FacingDirection::Down, idleAnimation));
+
+				animation->AddAnimation(AnimationState::Idle, idleAnimations);
+
+				
+
+
+			}
+
+
 
 			// Add new tile Object to the collection.
 			tileObjects.emplace_back(tileObject);
@@ -309,11 +340,60 @@ TileMapParser::BuildTileSheetData(xml_node<>* rootNode)
 		tileSheetData.imageSize.y
 			= std::atoi(imageNode->first_attribute("height")->value());
 
+		
+		
+		//check for animated tiles
+		for (xml_node<>* TilesetTile
+			= tilesheetNode->first_node("tile");
+			TilesetTile;
+			TilesetTile = TilesetTile->next_sibling("tile"))
+		{
+
+			if (TilesetTile != nullptr)
+			{
+
+				int tile = std::atoi(TilesetTile->first_attribute("id")->value());
+
+				xml_node<>* AnimationNode = TilesetTile->first_node("animation");
+				if (AnimationNode != nullptr)
+				{
+					std::cout << "Animation found for TileID: " << tile << std::endl;
+					std::vector<std::pair<int, int>> AnimationTiles;
+
+					for (xml_node<>* animationFrameNode = AnimationNode->first_node("frame");
+						animationFrameNode;
+						animationFrameNode = animationFrameNode->next_sibling())
+					{
+						if (animationFrameNode != nullptr)
+						{
+							int tileid = std::atoi(animationFrameNode->first_attribute("tileid")->value());
+							int duration = std::atoi(animationFrameNode->first_attribute("duration")->value());
+							std::cout << "Animation Node Found: ID= ";
+							std::cout << tileid;
+							std::cout << " Duration= ";
+							std::cout << duration << std::endl;
+
+							//can i work out the rect
+							int textureX = (tileid) % tileSheetData.columns * tileSheetData.tileSize.x;
+							int textureY = (tileid) / tileSheetData.columns * tileSheetData.tileSize.y;
+
+							//set the vecotr of Animation tiles
+							AnimationTiles.push_back(std::make_pair(textureX, textureY));
+
+						}
+
+					}
+					// add the map now
+					AnimationIndex.insert({ tile + firstid, AnimationTiles });
+				}
+			}
+		}
+		
 		// We store the tile sheets firstid.
 		tileSheets.insert(
 			std::make_pair(
 				firstid, std::make_shared<TileSheetData>(tileSheetData))
-		);
+				);
 
 	}
 
