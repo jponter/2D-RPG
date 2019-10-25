@@ -235,6 +235,9 @@
     <Image Include="that_games_guy_logo.png" />
     <Image Include="viking.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SnowFragment.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

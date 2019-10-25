@@ -461,7 +461,7 @@ void SceneDungeon::ProcessInput()
 
 void SceneDungeon::Update(float deltaTime)
 {
-
+	window.isSnowing = false;
 	m_script.ProcessCommand(deltaTime);
 
 	hero.pos = player->transform->GetPosition();
@@ -489,7 +489,7 @@ void SceneDungeon::Update(float deltaTime)
 	//check for the debug camera zoom
 	Debug::HandleCameraZoom(window, input);
 	
-
+	window.fElapsedtime += deltaTime;
 	//ImGui::ShowTestWindow();
 
 	

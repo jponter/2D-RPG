@@ -35,9 +35,14 @@ public:
 	void imGuiUpdate(sf::Clock clock);
 	void imGuiRender();
 	void imGuiInit();
+	float fElapsedtime;
+	bool isSnowing;
 
 private:
 	sf::RenderWindow window;
+	sf::RenderTexture renderTextture;
+
+	sf::Shader shader;
 
 };
 

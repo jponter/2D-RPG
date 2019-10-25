@@ -347,6 +347,7 @@ void SceneGame::OnCreate()
 	//context.imguilog = mylog;
 	context.currentScene = this;
 	context.mapParser = &mapParser;
+	
 
 	
 	
@@ -441,6 +442,7 @@ void SceneGame::ProcessInput()
 
 void SceneGame::Update(float deltaTime)
 {
+	window.isSnowing = true;
 	hero.pos = player->transform->GetPosition();
 
 	if (change == true) {
@@ -465,7 +467,7 @@ void SceneGame::Update(float deltaTime)
 	objects.ProcessRemovals();
 	//check for the debug camera zoom
 	Debug::HandleCameraZoom(window, input);
-	
+	window.fElapsedtime += deltaTime;
 
 	//ImGui::ShowTestWindow();
 

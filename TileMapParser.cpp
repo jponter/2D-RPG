@@ -4,6 +4,7 @@
 #include <iostream>
 #include "WorkingDirectory.hpp"
 #include "C_Animation.hpp"
+#include <string>
 
 
 TileMapParser::TileMapParser(ResourceAllocator<sf::Texture>& textureAllocator, SharedContext& context)
@@ -73,8 +74,18 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				sprite->SetScale(tileScale, tileScale);
 				//set the sort order for the tile based on layer
 				sprite->SetSortOrder(layerCount);
-				// Set the tiles layer to background for now
-				sprite->SetDrawLayer(DrawLayer::Background);
+				
+				// we want to set the draw layer based on the Tiled Map - for now if there is any layer label that include "Front of Player" we add that to the new InFront Layer - which is drawn last!
+
+				std::size_t found = layer.first.find("Front of Player");
+				if (found == std::string::npos)
+				{
+					sprite->SetDrawLayer(DrawLayer::Background);
+				}
+				else
+				{
+					sprite->SetDrawLayer(DrawLayer::InFront);
+				}
 			}
 			// Calculate world position.
 			float x = tile->x * tileSizeX * tileScale + offset.x;
