@@ -12,7 +12,8 @@ enum class DrawLayer
 	Background,
 	Foreground,
 	Entities,
-	InFront
+	InFront,
+	UI
 };
 
 class C_Drawable

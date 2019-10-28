@@ -50,7 +50,7 @@ void S_Command_MoveTo::Update(float fElapsedTime)
 
 }
 
-S_Command_ShowDialog::S_Command_ShowDialog(std::vector<std::string> line, DrawText& DrawTextEngine, Window& window)
+S_Command_ShowDialog::S_Command_ShowDialog(std::vector<std::string> line, DrawText* DrawTextEngine, Window* window)
 	:DrawTextEngine(DrawTextEngine), window(window)
 {
 	vecLines = line;
@@ -59,6 +59,6 @@ S_Command_ShowDialog::S_Command_ShowDialog(std::vector<std::string> line, DrawTe
 void S_Command_ShowDialog::Start()
 {
 	
-	DrawTextEngine.showDialog(vecLines, window,sf::Vector2f(0,0));
+	DrawTextEngine->showDialog(vecLines, *window,sf::Vector2f(0,0));
 }
 

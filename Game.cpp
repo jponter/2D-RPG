@@ -14,11 +14,11 @@ Game::Game() : window("2D Game Engine")
 			sceneStateMachine,
 			window,textureAllocator); //1
 
-	std::shared_ptr<SceneGame> gameScene =
-		std::make_shared<SceneGame>(workingDir,textureAllocator,window, sceneStateMachine, mylog, hero);
+	std::shared_ptr<SceneDungeon> gameScene =
+		std::make_shared<SceneDungeon>(workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, "House Exterior Animated.tmx");
 
 	std::shared_ptr<SceneDungeon> dungeonScene =
-		std::make_shared<SceneDungeon>(workingDir, textureAllocator, window, sceneStateMachine, mylog, hero);
+		std::make_shared<SceneDungeon>(workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero,"dungeon.tmx");
 
 
 

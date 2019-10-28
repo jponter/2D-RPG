@@ -31,6 +31,14 @@ using namespace std;
 	 float outlineThickness = 2;
 	 int fontSize = 32;
 
+
+	 //TODO: Implelemnt the shared context here
+	 /*
+	 const int fontID = owner->context->fontAllocator->Add(owner->context->workingDir->Get() + "Joystix Monospace.ttf");
+	 std::shared_ptr<sf::Font> font = owner->context->fontAllocator->Get(fontID);
+	 text.setFont(*font);
+	 */
+
 	 if(!font.loadFromFile("sansation.ttf"))
 	 {
 		 cout << "font not found! " << endl;

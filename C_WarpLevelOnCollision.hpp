@@ -4,6 +4,7 @@
 
 #include "Component.hpp"
 #include "C_Collidable.hpp"
+#include "C_Velocity.hpp"
 
 class C_WarpLevelOnCollision : public Component, public C_Collidable
 {
@@ -14,9 +15,12 @@ public:
 
 
 	std::string warplevel;
+	float toX;
+	float toY;
+	
 
 private:
-	//SharedContext& context;
+	std::shared_ptr<C_Velocity> velocity;
 };
 
 #endif

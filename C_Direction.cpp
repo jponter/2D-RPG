@@ -45,3 +45,29 @@ FacingDirection C_Direction::Get()
 	return currentDir;
 }
 
+//TODO: Create a static map with direction as key and heading as value
+sf::Vector2i C_Direction::GetHeading()
+{
+	FacingDirection direction = Get();
+
+	sf::Vector2i heading;
+
+	if (direction == FacingDirection::Right)
+	{
+		heading.x = 1;
+	}
+	else if (direction == FacingDirection::Left)
+	{
+		heading.x = -1;
+	}
+	else if (direction == FacingDirection::Up)
+	{
+		heading.y = -1;
+	}
+	else if (direction == FacingDirection::Down)
+	{
+		heading.y = 1;
+	}
+
+	return heading;
+}

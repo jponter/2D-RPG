@@ -15,6 +15,8 @@ public:
 
 	FacingDirection Get();
 
+	sf::Vector2i GetHeading();
+
 private:
 	std::shared_ptr<C_Velocity> velocity;
 	FacingDirection currentDir;

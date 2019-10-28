@@ -42,13 +42,13 @@ private:
 class  S_Command_ShowDialog : public S_Command
 {
 public:
-	S_Command_ShowDialog(std::vector<std::string> line, DrawText& DrawTextEngine, Window& window);
+	S_Command_ShowDialog(std::vector<std::string> line, DrawText* DrawTextEngine, Window* window);
 	void Start() override;
 
 private:
 	std::vector<std::string> vecLines;
-	DrawText& DrawTextEngine;
-	Window& window;
+	DrawText* DrawTextEngine;
+	Window* window;
 
 };
 	

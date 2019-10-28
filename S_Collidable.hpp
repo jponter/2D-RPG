@@ -17,7 +17,7 @@
 class S_Collidable
 {
 public:
-	S_Collidable();
+	S_Collidable(Quadtree& collisionTree);
 
 	void Add(std::vector<std::shared_ptr<Object>>& objects);
 	void ProcessRemovals();
@@ -38,7 +38,7 @@ private:
 	std::unordered_map<CollisionLayer, std::vector<std::shared_ptr<C_BoxCollider>>> collidables;
 
 	// The quadtree stores the collidables in a spatial aware structure.
-	Quadtree collisionTree;
+	Quadtree& collisionTree;
 
 	std::unordered_set<std::pair<std::shared_ptr<C_BoxCollider>, std::shared_ptr<C_BoxCollider>>, ComponentPairHash> objectsColliding;
 	// And add the definition for the new function:

@@ -15,6 +15,11 @@
 class ObjectCollection;
 class Scene;
 class TileMapParser;
+class Object;
+class Quadtree;
+class Raycast;
+class S_ScriptProcessor;
+class DrawText;
 
 struct SharedContext
 {
@@ -22,12 +27,18 @@ struct SharedContext
 	ObjectCollection* objects;
 	WorkingDirectory* workingDir;
 	ResourceAllocator<sf::Texture>* textureAllocator;
+	ResourceAllocator<sf::Font>* fontAllocator;
 	Window* window;
 	ImGuiLog* imguilog;
 	Scene* currentScene;
 	//Scene* currentScene = nullptr;
 	TileMapParser* mapParser;
 	HeroClass* hero;
+	std::shared_ptr<Object> player;
+	Quadtree* collisionTree;
+	Raycast* raycast;
+	S_ScriptProcessor* scriptEngine;
+	DrawText* drawTextEngine;
 	
 	//SceneStateMachine* sceneStateMachine;
 	//Game* thisGame;

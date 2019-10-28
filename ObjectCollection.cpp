@@ -1,6 +1,6 @@
 #include "ObjectCollection.hpp"
 
-
+ObjectCollection::ObjectCollection(S_Drawable& drawableSysttem, S_Collidable& collidableSystem) : drawables(drawableSysttem), collidables(collidableSystem) {}
 
 void ObjectCollection::Update(float deltaTime)
 {

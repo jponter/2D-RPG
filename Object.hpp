@@ -9,6 +9,7 @@
 #include "C_InstanceID.hpp"
 #include "SharedContext.hpp"
 #include "C_Collidable.hpp"
+#include "C_Tag.hpp"
 
 class Object
 {
@@ -39,6 +40,7 @@ public:
 	std::shared_ptr<C_Transform> transform;
 	std::shared_ptr<C_Drawable> GetDrawable();
 	std::shared_ptr<C_InstanceID> instanceID;
+	std::shared_ptr<C_Tag> tag;
 
 	SharedContext* context;
 	bool userMovementEnabled = true;
@@ -101,6 +103,20 @@ public:
 			}
 
 		return nullptr;
+	};
+
+	template <typename T> std::vector<std::shared_ptr<T>> GetComponents()
+	{
+		std::vector<std::shared_ptr<T>> matchingComponents;
+		for (auto& exisitingComponent : components)
+		{
+			if (std::dynamic_pointer_cast<T>(exisitingComponent))
+			{
+				matchingComponents.emplace_back(std::dynamic_pointer_cast<T>(exisitingComponent));
+			}
+		}
+
+		return matchingComponents;
 	};
 
 	void OnCollisionEnter(std::shared_ptr<C_BoxCollider> other);

@@ -1,7 +1,7 @@
 #include "S_Collidable.hpp"
 #include "SharedContext.hpp"
 
-S_Collidable::S_Collidable() : collisionTree(5, 5, 0, {0, 0, 4200, 2180}, nullptr)
+S_Collidable::S_Collidable(Quadtree& collisionTree) : collisionTree(collisionTree)
 {
     Bitmask defaultCollisions;
     defaultCollisions.SetBit((int)CollisionLayer::Default);
@@ -19,6 +19,10 @@ S_Collidable::S_Collidable() : collisionTree(5, 5, 0, {0, 0, 4200, 2180}, nullpt
     projectileCollisions.SetBit((int) CollisionLayer::Tile);
 	projectileCollisions.SetBit((int)CollisionLayer::NPC);
     collisionLayers.insert(std::make_pair(CollisionLayer::Projectile, projectileCollisions));
+
+	Bitmask npcCollisions;
+	npcCollisions.SetBit((int)CollisionLayer::Tile);
+	collisionLayers.insert(std::make_pair(CollisionLayer::NPC, npcCollisions));
 }
 
 void S_Collidable::Add(std::vector<std::shared_ptr<Object>>& objects)

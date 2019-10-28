@@ -1,6 +1,10 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
 
+
+
+
+
 class HeroClass
 {
 
@@ -13,5 +17,8 @@ public:
 	{
 		return health;
 	}
+
+	//std::shared_ptr<Object> player;
+
 };
 

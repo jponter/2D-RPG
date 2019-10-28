@@ -163,6 +163,8 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 	int objWidth = 32;
 	int objHeight = 32;
 	std::string objToLevel = "";
+	float toX = 0;
+	float toY = 0;
 	xml_node<> *node = doc.first_node("map");
 	node = node->first_node("objectgroup");
 	//node = node->first_node("object");
@@ -202,6 +204,12 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				std::cout << "Node Property has value " << node->value() << "\n";
 				std::string toLevel = node->first_attribute("value")->value();
 				std::cout << "Warp to Level = " << toLevel << std::endl;
+
+				node = node->next_sibling("property");
+				toX = std::atof(node->first_attribute("value")->value());
+				node = node->next_sibling("property");
+				toY = std::atof(node->first_attribute("value")->value());
+				
 				objToLevel = toLevel;
 
 				/*for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
@@ -283,6 +291,8 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			collider->SetLayer(CollisionLayer::Tile);
 			auto warp1 = tileObject->AddComponent<C_WarpLevelOnCollision>();
 			warp1->warplevel = objToLevel;
+			warp1->toX = toX;
+			warp1->toY = toY;
 
 
 

@@ -50,6 +50,7 @@ private:
 
 	SceneStateMachine sceneStateMachine;
 	ResourceAllocator<sf::Texture> textureAllocator;
+	ResourceAllocator<sf::Font> fontAllocator;
 	HeroClass hero;
 	
 

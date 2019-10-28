@@ -13,6 +13,7 @@
 class ObjectCollection
 {
 public:
+	ObjectCollection(S_Drawable& drawableSystem, S_Collidable& collidableSystem);
 	void Add(std::shared_ptr<Object> object);
 	void Add(std::vector<std::shared_ptr<Object>>& objects);
 
@@ -29,13 +30,13 @@ public:
 	int size();
 
 	std::vector<std::shared_ptr<Object>>& get();
-	QuadtreeObject worldTree;
-	S_Collidable collidables;
+	//QuadtreeObject worldTree;
+	S_Collidable& collidables;
 
 private:
 	std::vector<std::shared_ptr<Object>> objects;
 	std::vector<std::shared_ptr<Object>> newObjects; // 2
-	S_Drawable drawables;
+	S_Drawable& drawables;
 	
 	
 };

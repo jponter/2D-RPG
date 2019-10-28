@@ -24,13 +24,14 @@ X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing h
 
 //constructor
 SceneDungeon::SceneDungeon(WorkingDirectory& workingDir,
-	ResourceAllocator<sf::Texture>& textureAllocator,
-	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero)
+	ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
+	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, std::string level)
 
 	: workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero){}
+	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_levelFile(level),
+	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), raycast(collisionTree), fontAllocator(fontAllocator){}
 
 
 void SceneDungeon::CreatePlayer()
@@ -45,12 +46,15 @@ void SceneDungeon::CreatePlayer()
 	buffer << &player << endl;
 	std::string message = "Created a Player at 0x" + buffer.str();
 	context.imguilog->mylog.AddLog(message.c_str());
+	message = "Player ID " + std::to_string(player->instanceID->Get());
+	context.imguilog->mylog.AddLog(message.c_str());
+	context.imguilog->mylog.AddLog("\n");
 #endif 
 
 	//sf::Vector2f playerpos = player->transform->GetPosition();
 
 	//playerPtr = player;
-	player->transform->SetPosition(200, 700);
+	//player->transform->SetPosition(200, 700);
 
 	// Adds a component by calling our previously written template function.
 	auto sprite = player->AddComponent<C_Sprite>();
@@ -116,6 +120,14 @@ void SceneDungeon::CreatePlayer()
 
 	player->makePersistant();
 
+	//cheating way to keep track of the player object
+	context.player = player;
+	player->transform->SetPosition(630, 815);
+	player->tag->Set(Tag::Player);
+
+	//add interaction with objects
+	player->AddComponent<C_InteractWithObjects>();
+
 	//add the player
 	objects.Add(player);
 
@@ -152,6 +164,9 @@ void SceneDungeon::CreateFriend()
 	npc->AddComponent<C_Velocity>();
 	npc->AddComponent<C_MovementAnimation>();
 	npc->AddComponent<C_Direction>();
+	npc->AddComponent<C_InteractableTalking>();
+	auto npcInteract = npc->GetComponent<C_InteractableTalking>();
+	npcInteract->SetText(vector<std::string>{ "Skelly:", "Hello I Am Skelly!" });
 	npc->makePersistant();
 
 	objects.Add(npc);
@@ -330,11 +345,13 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 //
 //}
 
-void SceneDungeon::ChangeLevel1(std::string id)
+void SceneDungeon::ChangeLevel1(std::string id, float posX, float posY)
 {
 	//ChangeLevel(id, objects, mapParser);
 	change = true;
 	nameLevel = id;
+	newPosX = posX;
+	newPosY = posY;
 	//switchto = id;
 }
 
@@ -345,9 +362,14 @@ void SceneDungeon::OnCreate()
 	context.objects = &objects;
 	context.workingDir = &workingDir;
 	context.textureAllocator = &textureAllocator;
+	context.fontAllocator = &fontAllocator;
 	context.window = &window;
 	context.imguilog = &mylog;
 	context.hero = &hero;
+	context.collisionTree = &collisionTree;
+	context.raycast = &raycast;
+	context.scriptEngine = &m_script;
+	context.drawTextEngine = &Dialog;
 	
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -358,7 +380,7 @@ void SceneDungeon::OnCreate()
 
 	std::vector<std::shared_ptr<Object>> levelTiles;
 
-	levelTiles = mapParser.Parse(workingDir.Get() + "dungeon.tmx"
+	levelTiles = mapParser.Parse(workingDir.Get() + m_levelFile
 		, mapOffset);
 
 	//set the collision tree bounds
@@ -368,10 +390,11 @@ void SceneDungeon::OnCreate()
 	objects.Add(levelTiles);
 	//create our player
 	CreatePlayer();
+	//context.player = &player;
 	//create our friend
-	//CreateFriend();
+	CreateFriend();
 
-	player->transform->SetPosition(630, 815);
+	
 	//npc->transform->SetPosition(280, 340);
 	objects.ProcessNewObjects();
 	
@@ -429,6 +452,20 @@ void SceneDungeon::OnDestroy()
 
 }
 
+void SceneDungeon::OnDeactivate()
+{
+	//save the player position
+	hero.pos = sf::Vector2f(newPosX, newPosY);
+
+}
+
+void SceneDungeon::OnActivate()
+{
+	if (hero.pos.x != 0) {
+		player->transform->SetPosition(hero.pos);
+	}
+}
+
 void SceneDungeon::ProcessInput()
 {
 	if (window.HasFocus())
@@ -441,8 +478,16 @@ void SceneDungeon::ProcessInput()
 	{
 		Debug::Log("T Key Pressed - executing script");
 		//m_script.AddCommand(new S_Command_MoveTo(player, 600, 600, 5.0f));
-		X(ShowDialog({ "Hello!" }, Dialog, window));
-		X(ShowDialog({ "OOo. Another RPG with SFML!", "Are you insane?", "Thanks to Javidx9 for", "his videos on script engine!"}, Dialog, window));
+		X(ShowDialog({ "Hello!" }, &Dialog, &window));
+		X(ShowDialog({ "OOo. Another RPG with SFML!", "Are you insane?", "Thanks to Javidx9 for", "his videos on script engine!"}, &Dialog, &window));
+		if (window.isSnowing == false)
+		{
+			window.isSnowing = true;
+		}
+		else if (window.isSnowing == true)
+		{
+			window.isSnowing = false;
+		}
 
 
 	}
@@ -450,7 +495,7 @@ void SceneDungeon::ProcessInput()
 	if (Dialog.m_bShowDialog)
 	{
 		player->userMovementEnabled = false;
-		if (input.IsKeyUp(Input::Key::R))
+		if (input.IsKeyUp(Input::Key::SPACE))
 		{
 			Dialog.m_bShowDialog = false;
 			m_script.CompleteCommand();
@@ -461,24 +506,11 @@ void SceneDungeon::ProcessInput()
 
 void SceneDungeon::Update(float deltaTime)
 {
-	window.isSnowing = false;
+	//window.isSnowing = false;
 	m_script.ProcessCommand(deltaTime);
 
 	hero.pos = player->transform->GetPosition();
 
-	if (change == true) {
-		change = false;
-		//ChangeLevel(switchto, objects, mapParser);
-		int id = 0;
-		string name = nameLevel;
-		id = stateMachine.GetSceneByName(name);
-		if (id != -1)
-		{
-			player->transform->SetPosition(320, 440);
-			stateMachine.SwitchTo(id);
-		}
-		else Debug::LogError("Level switch ID not found");
-	}
 	
 	
 	objects.ProcessNewObjects();
@@ -492,6 +524,22 @@ void SceneDungeon::Update(float deltaTime)
 	window.fElapsedtime += deltaTime;
 	//ImGui::ShowTestWindow();
 
+	if (change == true) {
+		change = false;
+		//ChangeLevel(switchto, objects, mapParser);
+		int id = 0;
+		string name = nameLevel;
+		id = stateMachine.GetSceneByName(name);
+		if (id != -1)
+		{
+			//player->transform->SetPosition(320, 440);
+			stateMachine.SwitchTo(id);
+
+			//player->transform->SetPosition(newPosX, newPosY);
+		}
+		else Debug::LogError("Level switch ID not found");
+	}
+
 	
 	
 }
@@ -500,6 +548,8 @@ void SceneDungeon::LateUpdate(float deltaTime)
 {
 	objects.LateUpdate(deltaTime);
 }
+
+
 
 void SceneDungeon::SetSwitchToScene(unsigned int id)
 {
@@ -529,3 +579,4 @@ void SceneDungeon::Draw(Window& window)
 
 
 }
+

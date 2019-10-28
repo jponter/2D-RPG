@@ -26,7 +26,7 @@ SceneGame::SceneGame(WorkingDirectory& workingDir,
 	: workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine),mylog(mylog), hero(hero){}
+	window(window), stateMachine(stateMachine),mylog(mylog), hero(hero)	{}
 
 
 void SceneGame::CreatePlayer()

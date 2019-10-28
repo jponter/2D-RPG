@@ -2,7 +2,7 @@
 #include "Object.hpp"
 #include "Debug.hpp"
 #include "SharedContext.hpp"
-#include "SceneGame.hpp"
+#include "SceneDungeon.hpp"
 
 
 C_WarpLevelOnCollision::C_WarpLevelOnCollision(Object* owner) : Component(owner) {}
@@ -13,12 +13,21 @@ void C_WarpLevelOnCollision::OnCollisionEnter(std::shared_ptr<C_BoxCollider> oth
 	
 	if (layer == CollisionLayer::Player)
 	{
-		// Remove the projectile when it collides with any other object  
-		Debug::Log("Warp Collision - from PLayer ID: " + std::to_string(owner->instanceID->Get()));
+		
+		Debug::Log("Warp Collision - from Warp Tile ID: " + std::to_string(owner->instanceID->Get()));
 		owner->context->hero->health -= 1;
 			sf::Vector2f pos = this->owner->transform->GetPosition();
 			Debug::Log("collision at x: " + std::to_string(owner->transform->GetPosition().x) + "y: " + std::to_string(owner->transform->GetPosition().y));
 			//owner->context->currentScene->ChangeLevel1(1);
-			owner->context->currentScene->ChangeLevel1(this->warplevel);
+			//velocity = owner->context->player->GetComponent<C_Velocity>();
+			
+			owner->context->currentScene->ChangeLevel1(this->warplevel, toX, toY);
+
+			std::cout << "Warping to X:" << toX << " Y: " << toY << std::endl;
+			//velocity->Set(0, 0);
+			//owner->context->currentScene->
+			//owner->context->player->transform->SetPosition(toX, toY);
+			
+			
 	}
 }

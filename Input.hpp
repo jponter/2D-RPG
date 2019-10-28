@@ -20,7 +20,8 @@ public:
 		RBracket = 7,
 		E = 8,
 		R = 9,
-		T = 10
+		T = 10,
+		SPACE = 11
 	};
 
 	

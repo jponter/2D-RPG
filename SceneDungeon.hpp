@@ -26,6 +26,9 @@
 #include "HeroClass.h"
 #include "S_Command.hpp"
 #include "S_ScriptProcessor.hpp"
+#include "Raycast.hpp"
+#include "C_InteractWithObjects.hpp"
+#include "C_InteractableTalking.hpp"
 
 
 
@@ -35,14 +38,17 @@ class SceneDungeon : public Scene
 {
 public:
 	SceneDungeon(WorkingDirectory& workingDir,
-		ResourceAllocator<sf::Texture>& textureAllocator,
-		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero);
+		ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
+		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, std::string level);
 
 	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
-	void ChangeLevel1(std::string id);
+	void ChangeLevel1(std::string id, float posX, float posY);
 
 	void OnCreate() override;
 	void OnDestroy() override;
+
+	void OnActivate() override;
+	void OnDeactivate() override;
 
 	void ProcessInput() override;
 	void Update(float deltaTime) override;
@@ -59,7 +65,7 @@ public:
 
 	void SetSwitchToScene(unsigned int id);
 
-	
+	DrawText Dialog;
 
 private:
 
@@ -71,6 +77,7 @@ private:
 	void AddAnimationComponent(std::shared_ptr<Object> object, const int textureID);
 	
 	ResourceAllocator<sf::Texture>& textureAllocator;
+	ResourceAllocator<sf::Font>& fontAllocator;
 
 	WorkingDirectory& workingDir;
 	Input input;
@@ -90,8 +97,16 @@ private:
 	HeroClass& hero;
 
 	S_ScriptProcessor m_script;
-	DrawText Dialog;
 	
+	std::string m_levelFile;
+	float newPosX;
+	float newPosY;
+
+	S_Drawable drawableSystem;
+	S_Collidable collisionSystem;
+	Raycast raycast;
+	
+	Quadtree collisionTree;
 	
 };
 
