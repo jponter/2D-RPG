@@ -137,17 +137,27 @@ void Window::resetGLStates()
 	window.resetGLStates();
 }
 
+void Window::close()
+{
+	window.close();
+}
+
+void Window::SetMouseCursorVisible(bool visible)
+{
+	window.setMouseCursorVisible(visible);
+}
+
 void Window::pollEvent()
 {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		ImGui::SFML::ProcessEvent(event);
 
-		if (event.type == sf::Event::KeyPressed)
+		/*if (event.type == sf::Event::KeyPressed)
 			if (event.key.code == sf::Keyboard::Escape)
 			{
 				window.close();
-			}
+			}*/
 
 		if (event.type == sf::Event::Closed) {
 			window.close();

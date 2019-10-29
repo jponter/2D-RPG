@@ -13,6 +13,9 @@ Game::Game() : window("2D Game Engine")
 
 	S_Quests::g_script = &m_script;
 	S_Quests::g_heroStats = &hero;
+
+	//make the mouse cursor invisible
+	window.SetMouseCursorVisible(false);
 	
 	std::shared_ptr<SceneSplashScreen> splashScreen =
 		std::make_shared<SceneSplashScreen>(workingDir,

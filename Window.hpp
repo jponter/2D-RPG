@@ -35,6 +35,8 @@ public:
 	void imGuiUpdate(sf::Clock clock);
 	void imGuiRender();
 	void imGuiInit();
+	void close();
+	void SetMouseCursorVisible(bool visible);
 	float fElapsedtime;
 	bool isSnowing;
 

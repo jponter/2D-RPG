@@ -519,9 +519,19 @@ void SceneDungeon::ProcessInput()
 
 	}
 
+	if (input.IsKeyUp(Input::Key::Esc))
+	{
+		window.close();
+	}
+
 	if (Dialog.m_bShowDialog)
 	{
 		player->userMovementEnabled = false;
+		std::shared_ptr<C_Velocity> velocity = player->GetComponent<C_Velocity>();
+
+		velocity->Set(0, 0);
+
+
 		if (input.IsKeyUp(Input::Key::SPACE))
 		{
 			Dialog.m_bShowDialog = false;
@@ -678,7 +688,10 @@ void SceneDungeon::Draw(Window& window)
 	
 	if (Dialog.m_bShowDialog)
 	{
-		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, player->transform->GetPosition().x -200, player->transform->GetPosition().y - 200);
+		sf::Vector2f PlayerCoord = player->transform->GetPosition();
+
+		if ((PlayerCoord.y - 200) < 0) PlayerCoord.y = 420;
+		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, PlayerCoord.x -200, PlayerCoord.y - 200);
 		
 	}
 	
