@@ -70,7 +70,7 @@ using namespace std;
 	 
 
 	 //rectShape.setSize(sf::Vector2f(rect.width + rect.left, rect.height + rect.top));
-	 boxShape.setSize(sf::Vector2f(textRect.width + textRect.left + padding, (textRect.height + textRect.top) * (nLines +1) + padding * 2));
+	 boxShape.setSize(sf::Vector2f(textRect.width + textRect.left + padding * 6, (textRect.height + textRect.top) * (nLines +1) + padding *2));
 	 
 	 boxShape.setPosition(x, y);
 	 boxShape.setFillColor(sf::Color::Blue);
@@ -84,11 +84,17 @@ using namespace std;
 	 for (int l = 0; l < vecText.size(); l++)
 	 {
 		 text.setString(vecText[l]);
-		 text.setPosition(x, y + (l * text.getCharacterSize()));
+		 textRect = text.getLocalBounds();
+		 text.setOrigin(textRect.left + textRect.width / 2,
+			 textRect.top + textRect.height /2);
+
+		 text.setPosition(x + boxShape.getSize().x /2.0f, y + ((l+1) * text.getCharacterSize()));
+		 //text.setPosition(x + boxShape.getSize().x / 2.0f, y + ((l + 1) * text.getCharacterSize()));
 		 //text.move(boxShape.getSize().x / text.getLocalBounds().width, boxShape.getSize().y / text.getLocalBounds().height);
-		 text.move(boxShape.getSize().x / text.getLocalBounds().width, 0);
+		 //text.move(boxShape.getSize().x / text.getLocalBounds().width /2.0f, 0);
 
 		 window.Draw(text);
+		 
 	 }
 
 	 

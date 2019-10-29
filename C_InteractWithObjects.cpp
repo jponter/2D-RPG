@@ -1,5 +1,6 @@
 #include "C_InteractWithObjects.hpp"
 #include "Object.hpp"
+#include "S_Quests.hpp"
 
 C_InteractWithObjects::C_InteractWithObjects(Object* owner) : Component(owner), interactionDistance(60.f) {}
 
@@ -26,7 +27,9 @@ void C_InteractWithObjects::Update(float deltaTime)
         
         if(result.collision != nullptr)
         {
-			Debug::Log("Raycast result hit Object: " + std::to_string(result.collision->instanceID->Get()));
+			int TargetID = result.collision->instanceID->Get();
+			
+			Debug::Log("Raycast result hit Object: " + std::to_string(TargetID));
             // Retrieve all interactable components
             auto interactables = result.collision->GetComponents<C_Interactable>();
             
@@ -35,6 +38,29 @@ void C_InteractWithObjects::Update(float deltaTime)
 				
                 interactable->OnInteraction(owner);
             }
+
+			// we would want to check the quests here
+
+			std::list<S_Quests*>* listQuests = owner->context->listQuests;
+			std::list<S_Quests*>::iterator it;
+
+			
+
+			for (it = listQuests->begin() ; it != listQuests->end(); it++)
+			
+			{
+				S_Quests* tempQuest = *it;
+				Debug::Log("On InteractWithObject - Quest Check " + tempQuest->sName);
+				if (tempQuest->OnInteration(owner->context->objects, result.collision, owner, S_Quests::TALK))
+				{
+					break;
+				}
+				
+				
+				
+				
+			}
+
         }
         
    }

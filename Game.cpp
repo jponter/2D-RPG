@@ -1,26 +1,33 @@
 #include "Game.hpp"
 
 
-static auto mylog = new ImGuiLog;
-auto hero = new HeroClass;
+//static auto mylog = new ImGuiLog;
+//auto hero = new HeroClass;
 
 
 
 
 Game::Game() : window("2D Game Engine")
 {
+	//set some pointers
+
+	S_Quests::g_script = &m_script;
+	S_Quests::g_heroStats = &hero;
+	
 	std::shared_ptr<SceneSplashScreen> splashScreen =
 		std::make_shared<SceneSplashScreen>(workingDir,
 			sceneStateMachine,
 			window,textureAllocator); //1
 
 	std::shared_ptr<SceneDungeon> gameScene =
-		std::make_shared<SceneDungeon>(workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, "House Exterior Animated.tmx");
+		std::make_shared<SceneDungeon>("HouseExterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, "House Exterior Animated.tmx");
 
 	std::shared_ptr<SceneDungeon> dungeonScene =
-		std::make_shared<SceneDungeon>(workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero,"dungeon.tmx");
+		std::make_shared<SceneDungeon>("Dungeon1",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, "dungeon.tmx");
 
-
+	// add a test quest
+	//std::string QuestName = "Main Quest";
+	m_listQuests.push_front(new S_Quests_MainQuest());
 
 
 	unsigned int splashScreenID = sceneStateMachine.Add(splashScreen); //2
@@ -37,14 +44,20 @@ Game::Game() : window("2D Game Engine")
 
 	deltaTime = clock.restart().asSeconds();
 
+	static auto mylog = new ImGuiLog;
+
 	window.imGuiInit();
+
+
+	
 	
 
 }
 
-ImGuiLog* GetLog()
+ImGuiLog* Game::GetLog()
 {
-	return mylog;
+	return &mylog;
+	
 }
 
 

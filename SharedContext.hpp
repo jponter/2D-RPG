@@ -8,6 +8,8 @@
 #include "Window.hpp"
 #include "ImGuiLog.hpp"
 #include "HeroClass.h"
+#include <list>
+
 //#include "Game.hpp"
 
 
@@ -20,6 +22,7 @@ class Quadtree;
 class Raycast;
 class S_ScriptProcessor;
 class DrawText;
+class S_Quests;
 
 struct SharedContext
 {
@@ -39,6 +42,7 @@ struct SharedContext
 	Raycast* raycast;
 	S_ScriptProcessor* scriptEngine;
 	DrawText* drawTextEngine;
+	std::list<S_Quests*> *listQuests;
 	
 	//SceneStateMachine* sceneStateMachine;
 	//Game* thisGame;

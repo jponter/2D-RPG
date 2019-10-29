@@ -5,7 +5,15 @@
 #include "WorkingDirectory.hpp"
 #include "C_Animation.hpp"
 #include <string>
+#include "SceneDungeon.hpp"
+#include "boost/assign/list_of.hpp"
+#include <map>
 
+enum npcTypes
+{
+	SKELETON,
+	ORC
+};
 
 TileMapParser::TileMapParser(ResourceAllocator<sf::Texture>& textureAllocator, SharedContext& context)
 	: textureAllocator(textureAllocator),
@@ -209,7 +217,7 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				toX = std::atof(node->first_attribute("value")->value());
 				node = node->next_sibling("property");
 				toY = std::atof(node->first_attribute("value")->value());
-				
+
 				objToLevel = toLevel;
 
 				/*for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
@@ -218,89 +226,145 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 					std::cout << "with value " << attr->value() << "\n";
 
 				}*/
-			}
-			node = nodecopy;
 
-			//add the tile object
-			std::shared_ptr<Object> tileObject = std::make_shared<Object>(&context);
-			const unsigned int tileScale = 2;
+				node = nodecopy;
 
-			// Calculate world position.
-			//objects are in world space - not in tile offsets - so we need to convert
-			//float x = ((objX)/32) * 32* tileScale + offset.x;
-			//float y = ((objY)/32) * 32* tileScale + offset.y;
+				//todo: move the object addition code to the scene class as we did below for NPC's
+				//add the tile object
+				std::shared_ptr<Object> tileObject = std::make_shared<Object>(&context);
+				const unsigned int tileScale = 2;
 
-			float x = objX * tileScale + offset.x;
-			float y = objY * tileScale + offset.y;
-			
-			tileObject->transform->SetPosition(x ,y);
+				// Calculate world position.
+				//objects are in world space - not in tile offsets - so we need to convert
+				//float x = ((objX)/32) * 32* tileScale + offset.x;
+				//float y = ((objY)/32) * 32* tileScale + offset.y;
+
+				float x = objX * tileScale + offset.x;
+				float y = objY * tileScale + offset.y;
+
+				tileObject->transform->SetPosition(x, y);
 
 
-			// now this is a vortex always
-			const int textureID = textureAllocator.Add(context.workingDir->Get() + "vortexanim256.png");
-			auto sprite = tileObject->AddComponent<C_Sprite>();
-			//sprite->SetTextureAllocator(&textureAllocator);
-			//sprite->Load(textureID);
-			//sprite->SetTextureRect(tileInfo->textureRect);
-			sprite->SetScale(tileScale, tileScale);
-			//set the sort order for the tile based on layer
-			sprite->SetSortOrder(layerCount);
-			// Set the tiles layer to background for now
-			sprite->SetDrawLayer(DrawLayer::Entities);
+				// now this is a vortex always
+				const int textureID = textureAllocator.Add(context.workingDir->Get() + "vortexanim256.png");
+				auto sprite = tileObject->AddComponent<C_Sprite>();
+				//sprite->SetTextureAllocator(&textureAllocator);
+				//sprite->Load(textureID);
+				//sprite->SetTextureRect(tileInfo->textureRect);
+				sprite->SetScale(tileScale, tileScale);
+				//set the sort order for the tile based on layer
+				sprite->SetSortOrder(layerCount);
+				// Set the tiles layer to background for now
+				sprite->SetDrawLayer(DrawLayer::Entities);
 
-			//we need a direction & velocity at the moment
-			tileObject->AddComponent<C_Direction>();
-			tileObject->AddComponent<C_Velocity>();
-		
+				//we need a direction & velocity at the moment
+				tileObject->AddComponent<C_Direction>();
+				tileObject->AddComponent<C_Velocity>();
 
-			//add the animation to the warp tile
-			auto animation = tileObject->AddComponent<C_Animation>();
 
-			const unsigned int frameWidth = 32;
-			const unsigned int frameHeight = 32;
+				//add the animation to the warp tile
+				auto animation = tileObject->AddComponent<C_Animation>();
 
-			const bool idleAnimationLooped = true;
-			const float delayBetweenFrames = 0.1f;
+				const unsigned int frameWidth = 32;
+				const unsigned int frameHeight = 32;
 
-			// sprite tilesheet is 8x8
+				const bool idleAnimationLooped = true;
+				const float delayBetweenFrames = 0.1f;
 
-			std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
-			const int idleFrameCount = 64;
+				// sprite tilesheet is 8x8
 
-			std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
-			for (int y = 0; y < 8; y++)
-			{
-				for (int x = 0; x < 8; x++)
+				std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
+				const int idleFrameCount = 64;
+
+				std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
+				for (int y = 0; y < 8; y++)
 				{
-					idleAnimation->AddFrame(textureID, x * frameWidth, y * frameHeight, frameWidth, frameHeight, delayBetweenFrames, idleAnimationLooped);
+					for (int x = 0; x < 8; x++)
+					{
+						idleAnimation->AddFrame(textureID, x * frameWidth, y * frameHeight, frameWidth, frameHeight, delayBetweenFrames, idleAnimationLooped);
+					}
 				}
-			}
-			idleAnimations.insert(std::make_pair(FacingDirection::Down, idleAnimation));
+				idleAnimations.insert(std::make_pair(FacingDirection::Down, idleAnimation));
 
-			animation->AddAnimation(AnimationState::Idle, idleAnimations);
-
-
-			auto collider = tileObject->AddComponent<C_BoxCollider>();
-			//float left = (x - (tileSizeX * tileScale)) - (tileSizeX* tileScale);
-			//float top = y - (tileSizeY * tileScale);
-			float width = tileSizeX * tileScale;
-			float height = tileSizeY * tileScale;
-			float left = x - (tileSizeX * tileScale) * 0.5f;
-			float top = y - (tileSizeY * tileScale) * 0.5f;
-			collider->SetCollidable(sf::FloatRect(left , top, width, height));
-			collider->SetLayer(CollisionLayer::Tile);
-			auto warp1 = tileObject->AddComponent<C_WarpLevelOnCollision>();
-			warp1->warplevel = objToLevel;
-			warp1->toX = toX;
-			warp1->toY = toY;
+				animation->AddAnimation(AnimationState::Idle, idleAnimations);
 
 
+				auto collider = tileObject->AddComponent<C_BoxCollider>();
+				//float left = (x - (tileSizeX * tileScale)) - (tileSizeX* tileScale);
+				//float top = y - (tileSizeY * tileScale);
+				float width = tileSizeX * tileScale;
+				float height = tileSizeY * tileScale;
+				float left = x - (tileSizeX * tileScale) * 0.5f;
+				float top = y - (tileSizeY * tileScale) * 0.5f;
+				collider->SetCollidable(sf::FloatRect(left, top, width, height));
+				collider->SetLayer(CollisionLayer::Tile);
+				auto warp1 = tileObject->AddComponent<C_WarpLevelOnCollision>();
+				warp1->warplevel = objToLevel;
+				warp1->toX = toX;
+				warp1->toY = toY;
 
-			// Add new tile Object to the collection.
-			tileObjects.emplace_back(tileObject);
 
 
-		}
+				// Add new tile Object to the collection.
+				tileObjects.emplace_back(tileObject);
+
+			} //end warp
+
+			//NPC's from the MAP!
+			if (std::string(node->first_attribute("name")->value()) == "NPC")
+			{
+				// add NPC's from the tiled map
+				std::cout << "NPC Found!" << std::endl;
+				objX = std::atoi(node->first_attribute("x")->value());
+				objY = std::atoi(node->first_attribute("y")->value());
+				objWidth = 32;
+				objHeight = 32;
+				//std::string npcName = node->first_attribute("npcName")->value();
+				//std::string npcType = node->first_attribute("npcType")->value();
+
+
+				std::cout << "X = " << objX << std::endl;
+				std::cout << "Y = " << objY << std::endl;
+				std::cout << "Height = " << objHeight << std::endl;
+				std::cout << "Width = " << objWidth << std::endl;
+
+				
+				
+
+				for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
+				{
+					std::cout << "node Object Group has attribute " << attr->name() << " ";
+					std::cout << "with value " << attr->value() << "\n";
+
+				}
+				node = node->first_node("properties");
+				
+				node = node->first_node("property");
+				std::cout << "Node Property has value " << node->value() << "\n";
+				std::string npcName = node->first_attribute("value")->value();
+				std::cout << "NPC Name =  " << npcName << std::endl;
+
+				node = node->next_sibling("property");
+				std::string npcType = node->first_attribute("value")->value();
+				/*toX = std::atof(node->first_attribute("value")->value());
+				node = node->next_sibling("property");
+				toY = std::atof(node->first_attribute("value")->value());*/
+				
+				//copy back the node so we dont mangle it
+				node = nodecopy;
+
+				//todo: Add objects to the map!
+				float x = objX * tileScale + offset.x;
+				float y = objY * tileScale + offset.y;
+
+				context.currentScene->AddNpcToScene(npcName, x, y, npcType, true);
+
+				
+
+
+			}//end checking for NPC's
+
+		}// end checking for objects in the layer
 	}//end if checking for object layer
 
 	return tileObjects;
@@ -530,3 +594,91 @@ TileMapParser::BuildLayer(xml_node<>* layerNode,
 
 	return std::make_pair(layerName, layer);
 }
+
+
+	void TileMapParser::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID)
+	{
+
+		auto animation = object->AddComponent<C_Animation>();
+
+		const unsigned int frameWidth = 64;
+		const unsigned int frameHeight = 64;
+
+		const FacingDirection directions[4] = { FacingDirection::Up, FacingDirection::Left, FacingDirection::Down, FacingDirection::Right };
+
+		/*******************
+		 * Idle Animations *
+		 *******************/
+		const bool idleAnimationLooped = false;
+
+		unsigned int idleYFramePos = 512;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
+
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
+
+			idleAnimation->AddFrame(textureID, 0, idleYFramePos, frameWidth, frameHeight, 0.f, idleAnimationLooped);
+
+			idleAnimations.insert(std::make_pair(directions[i], idleAnimation));
+
+			idleYFramePos += frameHeight;
+		}
+
+		animation->AddAnimation(AnimationState::Idle, idleAnimations);
+
+
+		/**********************
+		 * Walking Animations *
+		 **********************/
+		const bool walkAnimationLooped = true;
+		const int walkingFrameCount = 9;
+		const float delayBetweenWalkingFramesSecs = 0.1f;
+
+		unsigned int walkingYFramePos = 512;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> walkingAnimations;
+
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Animation> walkingAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < walkingFrameCount; i++)
+			{
+				walkingAnimation->AddFrame(textureID, i * frameWidth, walkingYFramePos, frameWidth, frameHeight, delayBetweenWalkingFramesSecs, walkAnimationLooped);
+			}
+
+			walkingAnimations.insert(std::make_pair(directions[i], walkingAnimation));
+
+			walkingYFramePos += frameHeight;
+		}
+
+		animation->AddAnimation(AnimationState::Walk, walkingAnimations);
+
+
+		/*************************
+		 * Projectile Animations *
+		 *************************/
+		const bool projectileAnimationLooped = true;
+		const int projectileFrameCount = 10;
+		const float delayBetweenProjectileFramesSecs = 0.08f;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> projectileAnimations;
+
+		unsigned int projFrameYPos = 1024;
+
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Animation> projAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < projectileFrameCount; i++)
+			{
+				projAnimation->AddFrame(textureID, i * frameWidth, projFrameYPos, frameWidth, frameHeight, delayBetweenProjectileFramesSecs, projectileAnimationLooped);
+			}
+			projectileAnimations.insert(std::make_pair(directions[i], projAnimation));
+
+			projFrameYPos += frameHeight;
+		}
+
+		animation->AddAnimation(AnimationState::Projectile, projectileAnimations);
+
+	}

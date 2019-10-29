@@ -15,7 +15,11 @@ X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing h
 */
 #define X(n) m_script.AddCommand(new S_Command_ ## n) // shorthand for adding scripts to the script engine
 
-
+enum npcTypes
+{
+	SKELETON,
+	ORC
+};
 
 
 //auto mylog = new ImGuiLog;
@@ -23,15 +27,18 @@ X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing h
 
 
 //constructor
-SceneDungeon::SceneDungeon(WorkingDirectory& workingDir,
+SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
-	Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, std::string level)
+	Window& window, SceneStateMachine& stateMachine,
+	ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor,
+	list<S_Quests*>& listQuests,
+	std::string level)
 
-	: workingDir(workingDir),
+	: LevelName(LevelName), workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_levelFile(level),
-	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), raycast(collisionTree), fontAllocator(fontAllocator){}
+	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests),
+	m_levelFile(level),	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), dynamicObjects(drawableSystem, collisionSystem), raycast(collisionTree), fontAllocator(fontAllocator){}
 
 
 void SceneDungeon::CreatePlayer()
@@ -128,6 +135,8 @@ void SceneDungeon::CreatePlayer()
 	//add interaction with objects
 	player->AddComponent<C_InteractWithObjects>();
 
+	player->name = "James";
+
 	//add the player
 	objects.Add(player);
 
@@ -135,11 +144,11 @@ void SceneDungeon::CreatePlayer()
 
 }
 
-void SceneDungeon::CreateFriend()
+void SceneDungeon::CreateFriend(std::string name, float x, float y)
 {
 	npc = std::make_shared<Object>(&context);
 
-	npc->transform->SetPosition(500, 900);
+	npc->transform->SetPosition(x, y);
 
 	auto sprite = npc->AddComponent<C_Sprite>();
 	sprite->SetDrawLayer(DrawLayer::Entities);
@@ -164,10 +173,11 @@ void SceneDungeon::CreateFriend()
 	npc->AddComponent<C_Velocity>();
 	npc->AddComponent<C_MovementAnimation>();
 	npc->AddComponent<C_Direction>();
-	npc->AddComponent<C_InteractableTalking>();
+	/*npc->AddComponent<C_InteractableTalking>();
 	auto npcInteract = npc->GetComponent<C_InteractableTalking>();
-	npcInteract->SetText(vector<std::string>{ "Skelly:", "Hello I Am Skelly!" });
+	npcInteract->SetText(vector<std::string>{ "Skelly:", "Hello I Am Skelly!" });*/
 	npc->makePersistant();
+	npc->name = name;
 
 	objects.Add(npc);
 
@@ -370,6 +380,7 @@ void SceneDungeon::OnCreate()
 	context.raycast = &raycast;
 	context.scriptEngine = &m_script;
 	context.drawTextEngine = &Dialog;
+	context.listQuests = &listQuests;
 	
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -388,15 +399,23 @@ void SceneDungeon::OnCreate()
 	context.objects->collidables.SetQuadTreeBounds(newbounds);
 
 	objects.Add(levelTiles);
+
+	
+
+
 	//create our player
 	CreatePlayer();
 	//context.player = &player;
 	//create our friend
-	CreateFriend();
+	//CreateFriend("Skelly", 500, 900);
+	//CreateFriend("Jim", 600, 900);
 
+
+	
 	
 	//npc->transform->SetPosition(280, 340);
 	objects.ProcessNewObjects();
+	dynamicObjects.ProcessNewObjects();
 	
 	
 
@@ -456,6 +475,8 @@ void SceneDungeon::OnDeactivate()
 {
 	//save the player position
 	hero.pos = sf::Vector2f(newPosX, newPosY);
+	
+	dynamicObjects.Clear();
 
 }
 
@@ -463,6 +484,12 @@ void SceneDungeon::OnActivate()
 {
 	if (hero.pos.x != 0) {
 		player->transform->SetPosition(hero.pos);
+	}
+
+	//check if we need objects/npc's from the quest system
+	for (auto q : listQuests)
+	{
+		q->PopulateDynamics(&dynamicObjects, this->LevelName, &context);
 	}
 }
 
@@ -514,10 +541,15 @@ void SceneDungeon::Update(float deltaTime)
 	
 	
 	objects.ProcessNewObjects();
+	dynamicObjects.ProcessNewObjects();
 	
 	
 	objects.Update(deltaTime);
+	dynamicObjects.Update(deltaTime);
+
 	objects.ProcessRemovals();
+	dynamicObjects.ProcessRemovals();
+
 	//check for the debug camera zoom
 	Debug::HandleCameraZoom(window, input);
 	
@@ -547,6 +579,7 @@ void SceneDungeon::Update(float deltaTime)
 void SceneDungeon::LateUpdate(float deltaTime)
 {
 	objects.LateUpdate(deltaTime);
+	dynamicObjects.LateUpdate(deltaTime);
 }
 
 
@@ -555,6 +588,79 @@ void SceneDungeon::SetSwitchToScene(unsigned int id)
 {
 	// Stores the id of the scene that we will transition to.
 	switchToState = id;
+}
+
+bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant)
+{
+
+	std::shared_ptr<Object> npc = std::make_shared<Object>(&context);
+	const unsigned int tileScale = 2;
+
+	// Calculate world position.
+	//objects are in world space - not in tile offsets - so we need to convert
+	//float x = ((objX)/32) * 32* tileScale + offset.x;
+	//float y = ((objY)/32) * 32* tileScale + offset.y;
+
+
+
+	npc->transform->SetPosition(x, y);
+
+	auto sprite = npc->AddComponent<C_Sprite>();
+	sprite->SetDrawLayer(DrawLayer::Entities);
+
+	auto animation = npc->AddComponent<C_Animation>();
+
+
+	//type of NPC - 
+	int textureID = 0;
+	std::map<std::string, npcTypes> npcMap = boost::assign::map_list_of("Skeleton", SKELETON)("Orc", ORC);
+	switch (npcMap[npcType])
+	{
+	case SKELETON:
+		textureID = textureAllocator.Add(context.workingDir->Get() + "Skeleton.png");
+		break;
+	case ORC:
+		textureID = textureAllocator.Add(context.workingDir->Get() + "Orc.png");
+		break;
+	}// end switch
+
+
+
+
+	const unsigned int frameWidth = 64;
+	const unsigned int frameHeight = 64;
+
+	AddAnimationComponent(npc, textureID);
+
+	auto collider = npc->AddComponent<C_BoxCollider>();
+	collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
+	collider->SetOffset(0.f, 14.f);
+	collider->SetLayer(CollisionLayer::NPC);
+
+	/*auto warp1 = npc->AddComponent<C_WarpLevelOnCollision>();
+	warp1->warplevel = 1;*/
+
+	npc->AddComponent<C_Velocity>();
+	npc->AddComponent<C_MovementAnimation>();
+	npc->AddComponent<C_Direction>();
+	/*npc->AddComponent<C_InteractableTalking>();
+	auto npcInteract = npc->GetComponent<C_InteractableTalking>();
+	npcInteract->SetText(vector<std::string>{ "Skelly:", "Hello I Am Skelly!" });*/
+	
+	npc->name = npcName;
+
+	if (!persistant)
+	{
+		dynamicObjects.Add(npc);
+	}
+	else
+	{
+		objects.Add(npc);
+	}
+
+
+
+	return true;
 }
 
 void SceneDungeon::Draw(Window& window)
@@ -567,6 +673,7 @@ void SceneDungeon::Draw(Window& window)
 	//edit do it in the drawables collection - 
 
 	objects.Draw(window);
+	dynamicObjects.Draw(window);
 
 	
 	if (Dialog.m_bShowDialog)

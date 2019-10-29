@@ -33,6 +33,7 @@ public:
 	virtual void Draw(Window& window) {};
 	virtual void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser) {};
 	virtual void ChangeLevel1(std::string id, float posX, float posY) {};
+	virtual bool AddNpcToScene(std::string name, float x, float y, std::string npcType, bool persistant);
 	
 };
 

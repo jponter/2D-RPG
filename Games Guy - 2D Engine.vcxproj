@@ -179,6 +179,7 @@
     <ClCompile Include="S_Command.cpp" />
     <ClCompile Include="S_Drawable.cpp" />
     <ClCompile Include="S_Locator.cpp" />
+    <ClCompile Include="S_Quests.cpp" />
     <ClCompile Include="S_ScriptProcessor.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMapParser.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="S_Command.hpp" />
     <ClInclude Include="S_Drawable.hpp" />
     <ClInclude Include="S_Locator.hpp" />
+    <ClInclude Include="S_Quests.hpp" />
     <ClInclude Include="S_ScriptProcessor.hpp" />
     <ClInclude Include="Tile.hpp" />
     <ClInclude Include="TileMapParser.hpp" />

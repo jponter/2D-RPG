@@ -25,10 +25,13 @@
 #include "Game.hpp"
 #include "HeroClass.h"
 #include "S_Command.hpp"
-#include "S_ScriptProcessor.hpp"
+//#include "S_ScriptProcessor.hpp" moved to game class
 #include "Raycast.hpp"
 #include "C_InteractWithObjects.hpp"
 #include "C_InteractableTalking.hpp"
+#include "S_Quests.hpp"
+#include "boost/assign/list_of.hpp"
+#include <map>
 
 
 
@@ -37,9 +40,9 @@
 class SceneDungeon : public Scene
 {
 public:
-	SceneDungeon(WorkingDirectory& workingDir,
+	SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 		ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
-		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, std::string level);
+		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, std::string level);
 
 	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
 	void ChangeLevel1(std::string id, float posX, float posY);
@@ -67,10 +70,12 @@ public:
 
 	DrawText Dialog;
 
+	bool AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant) override;
+
 private:
 
 	void CreatePlayer();
-	void CreateFriend();
+	void CreateFriend(std::string name, float x, float y);
 
 	
 
@@ -84,6 +89,7 @@ private:
 	SceneStateMachine& stateMachine;
 
 	ObjectCollection objects;
+	ObjectCollection dynamicObjects;
 	TileMapParser mapParser;
 
 	Window& window;
@@ -93,10 +99,13 @@ private:
 	int switchto = 0;
 	unsigned int switchToState;
 	std::string nameLevel;
+	std::string LevelName;
 	ImGuiLog& mylog;
 	HeroClass& hero;
+	list<S_Quests*> &listQuests;
 
-	S_ScriptProcessor m_script;
+	//move to game glass - now a reference
+	S_ScriptProcessor& m_script;
 	
 	std::string m_levelFile;
 	float newPosX;

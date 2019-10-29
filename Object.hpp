@@ -44,6 +44,7 @@ public:
 
 	SharedContext* context;
 	bool userMovementEnabled = true;
+	std::string name = "NOTSET";
 
 
 
@@ -130,6 +131,7 @@ private:
 	std::vector<std::shared_ptr<C_Collidable>> collidables;
 	bool queuedForRemoval;
 	bool persistant;
+	
 };
 
 #endif /* Object_hpp */

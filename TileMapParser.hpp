@@ -73,6 +73,7 @@ private:
 	std::shared_ptr<TileSheets> BuildTileSheetData(xml_node<>* rootNode);
 	std::shared_ptr<MapTiles> BuildMapTiles(xml_node<>* rootNode);
 	std::pair<std::string, std::shared_ptr<Layer>> BuildLayer(xml_node<>* layerNode, std::shared_ptr<TileSheets> tileSheets);
+	void AddAnimationComponent(std::shared_ptr<Object> object, const int textureID);
 
 	//std::map<int,  std::vector<std::pair<int, int>>> AnimationIndex;
 	

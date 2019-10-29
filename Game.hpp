@@ -15,6 +15,8 @@
 #include "SharedContext.hpp"
 #include "HeroClass.h"
 #include "DrawText.h"
+#include "S_ScriptProcessor.hpp"
+#include "S_Quests.hpp"
 
 
 
@@ -38,6 +40,7 @@ public:
 
 	//const ImGuiLog::ExampleAppLog& GetLog() const;
 	ImGuiLog mylog;
+	S_ScriptProcessor m_script;
 
 	//Logger* logger;
 
@@ -52,6 +55,8 @@ private:
 	ResourceAllocator<sf::Texture> textureAllocator;
 	ResourceAllocator<sf::Font> fontAllocator;
 	HeroClass hero;
+
+	list<S_Quests*> m_listQuests;
 	
 
 	

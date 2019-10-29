@@ -1,6 +1,6 @@
 #include "Object.hpp"
 
-Object::Object(SharedContext* context) : context(context) , queuedForRemoval(false), persistant(false)
+Object::Object(SharedContext* context) : context(context) , queuedForRemoval(false), persistant(false), name("NOTSET")
 {
 	transform = AddComponent<C_Transform>();
 	instanceID = AddComponent<C_InstanceID>();

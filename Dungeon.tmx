@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="80" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="2">
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="80" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="5">
  <properties>
   <property name="toLevel" type="int" value="2"/>
  </properties>
@@ -339,6 +339,24 @@
     <property name="toLevel" value="gameScene"/>
     <property name="toX" type="float" value="640"/>
     <property name="toY" type="float" value="780"/>
+   </properties>
+  </object>
+  <object id="2" name="NPC" x="129.333" y="63.3333" width="30.6667" height="32.6667">
+   <properties>
+    <property name="npcName" value="Skelly"/>
+    <property name="npcType" value="Skeleton"/>
+   </properties>
+  </object>
+  <object id="3" name="NPC" x="191.667" y="126.667" width="30.6667" height="32.6667">
+   <properties>
+    <property name="npcName" value="Jim"/>
+    <property name="npcType" value="Skeleton"/>
+   </properties>
+  </object>
+  <object id="4" name="NPC" x="288" y="63" width="30.6667" height="32.6667">
+   <properties>
+    <property name="npcName" value="Orcy"/>
+    <property name="npcType" value="Orc"/>
    </properties>
   </object>
  </objectgroup>
