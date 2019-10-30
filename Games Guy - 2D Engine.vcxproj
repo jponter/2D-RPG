@@ -247,6 +247,7 @@
     <Image Include="viking.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="SnowFragment.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
