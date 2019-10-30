@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="6">
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="8">
  <tileset firstgid="1" name="Collision" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="Red Square.png" width="32" height="32"/>
   <tile id="0">
@@ -389,6 +389,18 @@
     <property name="toLevel" value="dungeonScene"/>
     <property name="toX" type="float" value="128"/>
     <property name="toY" type="float" value="240"/>
+   </properties>
+  </object>
+  <object id="6" name="NPC" x="224.667" y="222.333" width="30.6667" height="32.6667">
+   <properties>
+    <property name="npcName" value="Woodchurch Farm"/>
+    <property name="npcType" value="Signpost"/>
+   </properties>
+  </object>
+  <object id="7" name="NPC" x="768.667" y="128.333" width="30.6667" height="32.6667">
+   <properties>
+    <property name="npcName" value="To The Castle"/>
+    <property name="npcType" value="Signpost"/>
    </properties>
   </object>
  </objectgroup>

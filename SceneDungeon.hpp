@@ -32,6 +32,7 @@
 #include "S_Quests.hpp"
 #include "boost/assign/list_of.hpp"
 #include <map>
+#include "C_UIWorldLabel.hpp"
 
 
 
@@ -76,6 +77,7 @@ private:
 
 	void CreatePlayer();
 	void CreateFriend(std::string name, float x, float y);
+	void ActivateTitle(Window* window, ResourceAllocator<sf::Font>* fontAllocator);
 
 	
 
@@ -116,6 +118,7 @@ private:
 	Raycast raycast;
 	
 	Quadtree collisionTree;
+	//thread th1;
 	
 };
 

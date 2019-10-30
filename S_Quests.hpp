@@ -20,7 +20,7 @@ public:
 	
 
 public:
-	virtual bool OnInteration(ObjectCollection* objects, Object* target, Object* source, NATURE nature);
+	virtual bool OnInteration(ObjectCollection* objects, Object* target, Object* source, std::string mapname, NATURE nature);
 	virtual bool PopulateDynamics(ObjectCollection* objects, std::string mapname, SharedContext* context);
 
 public:
@@ -38,7 +38,7 @@ class S_Quests_MainQuest : public S_Quests
 {
 public:
 	
-	bool OnInteration(ObjectCollection* objects, Object* target, Object* source, NATURE nature) override;
+	bool OnInteration(ObjectCollection* objects, Object* target, Object* source, std::string mapname, NATURE nature) override;
 	bool PopulateDynamics(ObjectCollection* objects, std::string mapname, SharedContext* context) override;
 
 private:

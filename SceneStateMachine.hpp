@@ -47,7 +47,7 @@ private:
 	unsigned int insertedSceneID;
 
 	//should we change scene?
-	bool changeScene;
+	bool changeScene = false;
 };
 
 #endif /* SceneStateMachine_hpp */

@@ -18,7 +18,8 @@ X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing h
 enum npcTypes
 {
 	SKELETON,
-	ORC
+	ORC,
+	SIGNPOST
 };
 
 
@@ -39,6 +40,30 @@ SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 	mapParser(textureAllocator, context),
 	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests),
 	m_levelFile(level),	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), dynamicObjects(drawableSystem, collisionSystem), raycast(collisionTree), fontAllocator(fontAllocator){}
+
+
+void SceneDungeon::ActivateTitle(Window* window, ResourceAllocator<sf::Font>* fontAllocator)
+{
+	sf::Text text;
+	text.setString("TESTING");
+	const int fontID = fontAllocator->Add(context.workingDir->Get() + "sansation.ttf");
+	std::shared_ptr<sf::Font> font = fontAllocator->Get(fontID);
+	text.setFont(*font);
+	//sf::Vector2u screenSize = window.GetSize();
+	int c = 255;
+	text.setPosition(300, 400); // need this to be centered with local bounds etc will do that later!
+
+	while (c > 0)
+	{
+		//window.BeginDraw();
+
+		text.setFillColor(sf::Color(c, c, c));
+		window->Draw(text);
+		
+		c = c - 1;
+	}
+
+}
 
 
 void SceneDungeon::CreatePlayer()
@@ -381,6 +406,7 @@ void SceneDungeon::OnCreate()
 	context.scriptEngine = &m_script;
 	context.drawTextEngine = &Dialog;
 	context.listQuests = &listQuests;
+	context.levelName = LevelName;
 	
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -473,6 +499,7 @@ void SceneDungeon::OnDestroy()
 
 void SceneDungeon::OnDeactivate()
 {
+	//th1.join();
 	//save the player position
 	hero.pos = sf::Vector2f(newPosX, newPosY);
 	
@@ -491,6 +518,26 @@ void SceneDungeon::OnActivate()
 	{
 		q->PopulateDynamics(&dynamicObjects, this->LevelName, &context);
 	}
+
+
+	//this thread doesnt work - it is trying to access the window in a non safe way! 
+	// left in so i can see how to start threads in future
+	//std::thread t(&SceneDungeon::ActivateTitle, this, &window, &fontAllocator);
+	
+	std::shared_ptr<Object> levelLabelObject = std::make_shared<Object>(&context);
+	auto levelLabel = levelLabelObject->AddComponent<C_UIWorldLabel>();
+	levelLabel->SetDrawLayer(DrawLayer::UI);
+	levelLabel->SetFontColour(sf::Color::White);
+	levelLabel->SetText(LevelName);
+	
+	//levelLabelObject->transform->SetParent(player->transform);
+	sf::Vector2u center = window.GetCentre();
+	levelLabelObject->transform->SetPosition(center.x - 200,center.y);
+
+	dynamicObjects.Add(levelLabelObject);
+	
+	
+
 }
 
 void SceneDungeon::ProcessInput()
@@ -505,8 +552,8 @@ void SceneDungeon::ProcessInput()
 	{
 		Debug::Log("T Key Pressed - executing script");
 		//m_script.AddCommand(new S_Command_MoveTo(player, 600, 600, 5.0f));
-		X(ShowDialog({ "Hello!" }, &Dialog, &window));
-		X(ShowDialog({ "OOo. Another RPG with SFML!", "Are you insane?", "Thanks to Javidx9 for", "his videos on script engine!"}, &Dialog, &window));
+		//X(ShowDialog({ "Hello!" }, &Dialog, &window));
+		//X(ShowDialog({ "OOo. Another RPG with SFML!", "Are you insane?", "Thanks to Javidx9 for", "his videos on script engine!"}, &Dialog, &window));
 		if (window.isSnowing == false)
 		{
 			window.isSnowing = true;
@@ -623,7 +670,7 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 
 	//type of NPC - 
 	int textureID = 0;
-	std::map<std::string, npcTypes> npcMap = boost::assign::map_list_of("Skeleton", SKELETON)("Orc", ORC);
+	std::map<std::string, npcTypes> npcMap = boost::assign::map_list_of("Skeleton", SKELETON)("Orc", ORC)("Signpost",SIGNPOST);
 	switch (npcMap[npcType])
 	{
 	case SKELETON:
@@ -639,8 +686,10 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
-
-	AddAnimationComponent(npc, textureID);
+	if (textureID != 0)
+	{
+		AddAnimationComponent(npc, textureID);
+	}
 
 	auto collider = npc->AddComponent<C_BoxCollider>();
 	collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
@@ -653,10 +702,16 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	npc->AddComponent<C_Velocity>();
 	npc->AddComponent<C_MovementAnimation>();
 	npc->AddComponent<C_Direction>();
-	/*npc->AddComponent<C_InteractableTalking>();
+	npc->AddComponent<C_InteractableTalking>();
 	auto npcInteract = npc->GetComponent<C_InteractableTalking>();
-	npcInteract->SetText(vector<std::string>{ "Skelly:", "Hello I Am Skelly!" });*/
-	
+	if (npcType == "Signpost")
+	{
+		npcInteract->SetText(vector<std::string>{"[" + npcName + "]" });
+	}
+	else
+	{
+		npcInteract->SetText(vector<std::string>{"[" + npcName + "]", "Hello, I Am " + npcName + "!", "I have nothing for you right now." });
+	}
 	npc->name = npcName;
 
 	if (!persistant)
@@ -691,12 +746,11 @@ void SceneDungeon::Draw(Window& window)
 		sf::Vector2f PlayerCoord = player->transform->GetPosition();
 
 		if ((PlayerCoord.y - 200) < 0) PlayerCoord.y = 420;
-		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, PlayerCoord.x -200, PlayerCoord.y - 200);
+		if ((PlayerCoord.x + 100) > window.GetSize().x) PlayerCoord.x -= 150;
+		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, PlayerCoord.x -200, PlayerCoord.y - 200,  fontAllocator, context);
 		
 	}
+
 	
-
-
-
 }
 

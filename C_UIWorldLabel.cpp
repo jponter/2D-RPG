@@ -5,9 +5,10 @@ C_UIWorldLabel::C_UIWorldLabel(Object* owner) : Component(owner) {}
 
 void C_UIWorldLabel::Start()
 {
-    const int fontID = owner->context->fontAllocator->Add(owner->context->workingDir->Get() + "Joystix Monospace.ttf");
+    const int fontID = owner->context->fontAllocator->Add(owner->context->workingDir->Get() + "sansation.ttf");
     std::shared_ptr<sf::Font> font = owner->context->fontAllocator->Get(fontID);
     text.setFont(*font);
+	text.setCharacterSize(64);
 }
 
 void C_UIWorldLabel::Draw(Window& window)
@@ -30,6 +31,42 @@ void C_UIWorldLabel::LateUpdate(float deltaTime)
     
     background.setPosition(centeredPosition);
     text.setPosition(centeredPosition);
+	float maxalive = 2.0f;
+	float holdtime =  2.0f;
+	
+
+	
+
+	
+	
+	if (holding)
+	{
+		aliveTimer += deltaTime;
+		if (aliveTimer > holdtime)
+		{
+			holding = false;
+			aliveTimer = 0;
+		}
+	}
+	else
+	{
+		aliveTimer += deltaTime;
+		float t = aliveTimer / maxalive;
+		float lerp = t * 255;
+		int color = 255 - lerp;
+
+		if (color < 0) color = 0;
+
+		text.setFillColor(sf::Color(255, 255, 255, color));
+	}
+
+
+	if (aliveTimer > maxalive)
+	{
+		owner->QueueForRemoval();
+	}
+
+	
 }
 
 void C_UIWorldLabel::SetText(const std::string& text)

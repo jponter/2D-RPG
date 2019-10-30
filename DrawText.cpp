@@ -1,6 +1,7 @@
 #include "DrawText.h"
 #include <iostream>
 
+
 using namespace std;
 
  void DrawText::showDialog(std::vector<std::string> veclines, Window& window, sf::Vector2f pos)
@@ -20,10 +21,10 @@ using namespace std;
 	 m_bShowDialog = false;
  }
 
- void DrawText::displayDialog(std::vector<std::string> vecText, Window& window, float x, float y)
+ void DrawText::displayDialog(std::vector<std::string> vecText, Window& window, float x, float y, ResourceAllocator<sf::Font>& fontAllocator, SharedContext& context )
  {
 	 sf::Text text;
-	 sf::Font font;
+	 //sf::Font font;
 	 sf::FloatRect textRect;
 	 sf::FloatRect tempRect;
 	 sf::RectangleShape boxShape;
@@ -39,14 +40,18 @@ using namespace std;
 	 text.setFont(*font);
 	 */
 
-	 if(!font.loadFromFile("sansation.ttf"))
+	 const int fontID = fontAllocator.Add(context.workingDir->Get() + "sansation.ttf");
+	 std::shared_ptr<sf::Font> font = fontAllocator.Get(fontID);
+	 text.setFont(*font);
+
+	 /*if(!font.loadFromFile("sansation.ttf"))
 	 {
 		 cout << "font not found! " << endl;
 
-	 }
+	 }*/
 	 
 
-	 text.setFont(font);
+	 //text.setFont(font);
 	 text.setCharacterSize(fontSize);
 	 text.setFillColor(sf::Color::White);
 	 

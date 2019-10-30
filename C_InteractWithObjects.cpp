@@ -1,6 +1,7 @@
 #include "C_InteractWithObjects.hpp"
 #include "Object.hpp"
 #include "S_Quests.hpp"
+#include "SceneDungeon.hpp"
 
 C_InteractWithObjects::C_InteractWithObjects(Object* owner) : Component(owner), interactionDistance(60.f) {}
 
@@ -23,7 +24,7 @@ void C_InteractWithObjects::Update(float deltaTime)
         endPoint.y = startPoint.y + (heading.y * interactionDistance);
         
         RaycastResult result = owner->context->raycast->Cast(startPoint, endPoint, owner->instanceID->Get());
-		
+		bool defaultInteraction = true;
         
         if(result.collision != nullptr)
         {
@@ -33,11 +34,7 @@ void C_InteractWithObjects::Update(float deltaTime)
             // Retrieve all interactable components
             auto interactables = result.collision->GetComponents<C_Interactable>();
             
-            for (auto& interactable : interactables)
-            {
-				
-                interactable->OnInteraction(owner);
-            }
+          
 
 			// we would want to check the quests here
 
@@ -51,14 +48,24 @@ void C_InteractWithObjects::Update(float deltaTime)
 			{
 				S_Quests* tempQuest = *it;
 				Debug::Log("On InteractWithObject - Quest Check " + tempQuest->sName);
-				if (tempQuest->OnInteration(owner->context->objects, result.collision, owner, S_Quests::TALK))
+				if (tempQuest->OnInteration(owner->context->objects, result.collision, owner, owner->context->levelName, S_Quests::TALK))
 				{
+					defaultInteraction = false;
 					break;
 				}
+					
 				
 				
-				
-				
+			}
+
+			if (defaultInteraction) // nothing above called interaction so lets look at the default
+			{
+				// we will check for default interactions now
+				for (auto& interactable : interactables)
+				{
+
+					interactable->OnInteraction(owner);
+				}
 			}
 
         }

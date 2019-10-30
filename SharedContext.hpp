@@ -43,6 +43,7 @@ struct SharedContext
 	S_ScriptProcessor* scriptEngine;
 	DrawText* drawTextEngine;
 	std::list<S_Quests*> *listQuests;
+	std::string levelName;
 	
 	//SceneStateMachine* sceneStateMachine;
 	//Game* thisGame;

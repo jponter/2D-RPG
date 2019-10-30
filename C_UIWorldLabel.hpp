@@ -25,7 +25,8 @@ public:
 private:
     sf::Text text;
     sf::RectangleShape background;
-    
+	float aliveTimer = 0.0f;
+	bool holding = true;
 };
 
 #endif /* C_UIWorldLabel_hpp */

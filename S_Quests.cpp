@@ -12,7 +12,7 @@ HeroClass* S_Quests::g_heroStats = nullptr;
 
 
 
-bool S_Quests::OnInteration(ObjectCollection* objects, Object* target, Object* source, NATURE nature)
+bool S_Quests::OnInteration(ObjectCollection* objects, Object* target, Object* source, std::string mapname, NATURE nature)
 {
 	Debug::Log("S_Quests::OnInteration");
 	return true;
@@ -30,7 +30,7 @@ bool S_Quests::PopulateDynamics(ObjectCollection* objects, std::string mapname, 
 bool S_Quests_MainQuest::PopulateDynamics(ObjectCollection* objects, std::string mapname, SharedContext* context)
 {
 	
-	if (mapname == "HouseExterior")
+	if (mapname == "House Exterior")
 	{
 		if (m_nPhase == 0)
 		{
@@ -40,7 +40,7 @@ bool S_Quests_MainQuest::PopulateDynamics(ObjectCollection* objects, std::string
 		
 	}
 
-	if (mapname == "Dungeon1")
+	if (mapname == "Creepy Dungeon")
 	{
 		if (m_nPhase > 0)
 		{
@@ -55,7 +55,7 @@ bool S_Quests_MainQuest::PopulateDynamics(ObjectCollection* objects, std::string
 
 
 
-bool S_Quests_MainQuest::OnInteration(ObjectCollection* objects, Object* target, Object* source, NATURE nature)
+bool S_Quests_MainQuest::OnInteration(ObjectCollection* objects, Object* target, Object* source, std::string mapname, NATURE nature)
 {
 	Debug::Log("S_Quests_MainQuest::OnInteration Target = " + std::to_string(target->instanceID->Get()) + " Target Name: " + target->name);
 
@@ -88,8 +88,14 @@ bool S_Quests_MainQuest::OnInteration(ObjectCollection* objects, Object* target,
 		}
 		else if (m_nPhase > 0)
 		{
-			g_script->AddCommand(new S_Command_ShowDialog({ "[Luna]", "Hi " + source->name, "Thanks for following me to the Dungeon!" }, target->context->drawTextEngine, target->context->window));
-			return true;
+			if (mapname == "Creepy Dungeon") {
+				g_script->AddCommand(new S_Command_ShowDialog({ "[Luna]", "Hi " + source->name, "Thanks for following me to the Dungeon!" }, target->context->drawTextEngine, target->context->window));
+				return true;
+			}
+			else
+			{
+				X(ShowDialog({ "[Luna]","I'll meet you there in a minute!" }, target->context->drawTextEngine, target->context->window));
+			}
 		}
 	}
 
