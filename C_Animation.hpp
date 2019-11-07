@@ -14,7 +14,10 @@ enum class AnimationState
 	None,
 	Idle,
 	Walk,
-	Projectile
+	Projectile,
+	Slash,
+	Thrust,
+	Dead
 };
 
 using AnimationList =
@@ -39,6 +42,8 @@ public:
 
 	// Returns current animation state.
 	const AnimationState& GetAnimationState() const;
+
+	bool IsFinished();
 
 	void SetAnimationDirection(FacingDirection dir);
 

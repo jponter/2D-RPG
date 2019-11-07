@@ -39,7 +39,7 @@ void SceneSplashScreen::OnCreate()
 	}
 }
 
-void SceneSplashScreen::OnActivate()
+void SceneSplashScreen::OnActivate(unsigned int previousSceneID)
 {
 	// Resets the currentSeconds count whenever the scene is activated.
 	currentSeconds = 0.f;

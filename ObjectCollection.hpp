@@ -20,6 +20,7 @@ public:
 	void Update(float deltaTime);
 	void LateUpdate(float deltaTime);
 	void Draw(Window& window);
+	void DrawSpecificLayer(Window& window, DrawLayer specificLayer);
 
 	void ProcessNewObjects(); // 1
 	void ProcessRemovals();

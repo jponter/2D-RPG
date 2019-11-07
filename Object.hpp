@@ -33,6 +33,9 @@ public:
 
 	bool isPersistant();
 	void makePersistant();
+
+	bool IsDead();
+	void MakeDead();
 	
 	
 
@@ -130,6 +133,8 @@ private:
 	std::shared_ptr<C_Drawable> drawable;
 	std::vector<std::shared_ptr<C_Collidable>> collidables;
 	bool queuedForRemoval;
+	bool m_dead;
+	bool respawnOnEnter;
 	bool persistant;
 	
 };

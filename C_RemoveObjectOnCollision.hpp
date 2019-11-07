@@ -11,6 +11,9 @@ public:
 	C_RemoveObjectOnCollisionEnter(Object* owner);
 
 	void OnCollisionEnter(std::shared_ptr<C_BoxCollider> other) override;
+
+private:
+	int m_arrowDamage = 5;
 };
 
 #endif /* C_RemoveObjectOnCollisionEnter_hpp */

@@ -6,7 +6,7 @@
 
 C_InteractableTalking::C_InteractableTalking(Object* owner) : Component(owner), textToSayVector({ "Set Me!" }) {}
 
-void C_InteractableTalking::OnInteraction(Object* other)
+bool C_InteractableTalking::OnInteraction(Object* other)
 {
     /*std::shared_ptr<Object> labelObj = std::make_shared<Object>(owner->context);
     
@@ -27,4 +27,5 @@ void C_InteractableTalking::OnInteraction(Object* other)
 	// TODO: what we need to do here now is implement the observer pattern and have a quest system that actually fires from C_Interactable so we dont do this per creature
 	// that will be the next thing to do!
 	owner->context->scriptEngine->AddCommand(new S_Command_ShowDialog({ textToSayVector }, owner->context->drawTextEngine, owner->context->window));
+	return true;
 }

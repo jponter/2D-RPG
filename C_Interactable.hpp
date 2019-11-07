@@ -6,7 +6,7 @@
 class C_Interactable
 {
 public:
-    virtual void OnInteraction(Object* other) = 0;
+    virtual bool OnInteraction(Object* other) = 0;
 };
 
 #endif /* C_Interactable_hpp */

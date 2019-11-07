@@ -18,7 +18,7 @@ public:
 	void OnCreate() override;
 	void OnDestroy() override;
 
-	void OnActivate() override;
+	void OnActivate(unsigned int previousSceneID) override;
 
 	void SetSwitchToScene(unsigned int id);
 

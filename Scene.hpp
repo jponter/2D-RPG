@@ -20,7 +20,7 @@ public:
 
 	// Called whenever a scene is transitioned into. Can be 
 	// called many times in a typical game cycle.
-	virtual void OnActivate() {};
+	virtual void OnActivate(unsigned int previousSceneID) {};
 
 	// Called whenever a transition out of a scene occurs. 
 	// Can be called many times in a typical game cycle.
@@ -34,6 +34,8 @@ public:
 	virtual void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser) {};
 	virtual void ChangeLevel1(std::string id, float posX, float posY) {};
 	virtual bool AddNpcToScene(std::string name, float x, float y, std::string npcType, bool persistant);
+	virtual bool inDialog();
+	virtual void SetDialog(bool value) {};
 	
 };
 

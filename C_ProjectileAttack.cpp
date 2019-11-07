@@ -135,5 +135,5 @@ void C_ProjectileAttack::SpawnProjectile()
 	projectile->AddComponent<C_RemoveObjectOnCollisionEnter>();
 
 	// Add object to collection
-	owner->context->objects->Add(projectile);
+	owner->context->dynamicObjects->Add(projectile);
 }

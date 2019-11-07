@@ -21,7 +21,9 @@ public:
 		E = 8,
 		R = 9,
 		T = 10,
-		SPACE = 11
+		SPACE = 11,
+		P = 12
+		
 	};
 
 	

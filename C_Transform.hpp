@@ -29,6 +29,8 @@ public:
 	void SetStatic(bool isStatic);
 	bool isStatic() const;
 
+	void Pushback(sf::Vector2i heading);
+
 	void SetParent(std::shared_ptr<C_Transform> parent);
 	const std::shared_ptr<C_Transform> GetParent() const;
 
@@ -42,6 +44,8 @@ private:
 	bool isStaticTransform;
 	std::shared_ptr<C_Transform> parent;
 	std::vector<std::shared_ptr<C_Transform>> children;
+
+	int m_pushbackDefaultDistance = 20;
 };
 
 #endif /* C_Transform_hpp */

@@ -31,7 +31,7 @@ void C_KeyboardMovement::Update(float deltaTime)
 	{
 		
 		//TODO: keyboardmovement should not interact with animation component.
-		if (animation->GetAnimationState() == AnimationState::Projectile)
+		if (animation->GetAnimationState() == AnimationState::Projectile )
 		{
 			velocity->Set(0.f, 0.f);
 			return;

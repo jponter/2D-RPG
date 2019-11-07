@@ -9,11 +9,11 @@
 #include "boost/assign/list_of.hpp"
 #include <map>
 
-enum npcTypes
-{
-	SKELETON,
-	ORC
-};
+//enum npcTypes
+//{
+//	SKELETON,
+//	ORC
+//};
 
 TileMapParser::TileMapParser(ResourceAllocator<sf::Texture>& textureAllocator, SharedContext& context)
 	: textureAllocator(textureAllocator),
@@ -67,6 +67,7 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			std::shared_ptr<Object> tileObject = std::make_shared<Object>(&context);
 
 			const unsigned int tileScale = 2;
+			animatedTileFound = false;
 
 		
 
@@ -118,6 +119,7 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			AnimationIterator = AnimationIndex.find(tileID);
 			if (AnimationIterator != AnimationIndex.end())
 			{
+				animatedTileFound = true;
 				int foundTile = AnimationIterator->first;
 				std::cout << "While Building tile objects - found a tile with animation ID: " << foundTile << std::endl;
 				// what are the frames for this animation :| ???
@@ -157,9 +159,16 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			}
 
 
-
-			// Add new tile Object to the collection.
-			tileObjects.emplace_back(tileObject);
+			if (animatedTileFound)
+			{
+				//animated tile - put it in dynamic objects - this is a bit hacky, but we know the dynamic objects collection exists;
+				context.dynamicObjects->Add(tileObject);
+			}
+			else
+			{
+				// Add new tile Object to the collection.
+				tileObjects.emplace_back(tileObject);
+			}
 		}
 		//decrement the layer count
 		layerCount--;
@@ -302,11 +311,13 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				warp1->warplevel = objToLevel;
 				warp1->toX = toX;
 				warp1->toY = toY;
+				tileObject->makePersistant(); // we dont want these to dissapear on a level change!
 
 
 
 				// Add new tile Object to the collection.
-				tileObjects.emplace_back(tileObject);
+				//tileObjects.emplace_back(tileObject);
+				context.dynamicObjects->Add(tileObject);
 
 			} //end warp
 
@@ -357,8 +368,14 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				float x = objX * tileScale + offset.x;
 				float y = objY * tileScale + offset.y;
 
-				context.currentScene->AddNpcToScene(npcName, x, y, npcType, true);
-
+				if (npcName != "ENEMY")
+				{
+					context.currentScene->AddNpcToScene(npcName, x, y, npcType, true);
+				}
+				else
+				{
+					context.currentScene->AddNpcToScene(npcName, x, y, npcType, true);
+				}
 				
 
 

@@ -48,6 +48,8 @@ public:
 	void SetLooped(bool looped);
 	bool IsLooped();
 
+	bool IsFinished();
+
 
 
 private:

@@ -116,3 +116,14 @@ void C_Animation::AddAnimationAction(AnimationState state, FacingDirection dir, 
 		}
 	}
 }
+
+bool C_Animation::IsFinished()
+{
+	if (currentAnimation.first == AnimationState::Slash || currentAnimation.first == AnimationState::Thrust)
+	{
+		return currentAnimation.second->IsFinished();
+	}
+
+	return false;
+
+}

@@ -8,6 +8,7 @@
 #include "SharedContext.hpp"
 #include "C_Direction.hpp"
 
+
 //MACROS
 /*current commands
 X(moveTo(object, float target x, float target y, float timetotake)
@@ -15,12 +16,7 @@ X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing h
 */
 #define X(n) m_script.AddCommand(new S_Command_ ## n) // shorthand for adding scripts to the script engine
 
-enum npcTypes
-{
-	SKELETON,
-	ORC,
-	SIGNPOST
-};
+
 
 
 //auto mylog = new ImGuiLog;
@@ -37,9 +33,10 @@ SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 
 	: LevelName(LevelName), workingDir(workingDir),
 	textureAllocator(textureAllocator),
-	mapParser(textureAllocator, context),
+	mapParser(textureAllocator, context), 
 	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests),
-	m_levelFile(level),	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), dynamicObjects(drawableSystem, collisionSystem), raycast(collisionTree), fontAllocator(fontAllocator){}
+	m_levelFile(level),	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), dynamicObjects(dynamicDrawableSystem, collisionSystem), raycast(collisionTree), boxcast(collisionTree),
+	fontAllocator(fontAllocator){}
 
 
 void SceneDungeon::ActivateTitle(Window* window, ResourceAllocator<sf::Font>* fontAllocator)
@@ -91,7 +88,7 @@ void SceneDungeon::CreatePlayer()
 	// Adds a component by calling our previously written template function.
 	auto sprite = player->AddComponent<C_Sprite>();
 	//sprite->SetTextureAllocator(&textureAllocator);
-	sprite->SetDrawLayer(DrawLayer::Entities);
+	sprite->SetDrawLayer(DrawLayer::Player);
 	//sprite->Load(workingDir.Get() + "viking.png");
 	//setting of sprite now handled by animation component
 
@@ -106,12 +103,16 @@ void SceneDungeon::CreatePlayer()
 	
 
 	int textureID = textureAllocator.Add(workingDir.Get()
-		+ "Player.png");
+		+ "player-bow.png");
+
+	int textureID2 = textureAllocator.Add(workingDir.Get()
+		+ "player-axe.png");
 
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
 
-	AddAnimationComponent(player, textureID);
+	AddAnimationComponent(player, textureID2,npcTypes::PLAYER ,false);
+	AddAnimationComponent(player, textureID, npcTypes::PLAYER, true);
 
 	//end aminations
 
@@ -150,6 +151,8 @@ void SceneDungeon::CreatePlayer()
 	//add the direction component
 	player->AddComponent<C_Direction>();
 
+	player->AddComponent<C_EnemyHealth>();
+
 	player->makePersistant();
 
 	//cheating way to keep track of the player object
@@ -163,7 +166,7 @@ void SceneDungeon::CreatePlayer()
 	player->name = "James";
 
 	//add the player
-	objects.Add(player);
+	dynamicObjects.Add(player);
 
 
 
@@ -185,7 +188,7 @@ void SceneDungeon::CreateFriend(std::string name, float x, float y)
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
 
-	AddAnimationComponent(npc, textureID);
+	AddAnimationComponent(npc, textureID,npcTypes::SKELETON, false);
 
 	auto collider = npc->AddComponent<C_BoxCollider>();
 	collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
@@ -210,90 +213,181 @@ void SceneDungeon::CreateFriend(std::string name, float x, float y)
 
 }
 
-void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID)
+void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID, npcTypes npctype,bool additional)
 {
-
-	auto animation = object->AddComponent<C_Animation>();
-
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
 
 	const FacingDirection directions[4] = { FacingDirection::Up, FacingDirection::Left, FacingDirection::Down, FacingDirection::Right };
 
-	/*******************
-	 * Idle Animations *
-	 *******************/
-	const bool idleAnimationLooped = false;
-
-	unsigned int idleYFramePos = 512;
-
-	std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
-
-	for (int i = 0; i < 4; i++)
+	if (!additional)
 	{
-		std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
-
-		idleAnimation->AddFrame(textureID, 0, idleYFramePos, frameWidth, frameHeight, 0.f, idleAnimationLooped);
-
-		idleAnimations.insert(std::make_pair(directions[i], idleAnimation));
-
-		idleYFramePos += frameHeight;
-	}
-
-	animation->AddAnimation(AnimationState::Idle, idleAnimations);
+		auto animation = object->AddComponent<C_Animation>();
 
 
-	/**********************
-	 * Walking Animations *
-	 **********************/
-	const bool walkAnimationLooped = true;
-	const int walkingFrameCount = 9;
-	const float delayBetweenWalkingFramesSecs = 0.1f;
 
-	unsigned int walkingYFramePos = 512;
+		/*******************
+		 * Idle Animations *
+		 *******************/
+		const bool idleAnimationLooped = false;
 
-	std::map<FacingDirection, std::shared_ptr<Animation>> walkingAnimations;
+		unsigned int idleYFramePos = 512;
 
-	for (int i = 0; i < 4; i++)
-	{
-		std::shared_ptr<Animation> walkingAnimation = std::make_shared<Animation>();
-		for (int i = 0; i < walkingFrameCount; i++)
+		std::map<FacingDirection, std::shared_ptr<Animation>> idleAnimations;
+
+		for (int i = 0; i < 4; i++)
 		{
-			walkingAnimation->AddFrame(textureID, i * frameWidth, walkingYFramePos, frameWidth, frameHeight, delayBetweenWalkingFramesSecs, walkAnimationLooped);
+			std::shared_ptr<Animation> idleAnimation = std::make_shared<Animation>();
+
+			idleAnimation->AddFrame(textureID, 0, idleYFramePos, frameWidth, frameHeight, 0.f, idleAnimationLooped);
+
+			idleAnimations.insert(std::make_pair(directions[i], idleAnimation));
+
+			idleYFramePos += frameHeight;
 		}
 
-		walkingAnimations.insert(std::make_pair(directions[i], walkingAnimation));
+		animation->AddAnimation(AnimationState::Idle, idleAnimations);
 
-		walkingYFramePos += frameHeight;
-	}
 
-	animation->AddAnimation(AnimationState::Walk, walkingAnimations);
+		/**********************
+		 * Walking Animations *
+		 **********************/
+		const bool walkAnimationLooped = true;
+		const int walkingFrameCount = 9;
+		const float delayBetweenWalkingFramesSecs = 0.05f;
 
+		unsigned int walkingYFramePos = 512;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> walkingAnimations;
+
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Animation> walkingAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < walkingFrameCount; i++)
+			{
+				walkingAnimation->AddFrame(textureID, i * frameWidth, walkingYFramePos, frameWidth, frameHeight, delayBetweenWalkingFramesSecs, walkAnimationLooped);
+			}
+
+			walkingAnimations.insert(std::make_pair(directions[i], walkingAnimation));
+
+			walkingYFramePos += frameHeight;
+		}
+
+		animation->AddAnimation(AnimationState::Walk, walkingAnimations);
+
+		/*************************
+		 * Slash Animations		 *
+		 *************************/
+
+		const bool slashAnimationLooped = false;
+		const int slashFrameCount = 6;
+		const float delayBetweenSlashFramesSecs = 0.1f;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> slashAnimations;
+
+		unsigned int slashFrameYPos = 768;
+
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Animation> slashAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < slashFrameCount; i++)
+			{
+				slashAnimation->AddFrame(textureID, i * frameWidth, slashFrameYPos, frameWidth, frameHeight, delayBetweenSlashFramesSecs, slashAnimationLooped);
+			}
+			slashAnimations.insert(std::make_pair(directions[i], slashAnimation));
+
+			slashFrameYPos += frameHeight;
+		}
+
+		animation->AddAnimation(AnimationState::Slash, slashAnimations);
 
 	/*************************
-	 * Projectile Animations *
+	 * Thrust Animations		 *
 	 *************************/
-	const bool projectileAnimationLooped = true;
-	const int projectileFrameCount = 10;
-	const float delayBetweenProjectileFramesSecs = 0.08f;
 
-	std::map<FacingDirection, std::shared_ptr<Animation>> projectileAnimations;
+		const bool thrustAnimationLooped = false;
+		const int thrustFrameCount = 7;
+		const float delayBetweenThrustFramesSecs = 0.2f;
 
-	unsigned int projFrameYPos = 1024;
+		std::map<FacingDirection, std::shared_ptr<Animation>> thrustAnimations;
 
-	for (int i = 0; i < 4; i++)
-	{
-		std::shared_ptr<Animation> projAnimation = std::make_shared<Animation>();
-		for (int i = 0; i < projectileFrameCount; i++)
+		unsigned int thrustFrameYPos = 256;
+
+		for (int i = 0; i < 4; i++)
 		{
-			projAnimation->AddFrame(textureID, i * frameWidth, projFrameYPos, frameWidth, frameHeight, delayBetweenProjectileFramesSecs, projectileAnimationLooped);
+			std::shared_ptr<Animation> thrustAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < thrustFrameCount; i++)
+			{
+				thrustAnimation->AddFrame(textureID, i * frameWidth, thrustFrameYPos, frameWidth, frameHeight, delayBetweenThrustFramesSecs, thrustAnimationLooped);
+			}
+			thrustAnimations.insert(std::make_pair(directions[i], thrustAnimation));
+
+			thrustFrameYPos += frameHeight;
 		}
-		projectileAnimations.insert(std::make_pair(directions[i], projAnimation));
 
-		projFrameYPos += frameHeight;
+		animation->AddAnimation(AnimationState::Thrust, thrustAnimations);
+
+		
+		/*************************
+		 * DEAD Animation		 *
+		 *************************/
+
+		const bool deadAnimationLooped = false;
+		const int deradFrameCount = 6;
+		const float delayBetweenDeadFramesSecs = 0.1f;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> deadAnimations;
+
+		unsigned int deadFrameYPos = 20 * 64;
+
+		for (int i = 0; i < 4; i++) // only one direction for dead but we still need to set all 4
+		{
+			std::shared_ptr<Animation> deadAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < slashFrameCount; i++)
+			{
+				deadAnimation->AddFrame(textureID, i * frameWidth, deadFrameYPos, frameWidth, frameHeight, delayBetweenDeadFramesSecs, deadAnimationLooped);
+			}
+			deadAnimations.insert(std::make_pair(directions[i], deadAnimation));
+
+			//deadFrameYPos += frameHeight; // Only one direction set of animations!
+		}
+
+		animation->AddAnimation(AnimationState::Dead, deadAnimations);
+
+
 	}
+	else if (additional == true)
+	{
+		auto animation = object->GetComponent<C_Animation>();
+		
 
-	animation->AddAnimation(AnimationState::Projectile, projectileAnimations);
+		/*************************
+		 * Projectile Animations *
+		 *************************/
+		const bool projectileAnimationLooped = true;
+		const int projectileFrameCount = 10;
+		const float delayBetweenProjectileFramesSecs = 0.08f;
+
+		std::map<FacingDirection, std::shared_ptr<Animation>> projectileAnimations;
+
+		unsigned int projFrameYPos = 1024;
+
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Animation> projAnimation = std::make_shared<Animation>();
+			for (int i = 0; i < projectileFrameCount; i++)
+			{
+				projAnimation->AddFrame(textureID, i * frameWidth, projFrameYPos, frameWidth, frameHeight, delayBetweenProjectileFramesSecs, projectileAnimationLooped);
+			}
+			projectileAnimations.insert(std::make_pair(directions[i], projAnimation));
+
+			projFrameYPos += frameHeight;
+		}
+
+		animation->AddAnimation(AnimationState::Projectile, projectileAnimations);
+
+
+	}
 
 }
 
@@ -403,10 +497,13 @@ void SceneDungeon::OnCreate()
 	context.hero = &hero;
 	context.collisionTree = &collisionTree;
 	context.raycast = &raycast;
+	context.boxcast = &boxcast;
 	context.scriptEngine = &m_script;
 	context.drawTextEngine = &Dialog;
 	context.listQuests = &listQuests;
 	context.levelName = LevelName;
+	context.inDialog = false;
+	context.dynamicObjects = &dynamicObjects;
 	
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -507,7 +604,7 @@ void SceneDungeon::OnDeactivate()
 
 }
 
-void SceneDungeon::OnActivate()
+void SceneDungeon::OnActivate(unsigned int previousSceneID)
 {
 	if (hero.pos.x != 0) {
 		player->transform->SetPosition(hero.pos);
@@ -571,6 +668,25 @@ void SceneDungeon::ProcessInput()
 		window.close();
 	}
 
+	if (input.IsKeyUp(Input::Key::P))
+	{
+		// we need to pause
+		Debug::Log("P Key Pressed - moving to paused");
+		auto gameid = stateMachine.GetSceneByName(LevelName);
+		auto pauseid = stateMachine.GetSceneByName("pauseScreen");
+		window.CopyScreen();
+
+		if (gameid != -1 && pauseid != -1)
+		{
+			newPosX = hero.pos.x;
+			newPosY = hero.pos.y;
+			stateMachine.SwitchTo(pauseid, gameid);
+			
+			
+		}
+	}
+
+
 	if (Dialog.m_bShowDialog)
 	{
 		player->userMovementEnabled = false;
@@ -578,14 +694,29 @@ void SceneDungeon::ProcessInput()
 
 		velocity->Set(0, 0);
 
+		
+		
 
-		if (input.IsKeyUp(Input::Key::SPACE))
-		{
-			Dialog.m_bShowDialog = false;
-			m_script.CompleteCommand();
-			player->userMovementEnabled = true;
-		}
+			if (input.IsKeyDown(Input::Key::SPACE))
+			{
+				Dialog.m_bShowDialog = false;
+				m_script.CompleteCommand();
+				player->userMovementEnabled = true;
+				m_exitDialog = true;
+				
+			}
+		
 	}
+}
+
+bool SceneDungeon::inDialog()
+{
+	return m_exitDialog;
+}
+
+void SceneDungeon::SetDialog(bool value)
+{
+	m_exitDialog = value;
 }
 
 void SceneDungeon::Update(float deltaTime)
@@ -593,19 +724,22 @@ void SceneDungeon::Update(float deltaTime)
 	//window.isSnowing = false;
 	m_script.ProcessCommand(deltaTime);
 
+
 	hero.pos = player->transform->GetPosition();
+	auto playerHealth =  player->GetComponent<C_EnemyHealth>();
+	hero.health = playerHealth->Get();
 
 	
 	
 	objects.ProcessNewObjects();
 	dynamicObjects.ProcessNewObjects();
 	
-	
-	objects.Update(deltaTime);
 	dynamicObjects.Update(deltaTime);
-
-	objects.ProcessRemovals();
+	//objects.Update(deltaTime); - we shouldnt need to update anything that is not a dynamic tile!
+	
 	dynamicObjects.ProcessRemovals();
+	//objects.ProcessRemovals();
+	
 
 	//check for the debug camera zoom
 	Debug::HandleCameraZoom(window, input);
@@ -635,8 +769,9 @@ void SceneDungeon::Update(float deltaTime)
 
 void SceneDungeon::LateUpdate(float deltaTime)
 {
-	objects.LateUpdate(deltaTime);
 	dynamicObjects.LateUpdate(deltaTime);
+	objects.LateUpdate(deltaTime);
+	
 }
 
 
@@ -670,14 +805,17 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 
 	//type of NPC - 
 	int textureID = 0;
-	std::map<std::string, npcTypes> npcMap = boost::assign::map_list_of("Skeleton", SKELETON)("Orc", ORC)("Signpost",SIGNPOST);
+	npcTypes EnemyType;
+	std::map<std::string, npcTypes> npcMap = boost::assign::map_list_of("Skeleton", npcTypes::SKELETON)("Orc", npcTypes::ORC)("Signpost", npcTypes::SIGNPOST);
 	switch (npcMap[npcType])
 	{
-	case SKELETON:
+	case npcTypes::SKELETON:
 		textureID = textureAllocator.Add(context.workingDir->Get() + "Skeleton.png");
+		EnemyType = npcTypes::SKELETON;
 		break;
-	case ORC:
+	case npcTypes::ORC:
 		textureID = textureAllocator.Add(context.workingDir->Get() + "Orc.png");
+		EnemyType = npcTypes::ORC;
 		break;
 	}// end switch
 
@@ -688,13 +826,19 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	const unsigned int frameHeight = 64;
 	if (textureID != 0)
 	{
-		AddAnimationComponent(npc, textureID);
+		AddAnimationComponent(npc, textureID, EnemyType, false);
 	}
 
 	auto collider = npc->AddComponent<C_BoxCollider>();
-	collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
-	collider->SetOffset(0.f, 14.f);
-	collider->SetLayer(CollisionLayer::NPC);
+	
+	
+	//collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
+	//collider->SetOffset(0.f, 14.f);
+	
+	collider->SetSize(frameWidth, frameHeight); // full size collider for NPC's
+
+
+	
 
 	/*auto warp1 = npc->AddComponent<C_WarpLevelOnCollision>();
 	warp1->warplevel = 1;*/
@@ -702,17 +846,55 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	npc->AddComponent<C_Velocity>();
 	npc->AddComponent<C_MovementAnimation>();
 	npc->AddComponent<C_Direction>();
-	npc->AddComponent<C_InteractableTalking>();
-	auto npcInteract = npc->GetComponent<C_InteractableTalking>();
-	if (npcType == "Signpost")
+	
+	
+	if (npcName != "ENEMY")
 	{
-		npcInteract->SetText(vector<std::string>{"[" + npcName + "]" });
+		npc->AddComponent<C_InteractableTalking>();
+		auto npcInteract = npc->GetComponent<C_InteractableTalking>();
+		if (npcType == "Signpost")
+		{
+			npcInteract->SetText(vector<std::string>{"[" + npcName + "]" });
+		}
+		else
+		{
+			npcInteract->SetText(vector<std::string>{"[" + npcName + "]", "Hello, I Am " + npcName + "!", "I have nothing for you right now." });
+		}
+		npc->name = npcName;
+		npc->tag->Set(Tag::NPC);
+		collider->SetLayer(CollisionLayer::NPC);
 	}
 	else
 	{
-		npcInteract->SetText(vector<std::string>{"[" + npcName + "]", "Hello, I Am " + npcName + "!", "I have nothing for you right now." });
+		npc->name = "Enemy";
+		npc->tag->Set(Tag::Enemy);
+		collider->SetLayer(CollisionLayer::ENEMY);
+		//ENEMY - no interaction
+		npc->AddComponent<C_EnemyHealth>();
+		auto npcHealth = npc->GetComponent<C_EnemyHealth>();
+
+		npcHealth->Set(100);
+
+		//add some AI - 
+		npc->AddComponent<C_AI>();
+		auto npcai = npc->GetComponent<C_AI>();
+		//patrol
+		auto aipatrol = make_shared<AI_Patrol>(npcai);
+		npcai->RegisterState(aipatrol);
+		//chase
+		auto aichase = make_shared<AI_Chase>(npcai);
+		npcai->RegisterState(aichase);
+		
+		
+		npcai->ChangeState(std::string("PATROL"));
+		
+
+		
+		//C_AI* npcptr = npcai.get();
+		//AI_Patrol* aipatrolptr = aipatrol.get();
+		
 	}
-	npc->name = npcName;
+
 
 	if (!persistant)
 	{
@@ -720,7 +902,8 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	}
 	else
 	{
-		objects.Add(npc);
+		npc->makePersistant();
+		dynamicObjects.Add(npc);
 	}
 
 
@@ -737,8 +920,12 @@ void SceneDungeon::Draw(Window& window)
 
 	//edit do it in the drawables collection - 
 
+	
+	//TODO:: add a draw layer to be able to pull the foreground out of static objects collection to draw
+	//after we draw the dynamic objects - this will allow the player to be BEHIND things again!
 	objects.Draw(window);
 	dynamicObjects.Draw(window);
+	objects.DrawSpecificLayer(window, DrawLayer::InFront);
 
 	
 	if (Dialog.m_bShowDialog)

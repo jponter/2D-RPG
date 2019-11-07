@@ -22,6 +22,12 @@ Game::Game() : window("2D Game Engine")
 			sceneStateMachine,
 			window,textureAllocator); //1
 
+	std::shared_ptr<ScenePauseScreen> pauseScreen =
+		std::make_shared<ScenePauseScreen>(workingDir,
+			sceneStateMachine,
+			window, textureAllocator, fontAllocator,
+			hero);
+
 	std::shared_ptr<SceneDungeon> gameScene =
 		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, "House Exterior Animated.tmx");
 
@@ -36,9 +42,11 @@ Game::Game() : window("2D Game Engine")
 	unsigned int splashScreenID = sceneStateMachine.Add(splashScreen); //2
 	unsigned int gameSceneID = sceneStateMachine.Add(gameScene);
 	unsigned int dungeonSceneID = sceneStateMachine.Add(dungeonScene);
+	unsigned int pauseSceneID = sceneStateMachine.Add(pauseScreen);
 	
-	sceneStateMachine.AddSceneName("gameScene", gameSceneID);
-	sceneStateMachine.AddSceneName("dungeonScene", dungeonSceneID);
+	sceneStateMachine.AddSceneName("House Exterior", gameSceneID);
+	sceneStateMachine.AddSceneName("Creepy Dungeon", dungeonSceneID);
+	sceneStateMachine.AddSceneName("pauseScreen", pauseSceneID);
 
 	splashScreen->SetSwitchToScene(dungeonSceneID); //3
 	dungeonScene->SetSwitchToScene(gameSceneID);

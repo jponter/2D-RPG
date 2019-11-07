@@ -29,6 +29,7 @@ public:
 
 	// Transitions to scene with specified id.
 	void SwitchTo(unsigned int id);
+	void SwitchTo(unsigned int id, unsigned int previous);
 
 	// Removes scene from state machine.
 	void Remove(unsigned int id);
@@ -45,6 +46,10 @@ private:
 	// Stores our current scene id. This is incremented whenever 
 	// a scene is added.
 	unsigned int insertedSceneID;
+
+	// store the previous scene
+	unsigned int previousSceneID;
+
 
 	//should we change scene?
 	bool changeScene = false;

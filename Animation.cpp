@@ -25,7 +25,15 @@ void Animation::AddFrame(int textureID, int x, int y,
 	isLooped = looped;
 }
 
+bool Animation::IsFinished()
+{
+	if (currentFrameIndex == frames.size() -1 )
+	{
+		return true;
+	}
 
+	return false;
+}
 
 const FrameData* Animation::GetCurrentFrame() const
 {

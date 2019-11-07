@@ -13,16 +13,31 @@ S_Collidable::S_Collidable(Quadtree& collisionTree) : collisionTree(collisionTre
     playerCollisions.SetBit((int) CollisionLayer::Default);
     playerCollisions.SetBit((int) CollisionLayer::Tile);
 	playerCollisions.SetBit((int) CollisionLayer::NPC);
+	playerCollisions.SetBit((int)CollisionLayer::ENEMY);
     collisionLayers.insert(std::make_pair(CollisionLayer::Player, playerCollisions));
     
     Bitmask projectileCollisions;
     projectileCollisions.SetBit((int) CollisionLayer::Tile);
-	projectileCollisions.SetBit((int)CollisionLayer::NPC);
+	projectileCollisions.SetBit((int) CollisionLayer::NPC);
+	projectileCollisions.SetBit((int)CollisionLayer::ENEMY);
     collisionLayers.insert(std::make_pair(CollisionLayer::Projectile, projectileCollisions));
 
 	Bitmask npcCollisions;
 	npcCollisions.SetBit((int)CollisionLayer::Tile);
 	collisionLayers.insert(std::make_pair(CollisionLayer::NPC, npcCollisions));
+
+	Bitmask deadCollisions;
+	deadCollisions.SetBit((int)CollisionLayer::DEAD);
+	collisionLayers.insert(std::make_pair(CollisionLayer::DEAD, deadCollisions));
+
+	Bitmask enemyCollisions;
+	enemyCollisions.SetBit((int)CollisionLayer::ENEMY);
+	enemyCollisions.SetBit((int)CollisionLayer::Player);
+	enemyCollisions.SetBit((int)CollisionLayer::Tile);
+	enemyCollisions.SetBit((int)CollisionLayer::NPC);
+	enemyCollisions.SetBit((int)CollisionLayer::Projectile);
+
+	collisionLayers.insert((std::make_pair(CollisionLayer::ENEMY, enemyCollisions)));
 }
 
 void S_Collidable::Add(std::vector<std::shared_ptr<Object>>& objects)

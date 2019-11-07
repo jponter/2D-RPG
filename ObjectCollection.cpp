@@ -25,6 +25,11 @@ void ObjectCollection::Draw(Window& window)
 	drawables.Draw(window);
 }
 
+void ObjectCollection::DrawSpecificLayer(Window& window, DrawLayer specificLayer)
+{
+	drawables.DrawSpecificLayer(window, specificLayer);
+}
+
 void ObjectCollection::Add(std::shared_ptr<Object> object)
 {
 	newObjects.push_back(object);

@@ -111,7 +111,27 @@ void SceneStateMachine::SwitchTo(unsigned int id)
 		curScene = it->second;
 		
 
-		curScene->OnActivate();
+		curScene->OnActivate(-1);
 		
+	}
+}
+
+void SceneStateMachine::SwitchTo(unsigned int id, unsigned int previous)
+{
+	auto it = scenes.find(id);
+	if (it != scenes.end())
+	{
+		if (curScene)
+		{
+			// If we have a current scene, we call its OnDeactivate method.
+			curScene->OnDeactivate();
+		}
+
+		// Setting the current scene ensures that it is updated and drawn.
+		curScene = it->second;
+
+		
+		curScene->OnActivate(previous);
+
 	}
 }

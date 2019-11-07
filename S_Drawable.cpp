@@ -48,6 +48,18 @@ void S_Drawable::Sort()
 	}
 }
 
+void S_Drawable::DrawSpecificLayer(Window& window, DrawLayer specificLayer)
+{
+	for (auto& layer : drawables)
+	{
+		if (layer.first == specificLayer)
+			for (auto& drawable : layer.second)
+			{
+				drawable->Draw(window);
+			}
+	}
+}
+
 void S_Drawable::Draw(Window& window)
 {
 	Sort();

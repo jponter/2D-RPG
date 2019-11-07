@@ -16,6 +16,7 @@ public:
 	void BGClear();
 
 	void Draw(Window& window);
+	void DrawSpecificLayer(Window& window, DrawLayer specificLayer);
 
 private:
 	void Add(std::shared_ptr<Object> object);

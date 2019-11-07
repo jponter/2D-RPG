@@ -95,6 +95,7 @@ bool S_Quests_MainQuest::OnInteration(ObjectCollection* objects, Object* target,
 			else
 			{
 				X(ShowDialog({ "[Luna]","I'll meet you there in a minute!" }, target->context->drawTextEngine, target->context->window));
+				return true;
 			}
 		}
 	}

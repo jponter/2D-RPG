@@ -84,6 +84,7 @@ private:
 
 	ResourceAllocator<sf::Texture>& textureAllocator;
 	SharedContext& context;
+	bool animatedTileFound;
 };
 
 

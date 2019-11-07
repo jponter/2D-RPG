@@ -191,3 +191,13 @@ sf::FloatRect Window::GetViewSpace() const
 	return viewSpace;
 }
 
+void Window::CopyScreen()
+{
+	screenCopyTexture = sf::Texture(renderTextture.getTexture());
+}
+
+sf::Vector2f Window::mapPixelToCoords(sf::Vector2i pixelPos)
+{
+	return window.mapPixelToCoords(pixelPos);
+}
+

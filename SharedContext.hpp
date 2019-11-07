@@ -20,6 +20,7 @@ class TileMapParser;
 class Object;
 class Quadtree;
 class Raycast;
+class BoxCast;
 class S_ScriptProcessor;
 class DrawText;
 class S_Quests;
@@ -28,6 +29,7 @@ struct SharedContext
 {
 	Input* input;
 	ObjectCollection* objects;
+	ObjectCollection* dynamicObjects;
 	WorkingDirectory* workingDir;
 	ResourceAllocator<sf::Texture>* textureAllocator;
 	ResourceAllocator<sf::Font>* fontAllocator;
@@ -40,10 +42,12 @@ struct SharedContext
 	std::shared_ptr<Object> player;
 	Quadtree* collisionTree;
 	Raycast* raycast;
+	BoxCast* boxcast;
 	S_ScriptProcessor* scriptEngine;
 	DrawText* drawTextEngine;
 	std::list<S_Quests*> *listQuests;
 	std::string levelName;
+	bool inDialog;
 	
 	//SceneStateMachine* sceneStateMachine;
 	//Game* thisGame;

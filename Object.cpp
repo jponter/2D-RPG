@@ -1,6 +1,6 @@
 #include "Object.hpp"
 
-Object::Object(SharedContext* context) : context(context) , queuedForRemoval(false), persistant(false), name("NOTSET")
+Object::Object(SharedContext* context) : context(context) , queuedForRemoval(false), persistant(false), name("NOTSET"), m_dead(false), respawnOnEnter(true)
 {
 	transform = AddComponent<C_Transform>();
 	instanceID = AddComponent<C_InstanceID>();
@@ -52,6 +52,16 @@ void Object::QueueForRemoval()
 void Object::makePersistant()
 {
 	persistant = true;
+}
+
+bool Object::IsDead()
+{
+	return m_dead;
+}
+
+void Object::MakeDead()
+{
+	m_dead = true;
 }
 
 bool Object::isPersistant()

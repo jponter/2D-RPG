@@ -12,17 +12,33 @@ void C_MovementAnimation::Awake()
 
 void C_MovementAnimation::Update(float deltaTime)
 {
-	if (animation->GetAnimationState() != AnimationState::Projectile)
+	if (!owner->IsDead()) // dead - no need to update anything!
 	{
-		const sf::Vector2f& currentVel = velocity->Get();
+		if (animation->GetAnimationState() != AnimationState::Projectile && animation->GetAnimationState() != AnimationState::Slash ) // && animation->GetAnimationState() != AnimationState::Thrust)
+		{
+			const sf::Vector2f& currentVel = velocity->Get();
 
-		if (currentVel.x != 0.f || currentVel.y != 0.f)
-		{
-			animation->SetAnimationState(AnimationState::Walk);
-		}
-		else
-		{
-			animation->SetAnimationState(AnimationState::Idle);
+			if (currentVel.x != 0.f || currentVel.y != 0.f)
+			{
+				if (animation->GetAnimationState() == AnimationState::Thrust && animation->IsFinished())
+				{
+					animation->SetAnimationState(AnimationState::Walk);
+				}
+				else
+					animation->SetAnimationState(AnimationState::Walk);
+			}
+			else
+			{
+				if (animation->GetAnimationState() == AnimationState::Thrust && !animation->IsFinished())
+				{
+					//do nothing still in animation
+				}
+				else
+				{
+					animation->SetAnimationState(AnimationState::Idle);
+				}
+				
+			}
 		}
 	}
 }

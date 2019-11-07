@@ -7,6 +7,7 @@
 #include "Input.hpp"
 #include "SceneStateMachine.hpp" // New
 #include "SceneSplashScreen.hpp" // New
+#include "ScenePauseScreen.hpp"
 #include "SceneGame.hpp" // New
 #include "SceneDungeon.hpp"
 #include "ResourceAllocator.hpp"

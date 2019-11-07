@@ -60,6 +60,12 @@ void C_Transform::SetStatic(bool isStatic) { isStaticTransform = isStatic; }
 
 bool C_Transform::isStatic() const { return isStaticTransform; }
 
+void C_Transform::Pushback(sf::Vector2i heading)
+{
+	position.x = position.x + (heading.x * m_pushbackDefaultDistance);
+	position.y = position.y + (heading.y * m_pushbackDefaultDistance);
+}
+
 const sf::Vector2f& C_Transform::GetPreviousFramePosition() const { return previousFramePosition; }
 
 void C_Transform::SetParent(std::shared_ptr<C_Transform> parent)

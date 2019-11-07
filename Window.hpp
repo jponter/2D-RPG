@@ -39,10 +39,17 @@ public:
 	void SetMouseCursorVisible(bool visible);
 	float fElapsedtime;
 	bool isSnowing;
+	void CopyScreen();
+	sf::Vector2f mapPixelToCoords(sf::Vector2i pixelPos);
+
+	sf::Texture screenCopyTexture;
+	
 
 private:
 	sf::RenderWindow window;
 	sf::RenderTexture renderTextture;
+	
+	
 
 	sf::Shader shader;
 

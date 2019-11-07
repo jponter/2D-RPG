@@ -33,8 +33,19 @@
 #include "boost/assign/list_of.hpp"
 #include <map>
 #include "C_UIWorldLabel.hpp"
+#include "C_EnemyHealth.hpp"
+#include "BoxCast.hpp"
+#include "C_AI.hpp"
+#include "AI_Patrol.hpp"
+#include "AI_Chase.hpp"
 
-
+enum class npcTypes
+{
+	SKELETON,
+	ORC,
+	SIGNPOST,
+	PLAYER
+};
 
 
 
@@ -51,7 +62,7 @@ public:
 	void OnCreate() override;
 	void OnDestroy() override;
 
-	void OnActivate() override;
+	void OnActivate(unsigned int previousSceneID) override;
 	void OnDeactivate() override;
 
 	void ProcessInput() override;
@@ -72,6 +83,8 @@ public:
 	DrawText Dialog;
 
 	bool AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant) override;
+	bool inDialog() override;
+	void SetDialog(bool value) override;
 
 private:
 
@@ -81,7 +94,7 @@ private:
 
 	
 
-	void AddAnimationComponent(std::shared_ptr<Object> object, const int textureID);
+	void AddAnimationComponent(std::shared_ptr<Object> object, const int textureID, npcTypes EnemyType, bool additional);
 	
 	ResourceAllocator<sf::Texture>& textureAllocator;
 	ResourceAllocator<sf::Font>& fontAllocator;
@@ -95,6 +108,8 @@ private:
 	TileMapParser mapParser;
 
 	Window& window;
+
+	bool m_exitDialog = false;
 	
 	SharedContext context;
 	bool change = false;
@@ -114,8 +129,10 @@ private:
 	float newPosY;
 
 	S_Drawable drawableSystem;
+	S_Drawable dynamicDrawableSystem;
 	S_Collidable collisionSystem;
 	Raycast raycast;
+	BoxCast boxcast;
 	
 	Quadtree collisionTree;
 	//thread th1;

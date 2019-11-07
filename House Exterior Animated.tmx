@@ -386,7 +386,7 @@
  <objectgroup id="18" name="Objects">
   <object id="5" name="Warp Point" x="320.999" y="446" width="32" height="32">
    <properties>
-    <property name="toLevel" value="dungeonScene"/>
+    <property name="toLevel" value="Creepy Dungeon"/>
     <property name="toX" type="float" value="128"/>
     <property name="toY" type="float" value="240"/>
    </properties>

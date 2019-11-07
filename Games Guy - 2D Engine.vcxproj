@@ -131,10 +131,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI_Chase.cpp" />
+    <ClCompile Include="AI_Patrol.cpp" />
+    <ClCompile Include="AI_State.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Bitmask.cpp" />
+    <ClCompile Include="BoxCast.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentPairHash.cpp" />
+    <ClCompile Include="C_AI.cpp" />
     <ClCompile Include="C_Animation.cpp" />
     <ClCompile Include="C_BoxCollider.cpp" />
     <ClCompile Include="C_Camera.cpp" />
@@ -142,6 +147,7 @@
     <ClCompile Include="C_Collider.cpp" />
     <ClCompile Include="C_Direction.cpp" />
     <ClCompile Include="C_Drawable.cpp" />
+    <ClCompile Include="C_EnemyHealth.cpp" />
     <ClCompile Include="C_InstanceID.cpp" />
     <ClCompile Include="C_InteractableTalking.cpp" />
     <ClCompile Include="C_InteractWithObjects.cpp" />
@@ -172,6 +178,7 @@
     <ClCompile Include="ResourceAllocator.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneDungeon.cpp" />
+    <ClCompile Include="ScenePauseScreen.cpp" />
     <ClCompile Include="SceneSplashScreen.cpp" />
     <ClCompile Include="SceneStateMachine.cpp" />
     <ClCompile Include="SharedContext.cpp" />
@@ -188,10 +195,15 @@
     <ClCompile Include="WorkingDirectory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI_Chase.hpp" />
+    <ClInclude Include="AI_Patrol.hpp" />
+    <ClInclude Include="AI_State.hpp" />
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Bitmask.hpp" />
+    <ClInclude Include="BoxCast.hpp" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="ComponentPairHash.hpp" />
+    <ClInclude Include="C_AI.hpp" />
     <ClInclude Include="C_Animation.hpp" />
     <ClInclude Include="C_BoxCollider.hpp" />
     <ClInclude Include="C_Camera.hpp" />
@@ -199,6 +211,7 @@
     <ClInclude Include="C_Collider.hpp" />
     <ClInclude Include="C_Direction.hpp" />
     <ClInclude Include="C_Drawable.hpp" />
+    <ClInclude Include="C_EnemyHealth.hpp" />
     <ClInclude Include="C_InstanceID.hpp" />
     <ClInclude Include="C_Interactable.hpp" />
     <ClInclude Include="C_InteractableTalking.hpp" />
@@ -227,6 +240,7 @@
     <ClInclude Include="ResourceAllocator.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="SceneDungeon.hpp" />
+    <ClInclude Include="ScenePauseScreen.hpp" />
     <ClInclude Include="SceneSplashScreen.hpp" />
     <ClInclude Include="SceneStateMachine.hpp" />
     <ClInclude Include="SharedContext.hpp" />

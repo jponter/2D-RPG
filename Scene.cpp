@@ -4,3 +4,8 @@ bool Scene::AddNpcToScene(std::string name, float x, float y, std::string npcTyp
 {
 	return false;
 }
+
+bool Scene::inDialog()
+{
+	return false;
+}

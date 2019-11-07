@@ -12,6 +12,7 @@ enum class DrawLayer
 	Background,
 	Foreground,
 	Entities,
+	Player,
 	InFront,
 	UI
 };

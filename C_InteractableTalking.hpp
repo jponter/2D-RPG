@@ -13,7 +13,7 @@ class C_InteractableTalking : public Component, public C_Interactable
 public:
     C_InteractableTalking(Object* owner);
     
-    void OnInteraction(Object* other) override;
+    bool OnInteraction(Object* other) override;
 
 	/*void SetTextEngine(const DrawText& engine)
 	{
