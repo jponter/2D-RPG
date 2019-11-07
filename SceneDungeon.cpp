@@ -8,7 +8,6 @@
 #include "SharedContext.hpp"
 #include "C_Direction.hpp"
 
-
 //MACROS
 /*current commands
 X(moveTo(object, float target x, float target y, float timetotake)
@@ -16,12 +15,7 @@ X(ShowDialog(vector strings) - eg: X(ShowDialog({"Hello!", "What are you doing h
 */
 #define X(n) m_script.AddCommand(new S_Command_ ## n) // shorthand for adding scripts to the script engine
 
-
-
-
 //auto mylog = new ImGuiLog;
-
-
 
 //constructor
 SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
@@ -33,11 +27,10 @@ SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 
 	: LevelName(LevelName), workingDir(workingDir),
 	textureAllocator(textureAllocator),
-	mapParser(textureAllocator, context), 
+	mapParser(textureAllocator, context),
 	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests),
-	m_levelFile(level),	collisionSystem(collisionTree), objects(drawableSystem,collisionSystem), dynamicObjects(dynamicDrawableSystem, collisionSystem), raycast(collisionTree), boxcast(collisionTree),
-	fontAllocator(fontAllocator){}
-
+	m_levelFile(level), collisionSystem(collisionTree), objects(drawableSystem, collisionSystem), dynamicObjects(dynamicDrawableSystem, collisionSystem), raycast(collisionTree), boxcast(collisionTree),
+	fontAllocator(fontAllocator) {}
 
 void SceneDungeon::ActivateTitle(Window* window, ResourceAllocator<sf::Font>* fontAllocator)
 {
@@ -56,16 +49,13 @@ void SceneDungeon::ActivateTitle(Window* window, ResourceAllocator<sf::Font>* fo
 
 		text.setFillColor(sf::Color(c, c, c));
 		window->Draw(text);
-		
+
 		c = c - 1;
 	}
-
 }
-
 
 void SceneDungeon::CreatePlayer()
 {
-
 	//std::shared_ptr<Object> player = std::make_shared<Object>(&context);
 	player = std::make_shared<Object>(&context);
 
@@ -78,7 +68,7 @@ void SceneDungeon::CreatePlayer()
 	message = "Player ID " + std::to_string(player->instanceID->Get());
 	context.imguilog->mylog.AddLog(message.c_str());
 	context.imguilog->mylog.AddLog("\n");
-#endif 
+#endif
 
 	//sf::Vector2f playerpos = player->transform->GetPosition();
 
@@ -92,15 +82,12 @@ void SceneDungeon::CreatePlayer()
 	//sprite->Load(workingDir.Get() + "viking.png");
 	//setting of sprite now handled by animation component
 
-
-
 	//KEYBOARD MOVEMENT
 	/*auto movement = player->AddComponent<C_KeyboardMovement>();
 	movement->SetInput(&input);*/
 	player->AddComponent<C_KeyboardMovement>();
 
 	// add animation component
-	
 
 	int textureID = textureAllocator.Add(workingDir.Get()
 		+ "player-bow.png");
@@ -111,11 +98,10 @@ void SceneDungeon::CreatePlayer()
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
 
-	AddAnimationComponent(player, textureID2,npcTypes::PLAYER ,false);
+	AddAnimationComponent(player, textureID2, npcTypes::PLAYER, false);
 	AddAnimationComponent(player, textureID, npcTypes::PLAYER, true);
 
 	//end aminations
-
 
 	//add collider component
 	auto collider = player->AddComponent<C_BoxCollider>();
@@ -131,13 +117,10 @@ void SceneDungeon::CreatePlayer()
 	projectileAttack->SetTextureAllocator(&textureAllocator);*/
 	player->AddComponent<C_ProjectileAttack>();
 
-
-
 	//add the camera
 	/*auto camera = player->AddComponent<C_Camera>();
 	camera->SetWindow(&window);*/
 	player->AddComponent<C_Camera>();
-
 
 	//below line is an example of how to access components of player and call their functions
 	//player->transform->SetPosition(100.0f, 10.0f);
@@ -167,9 +150,6 @@ void SceneDungeon::CreatePlayer()
 
 	//add the player
 	dynamicObjects.Add(player);
-
-
-
 }
 
 void SceneDungeon::CreateFriend(std::string name, float x, float y)
@@ -188,7 +168,7 @@ void SceneDungeon::CreateFriend(std::string name, float x, float y)
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
 
-	AddAnimationComponent(npc, textureID,npcTypes::SKELETON, false);
+	AddAnimationComponent(npc, textureID, npcTypes::SKELETON, false);
 
 	auto collider = npc->AddComponent<C_BoxCollider>();
 	collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
@@ -208,12 +188,9 @@ void SceneDungeon::CreateFriend(std::string name, float x, float y)
 	npc->name = name;
 
 	objects.Add(npc);
-
-
-
 }
 
-void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID, npcTypes npctype,bool additional)
+void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const int textureID, npcTypes npctype, bool additional)
 {
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
@@ -223,8 +200,6 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 	if (!additional)
 	{
 		auto animation = object->AddComponent<C_Animation>();
-
-
 
 		/*******************
 		 * Idle Animations *
@@ -247,7 +222,6 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 		}
 
 		animation->AddAnimation(AnimationState::Idle, idleAnimations);
-
 
 		/**********************
 		 * Walking Animations *
@@ -301,9 +275,9 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 
 		animation->AddAnimation(AnimationState::Slash, slashAnimations);
 
-	/*************************
-	 * Thrust Animations		 *
-	 *************************/
+		/*************************
+		 * Thrust Animations		 *
+		 *************************/
 
 		const bool thrustAnimationLooped = false;
 		const int thrustFrameCount = 7;
@@ -327,7 +301,6 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 
 		animation->AddAnimation(AnimationState::Thrust, thrustAnimations);
 
-		
 		/*************************
 		 * DEAD Animation		 *
 		 *************************/
@@ -353,13 +326,10 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 		}
 
 		animation->AddAnimation(AnimationState::Dead, deadAnimations);
-
-
 	}
 	else if (additional == true)
 	{
 		auto animation = object->GetComponent<C_Animation>();
-		
 
 		/*************************
 		 * Projectile Animations *
@@ -385,10 +355,7 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 		}
 
 		animation->AddAnimation(AnimationState::Projectile, projectileAnimations);
-
-
 	}
-
 }
 
 //void SceneDungeon::ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser)
@@ -398,14 +365,14 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 //	switch (level)
 //	{
 //
-//		
+//
 //	case 0:
 //	{
-//		
+//
 //		objects.Clear();
 //		//textureAllocator.Clear();
-//		
-//		
+//
+//
 //		sf::Vector2i mapOffset(0, 0);
 //
 //		 levelTiles = mapParser.Parse(workingDir.Get() + "House Exterior New.tmx"
@@ -425,7 +392,7 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 //	case 1:
 //	{
 //
-//		
+//
 //		objects.Clear();
 //		//textureAllocator.Clear();
 //		sf::Vector2i mapOffset(0, 0);
@@ -464,13 +431,13 @@ void SceneDungeon::AddAnimationComponent(std::shared_ptr<Object> object, const i
 //		objects.ProcessNewObjects();
 //		break;
 //	}
-//	
+//
 //	}// end switch
 //
-//	
 //
-//	
-//	
+//
+//
+//
 //
 //}
 
@@ -504,12 +471,12 @@ void SceneDungeon::OnCreate()
 	context.levelName = LevelName;
 	context.inDialog = false;
 	context.dynamicObjects = &dynamicObjects;
-	
+
 	//update the context with mylog
 	//context.imguilog = mylog;
 	context.currentScene = this;
 	context.mapParser = &mapParser;
-	
+
 	sf::Vector2i mapOffset(0, 0);
 
 	std::vector<std::shared_ptr<Object>> levelTiles;
@@ -523,9 +490,6 @@ void SceneDungeon::OnCreate()
 
 	objects.Add(levelTiles);
 
-	
-
-
 	//create our player
 	CreatePlayer();
 	//context.player = &player;
@@ -533,34 +497,21 @@ void SceneDungeon::OnCreate()
 	//CreateFriend("Skelly", 500, 900);
 	//CreateFriend("Jim", 600, 900);
 
-
-	
-	
 	//npc->transform->SetPosition(280, 340);
 	objects.ProcessNewObjects();
 	dynamicObjects.ProcessNewObjects();
-	
-	
 
-	
 	//SceneDungeon::ChangeLevel(1, objects, mapParser);
 	//CreatePlayer();
 	//CreateFriend();
 
-
 	//ChangeLevel(2, objects, mapParser);
-	
-	
+
 	//ChangeLevel(1, objects, mapParser);
 
 	//Add the world
 	//sf::Vector2i mapOffset(-100, 128);
-	
-	
-
-
 }
-
 
 //static void ShoweAppLog(bool* p_open)
 //{
@@ -591,7 +542,6 @@ void SceneDungeon::OnCreate()
 
 void SceneDungeon::OnDestroy()
 {
-
 }
 
 void SceneDungeon::OnDeactivate()
@@ -599,9 +549,8 @@ void SceneDungeon::OnDeactivate()
 	//th1.join();
 	//save the player position
 	hero.pos = sf::Vector2f(newPosX, newPosY);
-	
-	dynamicObjects.Clear();
 
+	dynamicObjects.Clear();
 }
 
 void SceneDungeon::OnActivate(unsigned int previousSceneID)
@@ -616,33 +565,28 @@ void SceneDungeon::OnActivate(unsigned int previousSceneID)
 		q->PopulateDynamics(&dynamicObjects, this->LevelName, &context);
 	}
 
-
-	//this thread doesnt work - it is trying to access the window in a non safe way! 
+	//this thread doesnt work - it is trying to access the window in a non safe way!
 	// left in so i can see how to start threads in future
 	//std::thread t(&SceneDungeon::ActivateTitle, this, &window, &fontAllocator);
-	
+
 	std::shared_ptr<Object> levelLabelObject = std::make_shared<Object>(&context);
 	auto levelLabel = levelLabelObject->AddComponent<C_UIWorldLabel>();
 	levelLabel->SetDrawLayer(DrawLayer::UI);
 	levelLabel->SetFontColour(sf::Color::White);
 	levelLabel->SetText(LevelName);
-	
+
 	//levelLabelObject->transform->SetParent(player->transform);
 	sf::Vector2u center = window.GetCentre();
-	levelLabelObject->transform->SetPosition(center.x - 200,center.y);
+	levelLabelObject->transform->SetPosition(center.x - 200, center.y);
 
 	dynamicObjects.Add(levelLabelObject);
-	
-	
-
 }
 
 void SceneDungeon::ProcessInput()
 {
 	if (window.HasFocus())
 	{
-			input.Update();
-		
+		input.Update();
 	}
 
 	if (input.IsKeyUp(Input::Key::T))
@@ -659,14 +603,20 @@ void SceneDungeon::ProcessInput()
 		{
 			window.isSnowing = false;
 		}
-
-
 	}
 
 	if (input.IsKeyUp(Input::Key::Esc))
 	{
 		window.close();
 	}
+
+	if (input.IsKeyUp(Input::Key::R))
+	{
+		auto playerhealth = player->GetComponent<C_EnemyHealth>();
+		playerhealth->Set(playerhealth->GetMax());
+		player->Revive();
+	}
+
 
 	if (input.IsKeyUp(Input::Key::P))
 	{
@@ -681,11 +631,8 @@ void SceneDungeon::ProcessInput()
 			newPosX = hero.pos.x;
 			newPosY = hero.pos.y;
 			stateMachine.SwitchTo(pauseid, gameid);
-			
-			
 		}
 	}
-
 
 	if (Dialog.m_bShowDialog)
 	{
@@ -694,18 +641,13 @@ void SceneDungeon::ProcessInput()
 
 		velocity->Set(0, 0);
 
-		
-		
-
-			if (input.IsKeyDown(Input::Key::SPACE))
-			{
-				Dialog.m_bShowDialog = false;
-				m_script.CompleteCommand();
-				player->userMovementEnabled = true;
-				m_exitDialog = true;
-				
-			}
-		
+		if (input.IsKeyDown(Input::Key::SPACE))
+		{
+			Dialog.m_bShowDialog = false;
+			m_script.CompleteCommand();
+			player->userMovementEnabled = true;
+			m_exitDialog = true;
+		}
 	}
 }
 
@@ -724,26 +666,22 @@ void SceneDungeon::Update(float deltaTime)
 	//window.isSnowing = false;
 	m_script.ProcessCommand(deltaTime);
 
-
 	hero.pos = player->transform->GetPosition();
-	auto playerHealth =  player->GetComponent<C_EnemyHealth>();
+	auto playerHealth = player->GetComponent<C_EnemyHealth>();
 	hero.health = playerHealth->Get();
 
-	
-	
 	objects.ProcessNewObjects();
 	dynamicObjects.ProcessNewObjects();
-	
+
 	dynamicObjects.Update(deltaTime);
 	//objects.Update(deltaTime); - we shouldnt need to update anything that is not a dynamic tile!
-	
+
 	dynamicObjects.ProcessRemovals();
 	//objects.ProcessRemovals();
-	
 
 	//check for the debug camera zoom
 	Debug::HandleCameraZoom(window, input);
-	
+
 	window.fElapsedtime += deltaTime;
 	//ImGui::ShowTestWindow();
 
@@ -762,19 +700,13 @@ void SceneDungeon::Update(float deltaTime)
 		}
 		else Debug::LogError("Level switch ID not found");
 	}
-
-	
-	
 }
 
 void SceneDungeon::LateUpdate(float deltaTime)
 {
 	dynamicObjects.LateUpdate(deltaTime);
 	objects.LateUpdate(deltaTime);
-	
 }
-
-
 
 void SceneDungeon::SetSwitchToScene(unsigned int id)
 {
@@ -784,7 +716,6 @@ void SceneDungeon::SetSwitchToScene(unsigned int id)
 
 bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant)
 {
-
 	std::shared_ptr<Object> npc = std::make_shared<Object>(&context);
 	const unsigned int tileScale = 2;
 
@@ -793,8 +724,6 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	//float x = ((objX)/32) * 32* tileScale + offset.x;
 	//float y = ((objY)/32) * 32* tileScale + offset.y;
 
-
-
 	npc->transform->SetPosition(x, y);
 
 	auto sprite = npc->AddComponent<C_Sprite>();
@@ -802,8 +731,7 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 
 	auto animation = npc->AddComponent<C_Animation>();
 
-
-	//type of NPC - 
+	//type of NPC -
 	int textureID = 0;
 	npcTypes EnemyType;
 	std::map<std::string, npcTypes> npcMap = boost::assign::map_list_of("Skeleton", npcTypes::SKELETON)("Orc", npcTypes::ORC)("Signpost", npcTypes::SIGNPOST);
@@ -819,9 +747,6 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 		break;
 	}// end switch
 
-
-
-
 	const unsigned int frameWidth = 64;
 	const unsigned int frameHeight = 64;
 	if (textureID != 0)
@@ -830,15 +755,11 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	}
 
 	auto collider = npc->AddComponent<C_BoxCollider>();
-	
-	
+
 	//collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
 	//collider->SetOffset(0.f, 14.f);
-	
+
 	collider->SetSize(frameWidth, frameHeight); // full size collider for NPC's
-
-
-	
 
 	/*auto warp1 = npc->AddComponent<C_WarpLevelOnCollision>();
 	warp1->warplevel = 1;*/
@@ -846,8 +767,7 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 	npc->AddComponent<C_Velocity>();
 	npc->AddComponent<C_MovementAnimation>();
 	npc->AddComponent<C_Direction>();
-	
-	
+
 	if (npcName != "ENEMY")
 	{
 		npc->AddComponent<C_InteractableTalking>();
@@ -875,7 +795,7 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 
 		npcHealth->Set(100);
 
-		//add some AI - 
+		//add some AI -
 		npc->AddComponent<C_AI>();
 		auto npcai = npc->GetComponent<C_AI>();
 		//patrol
@@ -884,17 +804,12 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 		//chase
 		auto aichase = make_shared<AI_Chase>(npcai);
 		npcai->RegisterState(aichase);
-		
-		
-		npcai->ChangeState(std::string("PATROL"));
-		
 
-		
+		npcai->ChangeState(std::string("PATROL"));
+
 		//C_AI* npcptr = npcai.get();
 		//AI_Patrol* aipatrolptr = aipatrol.get();
-		
 	}
-
 
 	if (!persistant)
 	{
@@ -906,8 +821,6 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 		dynamicObjects.Add(npc);
 	}
 
-
-
 	return true;
 }
 
@@ -915,29 +828,23 @@ void SceneDungeon::Draw(Window& window)
 {
 	//we really want to do a quad tree search here for objects within our view
 	/*sf::FloatRect rect = context.window->GetViewSpace();
-	
+
 	std::vector<std::shared_ptr<Object>>  o = objects.worldTree.Search(rect);*/
 
-	//edit do it in the drawables collection - 
+	//edit do it in the drawables collection -
 
-	
 	//TODO:: add a draw layer to be able to pull the foreground out of static objects collection to draw
 	//after we draw the dynamic objects - this will allow the player to be BEHIND things again!
 	objects.Draw(window);
 	dynamicObjects.Draw(window);
 	objects.DrawSpecificLayer(window, DrawLayer::InFront);
 
-	
 	if (Dialog.m_bShowDialog)
 	{
 		sf::Vector2f PlayerCoord = player->transform->GetPosition();
 
 		if ((PlayerCoord.y - 200) < 0) PlayerCoord.y = 420;
 		if ((PlayerCoord.x + 100) > window.GetSize().x) PlayerCoord.x -= 150;
-		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, PlayerCoord.x -200, PlayerCoord.y - 200,  fontAllocator, context);
-		
+		Dialog.displayDialog(Dialog.m_vecDialogToShow, window, PlayerCoord.x - 200, PlayerCoord.y - 200, fontAllocator, context);
 	}
-
-	
 }
-

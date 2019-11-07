@@ -25,6 +25,11 @@ void C_EnemyHealth::SetMax(int maxhealth)
 	m_maxhealth = maxhealth;
 }
 
+int C_EnemyHealth::GetMax()
+{
+	return m_maxhealth;
+}
+
 //void C_EnemyHealth::Update(float deltaTime)
 //{
 //

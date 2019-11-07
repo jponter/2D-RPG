@@ -36,6 +36,7 @@ public:
 
 	bool IsDead();
 	void MakeDead();
+	void Revive();
 	
 	
 

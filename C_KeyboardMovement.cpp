@@ -27,7 +27,7 @@ void C_KeyboardMovement::SetMovementSpeed(float moveSpeed)
 void C_KeyboardMovement::Update(float deltaTime)
 {
 	
-	if (owner->userMovementEnabled) // we set this via script engine
+	if (owner->userMovementEnabled && !owner->IsDead()) // we set this via script engine
 	{
 		
 		//TODO: keyboardmovement should not interact with animation component.

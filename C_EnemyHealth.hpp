@@ -17,6 +17,7 @@ public:
 	bool Damage(int damage);
 	void Set(int health);
 	void SetMax(int maxhealth);
+	int GetMax();
 
 	//void Update(float deltaTime) override;
 

@@ -64,6 +64,11 @@ void Object::MakeDead()
 	m_dead = true;
 }
 
+void Object::Revive()
+{
+	m_dead = false;
+}
+
 bool Object::isPersistant()
 {
 	return persistant;
