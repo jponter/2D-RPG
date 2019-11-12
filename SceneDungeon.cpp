@@ -22,13 +22,13 @@ SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
 	Window& window, SceneStateMachine& stateMachine,
 	ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor,
-	list<S_Quests*>& listQuests,
+	list<S_Quests*>& listQuests, Inventory& playerInventory,
 	std::string level)
 
 	: LevelName(LevelName), workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests),
+	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests), playerInventory(playerInventory),
 	m_levelFile(level), collisionSystem(collisionTree), objects(drawableSystem, collisionSystem), dynamicObjects(dynamicDrawableSystem, collisionSystem), raycast(collisionTree), boxcast(collisionTree),
 	fontAllocator(fontAllocator) {}
 
@@ -471,6 +471,7 @@ void SceneDungeon::OnCreate()
 	context.levelName = LevelName;
 	context.inDialog = false;
 	context.dynamicObjects = &dynamicObjects;
+	context.playerInventory = &playerInventory;
 
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -712,6 +713,80 @@ void SceneDungeon::SetSwitchToScene(unsigned int id)
 {
 	// Stores the id of the scene that we will transition to.
 	switchToState = id;
+}
+
+bool SceneDungeon::AddItemToScene(std::string itemName, float x, float y, std::string itemType, bool persistant)
+{
+	std::shared_ptr<Object> item = std::make_shared<Object>(&context);
+	const unsigned int tileScale = 2;
+
+	item->transform->SetPosition(x, y);
+
+	auto sprite = item->AddComponent<C_Sprite>();
+	sprite->SetDrawLayer(DrawLayer::Entities);
+	sprite->SetSortOrder(0);
+	//sprite->SetScale(tileScale, tileScale);
+
+	int textureID = 0;
+	itemTypes ItemType;
+
+	textureID = textureAllocator.Add(context.workingDir->Get() + "icons.png");
+	int row = 4;
+	int column = 6;
+
+	sprite->Load(textureID);
+
+	// set the offset in the icon sheet we will want to calculate this based on the row and colum above which should be a switch on the item type as per the enemy type working below
+	// for now i'm hardcoding
+	row = (row-1) * 32;
+	column = (column-1)*32;
+	sprite->SetTextureRect(column, row, 32, 32);
+
+
+	const unsigned int frameWidth = 32;
+	const unsigned int frameHeight = 32;
+
+	auto collider = item->AddComponent<C_BoxCollider>();
+
+	//collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
+	//collider->SetOffset(0.f, 14.f);
+
+	collider->SetSize(frameWidth, frameHeight); // 32x32 for items
+	collider->SetLayer(CollisionLayer::Tile);
+
+
+	//TODO: hard coding for test - we will want to set this via the item type later
+	auto pickup = item->AddComponent<C_ItemPickupOnCollision>();
+	pickup->m_itemName = itemName;
+	pickup->m_itemType = itemType;
+	pickup->m_itemData = itemType;
+	pickup->column = column;
+	pickup->row = row;
+	pickup->keyitem = false;
+	pickup->m_textureId = textureID;
+	pickup->pickup = true;
+
+
+	//TODO: Add a new component for item pickup that either uses immediately or adds to inventory
+	//set the flag usage here when adding the item
+	// add another component that tells us what type of item it is
+
+	// C_item - will be a component that has the item types
+	// C_PickupOnCollision - will query the C_Item properties to decide what to do with it - likely adding to the inventory which will be another ObjectCollection
+
+	if (!persistant)
+	{
+		dynamicObjects.Add(item);
+	}
+	else
+	{
+		item->makePersistant();
+		dynamicObjects.Add(item);
+	}
+
+	return true;
+
+
 }
 
 bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant)

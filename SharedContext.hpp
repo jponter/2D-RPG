@@ -24,6 +24,7 @@ class BoxCast;
 class S_ScriptProcessor;
 class DrawText;
 class S_Quests;
+class Inventory;
 
 struct SharedContext
 {
@@ -47,6 +48,7 @@ struct SharedContext
 	DrawText* drawTextEngine;
 	std::list<S_Quests*> *listQuests;
 	std::string levelName;
+	Inventory* playerInventory;
 	bool inDialog;
 	
 	//SceneStateMachine* sceneStateMachine;

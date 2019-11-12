@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "S_ScriptProcessor.hpp"
+#include "Inventory.hpp"
 
 
 class SceneDungeon;

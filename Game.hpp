@@ -18,6 +18,8 @@
 #include "DrawText.h"
 #include "S_ScriptProcessor.hpp"
 #include "S_Quests.hpp"
+#include "Inventory.hpp"
+
 
 
 
@@ -56,8 +58,12 @@ private:
 	ResourceAllocator<sf::Texture> textureAllocator;
 	ResourceAllocator<sf::Font> fontAllocator;
 	HeroClass hero;
+	//ObjectCollection m_Inventory;
+
+	Inventory m_Inventory;
 
 	list<S_Quests*> m_listQuests;
+	
 	
 
 	

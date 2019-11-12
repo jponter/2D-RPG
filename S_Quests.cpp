@@ -79,6 +79,17 @@ bool S_Quests_MainQuest::OnInteration(ObjectCollection* objects, Object* target,
 		return true;
 	}
 
+	if (target->name == "Orcy")
+	{
+		if (source->context->playerInventory->HasItem("HEALTH"))
+		{
+			X(ShowDialog({ "[Orcy]" , "Hey " + source->name , "you have a health potion! Cool!" }, target->context->drawTextEngine, target->context->window));
+			return true;
+		}
+		else return false;
+	}
+
+
 	if (target->name == "Luna") {
 		if (m_nPhase == 0)
 		{

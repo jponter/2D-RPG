@@ -151,6 +151,8 @@
     <ClCompile Include="C_InstanceID.cpp" />
     <ClCompile Include="C_InteractableTalking.cpp" />
     <ClCompile Include="C_InteractWithObjects.cpp" />
+    <ClCompile Include="C_Item.cpp" />
+    <ClCompile Include="C_ItemPickupOnCollision.cpp" />
     <ClCompile Include="C_KeyboardMovement.cpp" />
     <ClCompile Include="C_MovementAnimation.cpp" />
     <ClCompile Include="C_ProjectileAttack.cpp" />
@@ -169,6 +171,8 @@
     <ClCompile Include="ImGuiLog.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectCollection.cpp" />
@@ -216,6 +220,8 @@
     <ClInclude Include="C_Interactable.hpp" />
     <ClInclude Include="C_InteractableTalking.hpp" />
     <ClInclude Include="C_InteractWithObjects.hpp" />
+    <ClInclude Include="C_Item.hpp" />
+    <ClInclude Include="C_ItemPickupOnCollision.hpp" />
     <ClInclude Include="C_KeyboardMovement.hpp" />
     <ClInclude Include="C_MovementAnimation.hpp" />
     <ClInclude Include="C_ProjectileAttack.hpp" />
@@ -232,6 +238,8 @@
     <ClInclude Include="HeroClass.h" />
     <ClInclude Include="ImGuiLog.hpp" />
     <ClInclude Include="Input.hpp" />
+    <ClInclude Include="Inventory.hpp" />
+    <ClInclude Include="Item.hpp" />
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="ObjectCollection.hpp" />
     <ClInclude Include="Quadtree.hpp" />

@@ -38,6 +38,8 @@
 #include "C_AI.hpp"
 #include "AI_Patrol.hpp"
 #include "AI_Chase.hpp"
+#include "C_ItemPickupOnCollision.hpp"
+#include "item.hpp"
 
 enum class npcTypes
 {
@@ -47,6 +49,11 @@ enum class npcTypes
 	PLAYER
 };
 
+enum class itemTypes
+{
+	HEALTH
+};
+
 
 
 class SceneDungeon : public Scene
@@ -54,7 +61,7 @@ class SceneDungeon : public Scene
 public:
 	SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 		ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
-		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, std::string level);
+		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, Inventory& playerInventory, std::string level);
 
 	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
 	void ChangeLevel1(std::string id, float posX, float posY);
@@ -83,6 +90,7 @@ public:
 	DrawText Dialog;
 
 	bool AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant) override;
+	bool AddItemToScene(std::string name, float x, float y, std::string itemType, bool persistant) override;
 	bool inDialog() override;
 	void SetDialog(bool value) override;
 
@@ -123,6 +131,8 @@ private:
 
 	//move to game glass - now a reference
 	S_ScriptProcessor& m_script;
+
+	Inventory& playerInventory;
 	
 	std::string m_levelFile;
 	float newPosX;

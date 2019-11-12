@@ -10,6 +10,7 @@ enum class Tag
     NPC,
 	Enemy,
 	Boss,
+	Item
 };
 
 class C_Tag : public Component

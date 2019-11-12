@@ -7,7 +7,7 @@
 
 
 
-Game::Game() : window("2D Game Engine")
+Game::Game() : window("2D Game Engine") 
 {
 	//set some pointers
 
@@ -29,10 +29,10 @@ Game::Game() : window("2D Game Engine")
 			hero);
 
 	std::shared_ptr<SceneDungeon> gameScene =
-		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, "House Exterior Animated.tmx");
+		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,  "House Exterior Animated.tmx");
 
 	std::shared_ptr<SceneDungeon> dungeonScene =
-		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, "dungeon.tmx");
+		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, "dungeon.tmx");
 
 	// add a test quest
 	//std::string QuestName = "Main Quest";

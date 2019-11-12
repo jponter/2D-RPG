@@ -194,6 +194,8 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			xml_node<>* nodecopy = node;
 			//node = node->first_node("object");
 			std::cout << "Node Object Group has value " << node->name() << "\n";
+
+			//Warp Points from the MAP
 			if (std::string(node->first_attribute("name")->value()) == "Warp Point")
 			{
 				std::cout << "Warp Point found!" << std::endl;
@@ -320,6 +322,53 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 				context.dynamicObjects->Add(tileObject);
 
 			} //end warp
+
+
+			//Items from the MAP!
+
+			if (std::string(node->first_attribute("name")->value()) == "ITEM")
+			{
+
+				//add an item from the map
+				std::cout << "Item Found!" << std::endl;
+				objX = std::atoi(node->first_attribute("x")->value());
+				objY = std::atoi(node->first_attribute("y")->value());
+				objWidth = 32;
+				objHeight = 32;
+
+				std::cout << "X = " << objX << std::endl;
+				std::cout << "Y = " << objY << std::endl;
+				std::cout << "Height = " << objHeight << std::endl;
+				std::cout << "Width = " << objWidth << std::endl;
+
+				for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
+				{
+					std::cout << "node Object Group has attribute " << attr->name() << " ";
+					std::cout << "with value " << attr->value() << "\n";
+
+				}
+				node = node->first_node("properties");
+
+				node = node->first_node("property");
+				std::cout << "Node Property has value " << node->value() << "\n";
+				std::string itemName = node->first_attribute("value")->value();
+				std::cout << "Item =  " << itemName << std::endl;
+				
+				node = node->next_sibling("property");
+				std::string itemType = node->first_attribute("value")->value();
+
+				node = nodecopy;
+
+				//todo: Add objects to the map!
+				float x = objX * tileScale + offset.x;
+				float y = objY * tileScale + offset.y;
+
+				context.currentScene->AddItemToScene(itemName, x, y, itemType, true);
+
+				std::cout << "Call AddItemToScene " + itemName + " :" + itemType  << endl;
+
+			}
+
 
 			//NPC's from the MAP!
 			if (std::string(node->first_attribute("name")->value()) == "NPC")
