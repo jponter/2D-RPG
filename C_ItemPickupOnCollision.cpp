@@ -29,7 +29,7 @@ void C_ItemPickupOnCollision::OnCollisionEnter(std::shared_ptr<C_BoxCollider> ot
 			Debug::Log("Adding to Inventory");
 			//we dont have one of these add it to the inventory
 			//Item::Item(std::string name, int textureID, int row, int column, ItemTypes itemType,std::string itemData bool keyItem)
-			std::shared_ptr<Item> item = std::make_shared<Item>(m_itemName, m_textureId, row, column, ItemTypes::HEALTH, m_itemData, false);
+			std::shared_ptr<Item> item = std::make_shared<Item>(m_itemName, m_textureId, row, column, itemType, m_itemData, keyitem);
 			other->owner->context->playerInventory->Add(item);
 
 		}

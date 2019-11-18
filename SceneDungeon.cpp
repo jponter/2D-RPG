@@ -615,7 +615,12 @@ void SceneDungeon::ProcessInput()
 	{
 		auto playerhealth = player->GetComponent<C_EnemyHealth>();
 		playerhealth->Set(playerhealth->GetMax());
+		////Change the objects collision layer
+		auto collision = player->GetComponent<C_Collider>();
+		collision->SetLayer(CollisionLayer::Player);
 		player->Revive();
+		
+		
 	}
 
 
@@ -634,6 +639,23 @@ void SceneDungeon::ProcessInput()
 			stateMachine.SwitchTo(pauseid, gameid);
 		}
 	}
+
+	if (input.IsKeyUp(Input::Key::I))
+	{
+		// we need to pause
+		Debug::Log("I Key Pressed - moving to inventory");
+		auto gameid = stateMachine.GetSceneByName(LevelName);
+		auto inventoryid = stateMachine.GetSceneByName("inventoryScreen");
+		window.CopyScreen();
+
+		if (gameid != -1 && inventoryid != -1)
+		{
+			newPosX = hero.pos.x;
+			newPosY = hero.pos.y;
+			stateMachine.SwitchTo(inventoryid, gameid);
+		}
+	}
+
 
 	if (Dialog.m_bShowDialog)
 	{
@@ -728,20 +750,11 @@ bool SceneDungeon::AddItemToScene(std::string itemName, float x, float y, std::s
 	//sprite->SetScale(tileScale, tileScale);
 
 	int textureID = 0;
-	itemTypes ItemType;
+	
 
 	textureID = textureAllocator.Add(context.workingDir->Get() + "icons.png");
-	int row = 4;
-	int column = 6;
-
-	sprite->Load(textureID);
-
-	// set the offset in the icon sheet we will want to calculate this based on the row and colum above which should be a switch on the item type as per the enemy type working below
-	// for now i'm hardcoding
-	row = (row-1) * 32;
-	column = (column-1)*32;
-	sprite->SetTextureRect(column, row, 32, 32);
-
+	int row = 0;
+	int column = 0;
 
 	const unsigned int frameWidth = 32;
 	const unsigned int frameHeight = 32;
@@ -754,17 +767,65 @@ bool SceneDungeon::AddItemToScene(std::string itemName, float x, float y, std::s
 	collider->SetSize(frameWidth, frameHeight); // 32x32 for items
 	collider->SetLayer(CollisionLayer::Tile);
 
+	
+
+	ItemTypes ItemClass = ItemTypes::HEALTH;
+	bool bKeyItem = false;
+	bool bPickup = false;
+	std::map<std::string, ItemTypes> itemMap = boost::assign::map_list_of("HEALTH", ItemTypes::HEALTH)("KEY", ItemTypes::KEY);
+	switch (itemMap[itemName])
+	{
+	case ItemTypes::HEALTH:
+		row = 4;
+		column = 6;
+		bPickup = true;
+		ItemClass = ItemTypes::HEALTH;
+		
+		break;
+	case ItemTypes::KEY:
+		row = 19;
+		column = std::stoi(itemType) * 1;
+		bKeyItem = true;
+		bPickup = true;
+		ItemClass = ItemTypes::KEY;
+
+		
+		break;
+
+	default:
+		//we shouldnt hit this set it to a skull icon
+		row = 0;
+		column = 0;
+		break;
+	}// end switch
+
+
+
+	
+
+	sprite->Load(textureID);
+
+	// set the offset in the icon sheet we will want to calculate this based on the row and colum above which should be a switch on the item type as per the enemy type working below
+	// for now i'm hardcoding
+	row = (row-1) * 32;
+	column = (column-1)*32;
+	sprite->SetTextureRect(column, row, 32, 32);
 
 	//TODO: hard coding for test - we will want to set this via the item type later
 	auto pickup = item->AddComponent<C_ItemPickupOnCollision>();
+	
+
+
+	
 	pickup->m_itemName = itemName;
 	pickup->m_itemType = itemType;
 	pickup->m_itemData = itemType;
 	pickup->column = column;
 	pickup->row = row;
-	pickup->keyitem = false;
+	pickup->keyitem = bKeyItem;
 	pickup->m_textureId = textureID;
-	pickup->pickup = true;
+	pickup->pickup = bPickup;
+	pickup->itemType = ItemClass;
 
 
 	//TODO: Add a new component for item pickup that either uses immediately or adds to inventory
@@ -875,12 +936,14 @@ bool SceneDungeon::AddNpcToScene(std::string npcName, float x, float y, std::str
 		auto npcai = npc->GetComponent<C_AI>();
 		//patrol
 		auto aipatrol = make_shared<AI_Patrol>(npcai);
+		aipatrol->SetPatrolState(PatrolType::HORIZONTAL);
 		npcai->RegisterState(aipatrol);
 		//chase
 		auto aichase = make_shared<AI_Chase>(npcai);
 		npcai->RegisterState(aichase);
 
 		npcai->ChangeState(std::string("PATROL"));
+		
 
 		//C_AI* npcptr = npcai.get();
 		//AI_Patrol* aipatrolptr = aipatrol.get();

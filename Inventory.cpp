@@ -49,6 +49,11 @@ bool Inventory::Increase(std::string name, std::string itemData)
 
 }
 
+std::vector<std::shared_ptr<Item>>& Inventory::GetInventory()
+{
+	return items;
+}
+
 bool Inventory::HasItem(std::string name, std::string itemData)
 {
 	for (auto& item : items)

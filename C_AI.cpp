@@ -39,3 +39,8 @@ void C_AI::RegisterState(std::shared_ptr<AI_State> state)
 {
 	m_stateMap.emplace(state->GetName(), state);
 }
+
+std::shared_ptr<AI_State> C_AI::GetAIState()
+{
+	return m_CurrentState;
+}

@@ -49,10 +49,7 @@ enum class npcTypes
 	PLAYER
 };
 
-enum class itemTypes
-{
-	HEALTH
-};
+
 
 
 

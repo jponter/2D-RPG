@@ -9,6 +9,7 @@ AI_Patrol::AI_Patrol(std::shared_ptr<C_AI> owner) : AI_State(owner)
 {
 	m_owner = owner;
 	m_Origin = m_owner->owner->transform->GetPosition();
+	m_lastFramePosition = m_Origin;
 }
 
 void AI_Patrol::Update(float deltaTime)
@@ -20,43 +21,115 @@ void AI_Patrol::Update(float deltaTime)
 	{
 		//can set some AI here!
 		auto velocity = m_owner->owner->GetComponent<C_Velocity>();
+		
 		if (velocity != nullptr)
 		{
 			if (velocity->Get().x == 0) velocity->Set(30.0f, 20.0f);
 		}
 
+
+
 		auto currentPosition = m_owner->owner->transform->GetPosition();
 
-		if (currentPosition.x > m_Origin.x + 100)
-		{
-			//velocity->Set(-30.0f, 0.0f);
-			force = Normalise(m_Origin - currentPosition) * 30.0f;
-			velocity->Set(force);
-		}
-		else if (currentPosition.x < m_Origin.x - 100)
-		{
-			//velocity->Set(30.0f, 0.0f);
-			force = Normalise(m_Origin - currentPosition) * 30.0f;
-			velocity->Set(force);
-		}
-		if (currentPosition.y > m_Origin.y + 100)
-		{
-			//velocity->Set(0, 30.0f);
-			force = Normalise(m_Origin - currentPosition) * 30.0f;
-			velocity->Set(force);
-		}
-		else if (currentPosition.y < m_Origin.y - 100)
-		{
-			//velocity->Set(0, -30.0f);
-			force = Normalise(m_Origin - currentPosition) * 30.0f;
-			velocity->Set(force);
 
+		switch (m_PatrolType)
+		{
+		case PatrolType::DEFAULT:
+		{
+			if (velocity != nullptr)
+			{
+				if (velocity->Get().x == 0) velocity->Set(30.0f, 20.0f);
+			}
+			if (currentPosition.x > m_Origin.x + 100)
+			{
+				//velocity->Set(-30.0f, 0.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+			}
+			else if (currentPosition.x < m_Origin.x - 100)
+			{
+				//velocity->Set(30.0f, 0.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+			}
+			if (currentPosition.y > m_Origin.y + 100)
+			{
+				//velocity->Set(0, 30.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+			}
+			else if (currentPosition.y < m_Origin.y - 100)
+			{
+				//velocity->Set(0, -30.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+
+			}
+			break;
+		}// end DEFAULT
+
+		case PatrolType::HORIZONTAL:
+		{
+			if (velocity != nullptr)
+			{
+				if (velocity->Get().x == 0) velocity->Set(30.0f, 0.0f);
+			}
+			
+			if (currentPosition.x > m_Origin.x + 100)
+			{
+				//velocity->Set(-30.0f, 0.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+			}
+			else if (currentPosition.x < m_Origin.x - 100)
+			{
+				//velocity->Set(30.0f, 0.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+			}
+			break;
 		}
+
+		case PatrolType::VERTICAL:
+		{
+			if (velocity != nullptr)
+			{
+				if (velocity->Get().y == 0) velocity->Set(0.0f, 30.0f);
+			}
+			if (currentPosition.y > m_Origin.y + 100)
+			{
+				//velocity->Set(0, 30.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+			}
+			else if (currentPosition.y < m_Origin.y - 100)
+			{
+				//velocity->Set(0, -30.0f);
+				force = Normalise(m_Origin - currentPosition) * 30.0f;
+				velocity->Set(force);
+
+			}
+			break;
+		}
+
 
 		
 
-		
 
+		} //end switch
+		
+		
+////can we bounce off walls?
+//		if (currentPosition.x == m_lastFramePosition.x)
+//		{
+//			force.x *= -1;
+//			velocity->Set(force);
+//		}
+//		if (currentPosition.y == m_lastFramePosition.y)
+//		{
+//			force.y *= -1;
+//			velocity->Set(force);
+//		}
 
 		//TODO: check whether a player is in range if so change the AI state
 		direction = m_owner->owner->GetComponent<C_Direction>();
@@ -104,4 +177,10 @@ void AI_Patrol::OnExit()
 {
 	Debug::Log("AI_Patrol::OnExit");
 
+}
+
+bool AI_Patrol::SetPatrolState(PatrolType patrolType)
+{
+	m_PatrolType = patrolType;
+	return true;
 }

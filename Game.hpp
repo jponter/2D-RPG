@@ -5,11 +5,16 @@
 #include "Window.hpp"
 #include "WorkingDirectory.hpp"
 #include "Input.hpp"
+
+//Scenes
 #include "SceneStateMachine.hpp" // New
 #include "SceneSplashScreen.hpp" // New
 #include "ScenePauseScreen.hpp"
 #include "SceneGame.hpp" // New
 #include "SceneDungeon.hpp"
+#include "SceneInventory.hpp"
+
+
 #include "ResourceAllocator.hpp"
 #include "ImGuiLog.hpp"
 #include "imgui.h"
@@ -19,6 +24,7 @@
 #include "S_ScriptProcessor.hpp"
 #include "S_Quests.hpp"
 #include "Inventory.hpp"
+
 
 
 

@@ -15,6 +15,8 @@ public:
 	void Draw(const sf::Drawable& drawable);
 	void Draw(const sf::Vertex* vertices,
 		std::size_t vertexCount, sf::PrimitiveType type);
+
+	void Clear(const sf::Color& color);
 	
 	void EndDraw();
 
@@ -41,6 +43,7 @@ public:
 	bool isSnowing;
 	void CopyScreen();
 	sf::Vector2f mapPixelToCoords(sf::Vector2i pixelPos);
+	sf::Vector2f convertCoords(sf::Vector2i coords, sf::View view);
 
 	sf::Texture screenCopyTexture;
 	

@@ -14,6 +14,7 @@ public:
 	bool Increase(std::string name, std::string itemData);
 	bool HasItem(std::string name, std::string itemData);
 	bool HasItem(std::string name);
+	std::vector<std::shared_ptr<Item>>& GetInventory();
 
 
 

@@ -20,13 +20,20 @@ Game::Game() : window("2D Game Engine")
 	std::shared_ptr<SceneSplashScreen> splashScreen =
 		std::make_shared<SceneSplashScreen>(workingDir,
 			sceneStateMachine,
-			window,textureAllocator); //1
+			window,textureAllocator); 
+	
+	std::shared_ptr<SceneInventory> inventoryScreen =
+		std::make_shared<SceneInventory>(workingDir,
+			sceneStateMachine,
+			window, textureAllocator, fontAllocator, hero);
+	inventoryScreen->SetInventory(m_Inventory);
 
 	std::shared_ptr<ScenePauseScreen> pauseScreen =
 		std::make_shared<ScenePauseScreen>(workingDir,
 			sceneStateMachine,
 			window, textureAllocator, fontAllocator,
 			hero);
+	
 
 	std::shared_ptr<SceneDungeon> gameScene =
 		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,  "House Exterior Animated.tmx");
@@ -43,15 +50,21 @@ Game::Game() : window("2D Game Engine")
 	unsigned int gameSceneID = sceneStateMachine.Add(gameScene);
 	unsigned int dungeonSceneID = sceneStateMachine.Add(dungeonScene);
 	unsigned int pauseSceneID = sceneStateMachine.Add(pauseScreen);
+	unsigned int inventorySceneID = sceneStateMachine.Add(inventoryScreen);
 	
 	sceneStateMachine.AddSceneName("House Exterior", gameSceneID);
 	sceneStateMachine.AddSceneName("Creepy Dungeon", dungeonSceneID);
 	sceneStateMachine.AddSceneName("pauseScreen", pauseSceneID);
+	sceneStateMachine.AddSceneName("inventoryScreen", inventorySceneID);
 
 	splashScreen->SetSwitchToScene(dungeonSceneID); //3
 	dungeonScene->SetSwitchToScene(gameSceneID);
 
-	sceneStateMachine.SwitchTo(splashScreenID); //4
+
+	//uncomment to put the splash screen back
+	//sceneStateMachine.SwitchTo(splashScreenID); //4
+	sceneStateMachine.SwitchTo(dungeonSceneID);
+
 
 	deltaTime = clock.restart().asSeconds();
 

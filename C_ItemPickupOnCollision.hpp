@@ -25,6 +25,7 @@ public:
 	int row = 0;
 	bool pickup = false;
 	bool keyitem = false;
+	ItemTypes itemType;
 
 
 

@@ -19,6 +19,7 @@ public:
 
 	void RegisterState( std::shared_ptr<AI_State> state);
 	Object* owner;
+	std::shared_ptr<AI_State> GetAIState();
 
 private:
 

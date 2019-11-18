@@ -63,9 +63,15 @@ void Window::BeginDraw() // 4
 void Window::Draw(const sf::Drawable& drawable)
 {
 	//window.draw(drawable);
+	
 	renderTextture.draw(drawable);
 	
 	
+}
+
+void Window::Clear(const sf::Color& color)
+{
+	renderTextture.clear(color);
 }
 
 void Window::Draw(const sf::Vertex* vertices,
@@ -199,5 +205,11 @@ void Window::CopyScreen()
 sf::Vector2f Window::mapPixelToCoords(sf::Vector2i pixelPos)
 {
 	return window.mapPixelToCoords(pixelPos);
+}
+
+sf::Vector2f Window::convertCoords(sf::Vector2i coords, sf::View view)
+{
+
+	return window.mapPixelToCoords(coords, view);
 }
 

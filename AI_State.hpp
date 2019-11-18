@@ -3,6 +3,7 @@
 #define AI_State_hpp
 
 #include "C_AI.hpp"
+
 #include <string>
 
 class C_AI;

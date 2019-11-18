@@ -8,6 +8,13 @@
 #include "C_Direction.hpp"
 #include "BoxCast.hpp"
 
+enum class PatrolType
+{
+	DEFAULT,
+	HORIZONTAL,
+	VERTICAL,
+	
+};
 
 class AI_Patrol :
 	public AI_State
@@ -21,6 +28,7 @@ public:
 	void OnEnter() override;
 	void OnExit() override;
 	std::string GetName()  override { return "PATROL"; };
+	bool SetPatrolState(PatrolType patrolType);
 
 
 private:
@@ -48,7 +56,8 @@ private:
 	sf::Vector2f m_Origin;
 	std::shared_ptr<C_Direction> direction;
 	float interactionDistance = 100.0f;
-
+	PatrolType	m_PatrolType = PatrolType::DEFAULT;
+	sf::Vector2f m_lastFramePosition;
 
 
 };

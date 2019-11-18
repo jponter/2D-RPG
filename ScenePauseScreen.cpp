@@ -16,7 +16,7 @@ ScenePauseScreen::ScenePauseScreen(WorkingDirectory& workingDir,
 
 void ScenePauseScreen::OnCreate()
 {
-	// We’ll initialise our splash screen image here.
+	// We’ll initialise our Pause screen image here.
 
 
 

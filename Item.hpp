@@ -5,9 +5,21 @@
 
 enum class  ItemTypes
 {
-	HEALTH = 1
+	HEALTH = 1,
+	KEY = 2
 };
 
+struct ItemInfo
+{
+	std::string name;
+	std::string description;
+	std::string data;
+	int row;
+	int column;
+	int textureid;
+	int count;
+	bool keyitem;
+};
 
 class Item 
 {
@@ -17,6 +29,9 @@ public:
 	std::string GetName();
 	std::string GetData();
 	void Increase();
+	void GetInfo(ItemInfo& info);
+
+	
 	
 
 private:
