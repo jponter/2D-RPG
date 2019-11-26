@@ -18,7 +18,7 @@ class ScenePauseScreen : public Scene
 	public:
 		ScenePauseScreen(WorkingDirectory& workingDir,
 			SceneStateMachine& sceneStateMachine, Window& window,
-			ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator, HeroClass& hero);
+			ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator, HeroClass& hero, Input& input);
 
 		void OnCreate() override;
 		void OnDestroy() override;
@@ -35,7 +35,7 @@ class ScenePauseScreen : public Scene
 		sf::Sprite splashSprite;
 		sf::Sprite screenSprite;
 		sf::Texture screenTexture;
-		Input input;
+		Input& input;
 
 		WorkingDirectory& workingDir;
 		SceneStateMachine& sceneStateMachine;

@@ -19,7 +19,7 @@ class SceneInventory :
 		SceneStateMachine& sceneStateMachine,
 		Window& window,
 		ResourceAllocator<sf::Texture>& textureAllocator,
-		ResourceAllocator<sf::Font>& fontAllocator, HeroClass& hero	);
+		ResourceAllocator<sf::Font>& fontAllocator, HeroClass& hero, Input& input	);
 
 	void SetContext(SharedContext& context) { m_context = &context; }
 	void SetInventory(Inventory& inventory) { player_inventory = &inventory;  }
@@ -47,7 +47,7 @@ private:
 	ResourceAllocator<sf::Texture>& textureAllocator;
 	ResourceAllocator<sf::Font>& fontAllocator;
 
-	Input input;
+	Input& input;
 
 	sf::Text text;
 	sf::Text countText;

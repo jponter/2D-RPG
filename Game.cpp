@@ -25,21 +25,21 @@ Game::Game() : window("2D Game Engine")
 	std::shared_ptr<SceneInventory> inventoryScreen =
 		std::make_shared<SceneInventory>(workingDir,
 			sceneStateMachine,
-			window, textureAllocator, fontAllocator, hero);
+			window, textureAllocator, fontAllocator, hero, input);
 	inventoryScreen->SetInventory(m_Inventory);
 
 	std::shared_ptr<ScenePauseScreen> pauseScreen =
 		std::make_shared<ScenePauseScreen>(workingDir,
 			sceneStateMachine,
 			window, textureAllocator, fontAllocator,
-			hero);
+			hero, input);
 	
 
 	std::shared_ptr<SceneDungeon> gameScene =
-		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,  "House Exterior Animated.tmx");
+		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,  "House Exterior Animated.tmx", input);
 
 	std::shared_ptr<SceneDungeon> dungeonScene =
-		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, "dungeon.tmx");
+		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, "dungeon.tmx", input);
 
 	// add a test quest
 	//std::string QuestName = "Main Quest";
@@ -69,6 +69,8 @@ Game::Game() : window("2D Game Engine")
 	deltaTime = clock.restart().asSeconds();
 
 	static auto mylog = new ImGuiLog;
+
+	
 
 	window.imGuiInit();
 
@@ -135,7 +137,7 @@ void Game::Draw()
 	
 
 
-	ImGui::Begin("Window 1"); // begin window
+	ImGui::Begin("Debug Information"); // begin window
 
 
 	int numObjects = 0;//context.objects.size();
@@ -158,6 +160,7 @@ void Game::Draw()
 
 	ImGui::Text("Player X = %f, Y = %f\n", hero.pos.x, hero.pos.y);
 	ImGui::Text("Player Health = %i", hero.health);
+	ImGui::Text("Joystick:\n x: %f\n y: %f", input.getjoyx(), input.getjoyy());
 
 	//sf::Vector2u playerCoords;
 	//playerCoords = playerTexture->getSize();

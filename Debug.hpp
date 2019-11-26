@@ -34,6 +34,7 @@ private:
 	static std::vector<std::array<sf::Vertex, 2>> lines;
 	static std::vector<sf::RectangleShape> rects;
 	
+	
 };
 
 #endif /* Debug_hpp */

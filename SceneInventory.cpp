@@ -6,10 +6,10 @@ SceneInventory::SceneInventory(WorkingDirectory& workingDir,
 	Window& window,
 	ResourceAllocator<sf::Texture>& textureAllocator,
 	ResourceAllocator<sf::Font>& fontAllocator,
-	HeroClass& hero)
+	HeroClass& hero, Input& input)
 	
 	: sceneStateMachine(sceneStateMachine), workingDir(workingDir),
-	window(window), textureAllocator(textureAllocator), fontAllocator(fontAllocator), hero(hero)
+	window(window), textureAllocator(textureAllocator), fontAllocator(fontAllocator), hero(hero), input(input)
 	{}
 
 void SceneInventory::OnCreate()

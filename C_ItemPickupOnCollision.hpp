@@ -8,6 +8,7 @@
 #include "Object.hpp"
 #include "Quadtree.hpp"
 #include "Item.hpp"
+#include "Item_Key.hpp"
 #include "Inventory.hpp"
 
 class C_ItemPickupOnCollision: public Component, public C_Collidable

@@ -23,14 +23,14 @@ SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 	Window& window, SceneStateMachine& stateMachine,
 	ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor,
 	list<S_Quests*>& listQuests, Inventory& playerInventory,
-	std::string level)
+	std::string level, Input& input)
 
 	: LevelName(LevelName), workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
 	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests), playerInventory(playerInventory),
 	m_levelFile(level), collisionSystem(collisionTree), objects(drawableSystem, collisionSystem), dynamicObjects(dynamicDrawableSystem, collisionSystem), raycast(collisionTree), boxcast(collisionTree),
-	fontAllocator(fontAllocator) {}
+	fontAllocator(fontAllocator), input(input) {}
 
 void SceneDungeon::ActivateTitle(Window* window, ResourceAllocator<sf::Font>* fontAllocator)
 {

@@ -24,6 +24,7 @@
 #include "S_ScriptProcessor.hpp"
 #include "S_Quests.hpp"
 #include "Inventory.hpp"
+#include "Input.hpp"
 
 
 
@@ -69,6 +70,8 @@ private:
 	Inventory m_Inventory;
 
 	list<S_Quests*> m_listQuests;
+
+	Input input;
 	
 	
 

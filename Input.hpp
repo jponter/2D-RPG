@@ -4,10 +4,14 @@
 
 #include <SFML/Graphics.hpp>
 #include "Bitmask.hpp"
+//#include "Debug.hpp"
 
 class Input
 {
 public:
+
+	Input();
+
 	enum class Key
 	{
 		None = 0,
@@ -36,10 +40,30 @@ public:
 	
 	void Update();
 
+	float getjoyx() { return x; };
+	float getjoyy() { return y; };
+
 
 private:
 	Bitmask thisFrameKeys;
 	Bitmask lastFrameKeys;
+	bool m_joystick = false;
+
+	//joystick
+
+	// sensitivity
+	float sensitivity = 50.0f;
+
+	float x;
+	float y;
+	
+	bool button0; // A
+	bool button1; // B
+	bool button2; // X
+	bool joy_left = false;
+	bool joy_right = false;
+	bool joy_up = false;
+	bool joy_down = false;
 
 
 };

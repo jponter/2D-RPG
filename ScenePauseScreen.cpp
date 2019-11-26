@@ -6,12 +6,12 @@ ScenePauseScreen::ScenePauseScreen(WorkingDirectory& workingDir,
 	Window& window,
 	ResourceAllocator<sf::Texture>& textureAllocator,
 	ResourceAllocator<sf::Font>& fontAllocator,
-	HeroClass& hero)
+	HeroClass& hero, Input& input)
 	: sceneStateMachine(sceneStateMachine), workingDir(workingDir),
 	window(window), switchToState(0), currentSeconds(0.f),
 	showForSeconds(3.f), // We’ll show this splash screen for 3 seconds.
 	textureAllocator(textureAllocator),fontAllocator(fontAllocator),
-	hero(hero)
+	hero(hero), input(input)
 {}
 
 void ScenePauseScreen::OnCreate()

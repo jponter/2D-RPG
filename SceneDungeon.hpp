@@ -58,7 +58,7 @@ class SceneDungeon : public Scene
 public:
 	SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 		ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
-		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, Inventory& playerInventory, std::string level);
+		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, Inventory& playerInventory, std::string level, Input& input);
 
 	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
 	void ChangeLevel1(std::string id, float posX, float posY);
@@ -105,7 +105,7 @@ private:
 	ResourceAllocator<sf::Font>& fontAllocator;
 
 	WorkingDirectory& workingDir;
-	Input input;
+	Input& input;
 	SceneStateMachine& stateMachine;
 
 	ObjectCollection objects;

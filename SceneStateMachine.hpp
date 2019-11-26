@@ -34,6 +34,8 @@ public:
 	// Removes scene from state machine.
 	void Remove(unsigned int id);
 
+	
+
 private:
 	// Stores all of the scenes associated with this state machine.
 	std::unordered_map<unsigned int, std::shared_ptr<Scene>> scenes;

@@ -173,6 +173,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Item_Key.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectCollection.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Inventory.hpp" />
     <ClInclude Include="Item.hpp" />
+    <ClInclude Include="Item_Key.hpp" />
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="ObjectCollection.hpp" />
     <ClInclude Include="Quadtree.hpp" />

@@ -162,6 +162,7 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 			if (animatedTileFound)
 			{
 				//animated tile - put it in dynamic objects - this is a bit hacky, but we know the dynamic objects collection exists;
+				tileObject->makePersistant();
 				context.dynamicObjects->Add(tileObject);
 			}
 			else

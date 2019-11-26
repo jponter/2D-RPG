@@ -96,6 +96,8 @@ void SceneStateMachine::Remove(unsigned int id)
 	}
 }
 
+
+
 void SceneStateMachine::SwitchTo(unsigned int id)
 {
 	auto it = scenes.find(id);
