@@ -566,6 +566,10 @@ void SceneDungeon::OnActivate(unsigned int previousSceneID)
 		q->PopulateDynamics(&dynamicObjects, this->LevelName, &context);
 	}
 
+	//update player health from possible inventory changes
+	auto playerhealth = player->GetComponent<C_EnemyHealth>();
+	playerhealth->Set(hero.health);
+
 	//this thread doesnt work - it is trying to access the window in a non safe way!
 	// left in so i can see how to start threads in future
 	//std::thread t(&SceneDungeon::ActivateTitle, this, &window, &fontAllocator);
@@ -772,7 +776,7 @@ bool SceneDungeon::AddItemToScene(std::string itemName, float x, float y, std::s
 	ItemTypes ItemClass = ItemTypes::HEALTH;
 	bool bKeyItem = false;
 	bool bPickup = false;
-	std::map<std::string, ItemTypes> itemMap = boost::assign::map_list_of("HEALTH", ItemTypes::HEALTH)("KEY", ItemTypes::KEY);
+	std::map<std::string, ItemTypes> itemMap = boost::assign::map_list_of("HEALTH", ItemTypes::HEALTH)("MAXHEALTH",ItemTypes::MAXHEALTH)("KEY", ItemTypes::KEY);
 	switch (itemMap[itemName])
 	{
 	case ItemTypes::HEALTH:
@@ -782,6 +786,13 @@ bool SceneDungeon::AddItemToScene(std::string itemName, float x, float y, std::s
 		ItemClass = ItemTypes::HEALTH;
 		
 		break;
+	case ItemTypes::MAXHEALTH:
+		row = 10;
+		column = 7;
+		bPickup = true;
+		ItemClass = ItemTypes::MAXHEALTH;
+		break;
+
 	case ItemTypes::KEY:
 		row = 19;
 		column = std::stoi(itemType) * 1;

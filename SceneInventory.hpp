@@ -33,6 +33,7 @@ class SceneInventory :
 
 	void Update(float deltaTime) override;
 	void Draw(Window& window) override;
+	void InvalidateInventory();
 
 
 private:
@@ -51,10 +52,11 @@ private:
 
 	sf::Text text;
 	sf::Text countText;
+	sf::Text descriptionText;
 
 	unsigned int switchToState;
 
-	std::vector<std::shared_ptr<Item>> items;
+	//std::vector<std::shared_ptr<Item>> items;
 	std::vector<sf::Sprite> items_sprites;
 	std::vector<std::unique_ptr<sf::RenderTexture>> items_textures;
 	sf::View originalView;

@@ -31,6 +31,12 @@
     <Filter Include="Header Files\AI">
       <UniqueIdentifier>{595169f5-a901-4500-9bd8-ddb3ab51b735}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Items">
+      <UniqueIdentifier>{73c025f5-c471-4506-9d44-6fb5736acd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Items">
+      <UniqueIdentifier>{fda81928-14e0-40b7-89df-4334312a4e82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -219,9 +225,6 @@
     <ClCompile Include="C_AI.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C_Item.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -234,8 +237,17 @@
     <ClCompile Include="SceneInventory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Item_MaxHealth.cpp">
+      <Filter>Source Files\Items</Filter>
+    </ClCompile>
     <ClCompile Include="Item_Key.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item_Health.cpp">
+      <Filter>Source Files\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,17 +437,23 @@
     <ClInclude Include="C_ItemPickupOnCollision.hpp">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Item.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Inventory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SceneInventory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Item_MaxHealth.hpp">
+      <Filter>Header Files\Items</Filter>
+    </ClInclude>
     <ClInclude Include="Item_Key.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Item_Health.hpp">
+      <Filter>Header Files\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.hpp">
+      <Filter>Header Files\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

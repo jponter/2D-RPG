@@ -46,10 +46,12 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 		std::shared_ptr<sf::Font> font = fontAllocator.Get(fontID);
 		
 		countText.setFont(*font);
-		
 		countText.setCharacterSize(10);
+		
+		descriptionText.setFont(*font);
+		descriptionText.setCharacterSize(20);
 	}
-	else(Debug::LogError("SceneInventory - Font not found - Charriot"));
+	else(Debug::LogError("SceneInventory - Font not found - Charriot.ttf"));
 
 	const int fontID2 = fontAllocator.Add(workingDir.Get() + "Assets/Fonts/Sansation.ttf");
 	
@@ -59,7 +61,7 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 		text.setCharacterSize(64);
 		text.setFont(*font2);
 	}
-	else(Debug::LogError("SceneInventory - Font not fount - PixelAzureBonds.ttf"));
+	else(Debug::LogError("SceneInventory - Font not fount - Sansation.ttf"));
 
 	text.setString("Inventory  - I to exit");
 	text.setFillColor(sf::Color::White);
@@ -69,6 +71,12 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 	countText.setFillColor(sf::Color::White);
 	countText.setOutlineColor(sf::Color::Black);
 	countText.setOutlineThickness(1.0f);
+
+	descriptionText.setFillColor(sf::Color::White);
+	descriptionText.setOutlineColor(sf::Color::Black);
+	descriptionText.setOutlineThickness(1.0f);
+	
+	descriptionText.setString("");
 
 	//let's initialise the inventory screen
 
@@ -88,7 +96,7 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 	items_textures.clear();
 	scale = 2;
 	
-	items = player_inventory->GetInventory();
+	auto& items = player_inventory->GetInventory();
 	for (auto& item : items)
 	{
 		ItemInfo iteminfo;
@@ -96,7 +104,7 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 		Debug::Log("Have: " + iteminfo.name + " : " + iteminfo.data);
 		sf::Sprite itemsprite;
 
-		std::shared_ptr<sf::Texture> texture = textureAllocator.Get(iteminfo.textureid);
+		std::shared_ptr<sf::Texture> texture = textureAllocator.Get(iteminfo.textureId);
 		itemsprite.setTexture(*texture);
 		
 		itemsprite.setTextureRect(sf::IntRect(iteminfo.column , iteminfo.row , 32, 32));
@@ -146,6 +154,7 @@ void SceneInventory::SetSwitchToScene(unsigned int id)
 
 void SceneInventory::Update(float deltaTime)
 {
+	auto& items = player_inventory->GetInventory();
 	if (window.HasFocus())
 	{
 		input.Update();
@@ -197,6 +206,15 @@ void SceneInventory::Update(float deltaTime)
 		selectRect.setSize(sf::Vector2f((32.0f * scale)-4, (32.0f * scale)-4));
 		selectRect.setPosition(pos);
 
+		if (selectedInv < items.size())
+		{
+			descriptionText.setString(items[selectedInv]->GetDescription());
+			
+		}
+		else
+		{
+			descriptionText.setString("");
+		}
 
 		if (input.IsKeyUp(Input::Key::SPACE))
 		{
@@ -208,6 +226,27 @@ void SceneInventory::Update(float deltaTime)
 			{
 				//we have an inventory
 				Debug::Log("Inventory Item: " + items[selectedInv]->GetName());
+				if (items[selectedInv]->OnUse(hero)) // returns true if we used the item
+				{
+				
+					if (items[selectedInv]->GetInfo().count < 1)
+					{
+						//delete the item
+						Debug::Log("REMOVE THE ITEM");
+						items.erase(items.begin() + selectedInv);
+						
+						
+					} // if this didnt fire we still have some of the item left
+
+					//invalidate the inventory to update the screen
+					InvalidateInventory();
+				}
+				else
+				{
+					// we didnt use the item
+					Debug::Log("Item was not used");
+
+				}
 			}
 			else
 			{
@@ -217,12 +256,79 @@ void SceneInventory::Update(float deltaTime)
 
 }
 
+void SceneInventory::InvalidateInventory()
+{
+
+	int ScreenX = 16;
+	int ScreenY = 9 * 32;
+	int count = 0;
+
+	sf::Vector2f origin = window.mapPixelToCoords(sf::Vector2i(0, 0));
+	sf::Vector2f windowCentre = window.GetView().getCenter();
+	sf::Vector2u windowSize = window.GetSize();
+	sf::View view = window.GetView();
+
+	items_sprites.clear();
+	items_textures.clear();
+	scale = 2;
+
+	auto& items = player_inventory->GetInventory();
+	for (auto& item : items)
+	{
+		ItemInfo iteminfo;
+		item->GetInfo(iteminfo);
+		Debug::Log("Have: " + iteminfo.name + " : " + iteminfo.data);
+		sf::Sprite itemsprite;
+
+		std::shared_ptr<sf::Texture> texture = textureAllocator.Get(iteminfo.textureId);
+		itemsprite.setTexture(*texture);
+
+		itemsprite.setTextureRect(sf::IntRect(iteminfo.column, iteminfo.row, 32, 32));
+
+
+
+
+		std::unique_ptr<sf::RenderTexture> renderTex = std::make_unique<sf::RenderTexture>();
+		renderTex->create(32, 32);
+		renderTex->draw(itemsprite);
+
+		countText.setString(sf::String(std::to_string(iteminfo.count)));
+		countText.setPosition(sf::Vector2f(3, 0));
+		renderTex->draw(countText);
+		renderTex->display();
+
+		items_textures.push_back(std::move(renderTex));
+
+		itemsprite.setTexture(items_textures[count]->getTexture());
+		itemsprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+
+		itemsprite.setScale(sf::Vector2f(scale, scale));
+		sf::Vector2f pos = window.convertCoords(sf::Vector2i(ScreenX, ScreenY), view);
+		itemsprite.setPosition(pos);
+
+		ScreenX += 32 * scale;
+		if (ScreenX > 8 * 32 * scale)
+		{
+			ScreenY += 32 * scale;
+			ScreenX = 16;
+		}
+
+		items_sprites.push_back(itemsprite);
+
+		count++;
+
+	}
+
+}
+
+
 void SceneInventory::Draw(Window& window)
 {
 
 	sf::Vector2f windowCentre = window.GetView().getCenter();
 	
 	text.setPosition(windowCentre.x - 500, windowCentre.y + 200);
+	descriptionText.setPosition(windowCentre.x , windowCentre.y - 400);
 
 	window.Clear(sf::Color());
 
@@ -238,6 +344,7 @@ void SceneInventory::Draw(Window& window)
 
 	
 	window.Draw(text);
+	window.Draw(descriptionText);
 
 }
 

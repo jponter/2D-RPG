@@ -26,6 +26,26 @@ public:
 
 	bool atMaxHealth();
 
+	bool Damage(int dmg)
+	{
+		health -= dmg;
+		return true;
+	}
+
+	bool Heal(int heal)
+	{
+		health += heal;
+		if( health > maxHealth)	health = maxHealth;
+		return true;
+	}
+
+	bool FullHeal()
+	{
+		health = maxHealth;
+		return true;
+	}
+
+
 	//std::shared_ptr<Object> player;
 
 };

@@ -397,7 +397,7 @@
   </object>
   <object id="11" name="ITEM" x="288.333" y="128" width="30.6667" height="32.6667">
    <properties>
-    <property name="A-ItemName" value="HEALTH"/>
+    <property name="A-ItemName" value="MAXHEALTH"/>
     <property name="B-ItemType" value="60"/>
    </properties>
   </object>

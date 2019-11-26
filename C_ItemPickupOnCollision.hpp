@@ -9,6 +9,8 @@
 #include "Quadtree.hpp"
 #include "Item.hpp"
 #include "Item_Key.hpp"
+#include "Item_Health.hpp"
+#include "Item_MaxHealth.hpp"
 #include "Inventory.hpp"
 
 class C_ItemPickupOnCollision: public Component, public C_Collidable

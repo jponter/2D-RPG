@@ -39,9 +39,17 @@ void C_ItemPickupOnCollision::OnCollisionEnter(std::shared_ptr<C_BoxCollider> ot
 				other->owner->context->playerInventory->Add(item);
 					break;
 				}
+
+			case ItemTypes::MAXHEALTH:
+			{
+				std::shared_ptr<Item> item = std::make_shared<Item_MAXHealth>(m_itemName, m_textureId, row, column, itemType, m_itemData, keyitem);
+				other->owner->context->playerInventory->Add(item);
+				break;
+			}
+
 			default:
 				{
-				std::shared_ptr<Item> item = std::make_shared<Item>(m_itemName, m_textureId, row, column, itemType, m_itemData, keyitem);
+				std::shared_ptr<Item> item = std::make_shared<Item_Health>(m_itemName, m_textureId, row, column, itemType, m_itemData, keyitem);
 				other->owner->context->playerInventory->Add(item);
 				break;
 				}
