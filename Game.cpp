@@ -64,7 +64,7 @@ Game::Game() : window("2D Game Engine")
 	
 	sceneStateMachine.AddSceneName("House Exterior", gameSceneID);
 	sceneStateMachine.AddSceneName("Creepy Dungeon", dungeonSceneID);
-	sceneStateMachine.AddSceneName("Spooky Dungeon 1F", spookySceneID);
+	sceneStateMachine.AddSceneName("Spooky Dungeon", spookySceneID);
 
 	sceneStateMachine.AddSceneName("pauseScreen", pauseSceneID);
 	sceneStateMachine.AddSceneName("inventoryScreen", inventorySceneID);
