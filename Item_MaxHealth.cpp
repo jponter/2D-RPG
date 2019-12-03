@@ -6,7 +6,7 @@ Item_MAXHealth::Item_MAXHealth(std::string name, int textureID, int row, int col
 
 
 
-	SetDescription("Potion of Max Health!");
+	SetDescription("Potion of Max Health! really long text string want to see if this auto wraps in the text box that we have set with tgui!");
 }
 
 bool Item_MAXHealth::OnUse(HeroClass& hero)

@@ -15,7 +15,8 @@ void C_WarpLevelOnCollision::OnCollisionEnter(std::shared_ptr<C_BoxCollider> oth
 	{
 		
 		Debug::Log("Warp Collision - from Warp Tile ID: " + std::to_string(owner->instanceID->Get()));
-		owner->context->hero->health -= 1;
+		//owner->context->hero->health -= 1; // No Longer testing the health dmg from warping also we should be using the correct dmg
+		// modifiers if we want to dmg the player!
 			sf::Vector2f pos = this->owner->transform->GetPosition();
 			Debug::Log("collision at x: " + std::to_string(owner->transform->GetPosition().x) + "y: " + std::to_string(owner->transform->GetPosition().y));
 			//owner->context->currentScene->ChangeLevel1(1);

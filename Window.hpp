@@ -2,6 +2,7 @@
 #define Window_hpp
 
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
 class Window
 {
@@ -42,6 +43,10 @@ public:
 	float fElapsedtime;
 	bool isSnowing;
 	void CopyScreen();
+	tgui::Gui* getTgui();
+
+	sf::RenderWindow& Handle();
+
 	sf::Vector2f mapPixelToCoords(sf::Vector2i pixelPos);
 	sf::Vector2f convertCoords(sf::Vector2i coords, sf::View view);
 
@@ -51,10 +56,11 @@ public:
 private:
 	sf::RenderWindow window;
 	sf::RenderTexture renderTextture;
-	
-	
+	tgui::Gui gui;
+	tgui::Gui* gui_global;
 
 	sf::Shader shader;
+	
 
 };
 

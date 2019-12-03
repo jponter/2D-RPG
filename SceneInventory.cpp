@@ -1,6 +1,7 @@
 #include "SceneInventory.hpp"
 
 
+
 SceneInventory::SceneInventory(WorkingDirectory& workingDir,
 	SceneStateMachine& sceneStateMachine,
 	Window& window,
@@ -24,6 +25,58 @@ void SceneInventory::OnCreate()
 	BankStash.setTexture(*texture);
 	//BankStash.setScale(0.5,0.5);
 	
+	
+
+
+	try
+	{
+		gui = window.getTgui();
+		tgui::Theme theme{ "themes/Black.txt" };
+		auto panel = tgui::Panel::create();
+		panelptr = panel;
+		panel->setRenderer(theme.getRenderer("Panel"));
+		auto renderer = panel->getRenderer();
+		renderer->setBackgroundColor(sf::Color::Transparent);
+
+
+		auto textbox = tgui::TextBox::create();
+
+
+		textbox->setRenderer(theme.getRenderer("TextBox"));
+		textbox->setTextSize(20);
+		textbox->setSize(400, 150);
+		textbox->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+		textbox->setText("This is the textbox");
+
+		textbox->setEnabled(false);
+		descriptionBox = textbox;
+
+		auto descriptionLabel = tgui::Label::create();
+		descriptionLabel->setRenderer(theme.getRenderer("Label"));
+		descriptionLabel->setText("Item Description:");
+		descriptionLabel->setTextSize(30);
+		descriptionLabel->setPosition({ bindLeft(textbox), bindTop(textbox) - (34) });
+
+		sf::Vector2f pos = window.convertCoords(sf::Vector2i(635, 120), window.GetView());
+		descriptionBox->setPosition(pos.x, pos.y);
+
+
+		panel->add(textbox,"DescriptionTextBox");
+		panel->add(descriptionLabel, "DescriptionLabel");
+		panel->setVisible(false);
+		gui->add(panel,"InventoryPanel");
+
+	}
+
+	catch (const tgui::Exception & e)
+	{
+		std::cerr << "TGUI Exception: " << e.what() << std::endl;
+		//return EXIT_FAILURE;
+	}
+	
+	
+	
+
 
 
 }
@@ -37,24 +90,35 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 	SetSwitchToScene(previousSceneID);
 	originalView = window.GetView();
 
-	
+
+	//Turn off any shaders
+	//todo: change this from window.isSnowing to window.shadersActivated or something
+	shadersActivated = window.isSnowing;
+
+	if (shadersActivated)
+	{
+		window.isSnowing = false;
+	}
 
 	const int fontID = fontAllocator.Add(workingDir.Get() + "Assets/Fonts/Charriot.ttf");
 
 	if (fontID >= 0)
 	{
 		std::shared_ptr<sf::Font> font = fontAllocator.Get(fontID);
-		
+
 		countText.setFont(*font);
 		countText.setCharacterSize(10);
+
+		//descriptionText.setFont(*font);
+		//descriptionText.setCharacterSize(20);
+		gui = window.getTgui();
+		gui->setFont(*font);
 		
-		descriptionText.setFont(*font);
-		descriptionText.setCharacterSize(20);
 	}
 	else(Debug::LogError("SceneInventory - Font not found - Charriot.ttf"));
 
 	const int fontID2 = fontAllocator.Add(workingDir.Get() + "Assets/Fonts/Sansation.ttf");
-	
+
 	if (fontID2 >= 0)
 	{
 		std::shared_ptr<sf::Font> font2 = fontAllocator.Get(fontID2);
@@ -72,21 +136,21 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 	countText.setOutlineColor(sf::Color::Black);
 	countText.setOutlineThickness(1.0f);
 
-	descriptionText.setFillColor(sf::Color::White);
+	/*descriptionText.setFillColor(sf::Color::White);
 	descriptionText.setOutlineColor(sf::Color::Black);
 	descriptionText.setOutlineThickness(1.0f);
-	
-	descriptionText.setString("");
+
+	descriptionText.setString("Item Description");*/
 
 	//let's initialise the inventory screen
 
-	
-	
+
+
 
 	int ScreenX = 16;
-	int ScreenY = 9*32;
+	int ScreenY = 9 * 32;
 	int count = 0;
-	
+
 	sf::Vector2f origin = window.mapPixelToCoords(sf::Vector2i(0, 0));
 	sf::Vector2f windowCentre = window.GetView().getCenter();
 	sf::Vector2u windowSize = window.GetSize();
@@ -95,7 +159,7 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 	items_sprites.clear();
 	items_textures.clear();
 	scale = 2;
-	
+
 	auto& items = player_inventory->GetInventory();
 	for (auto& item : items)
 	{
@@ -106,31 +170,31 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 
 		std::shared_ptr<sf::Texture> texture = textureAllocator.Get(iteminfo.textureId);
 		itemsprite.setTexture(*texture);
-		
-		itemsprite.setTextureRect(sf::IntRect(iteminfo.column , iteminfo.row , 32, 32));
-		
 
-		
+		itemsprite.setTextureRect(sf::IntRect(iteminfo.column, iteminfo.row, 32, 32));
+
+
+
 
 		std::unique_ptr<sf::RenderTexture> renderTex = std::make_unique<sf::RenderTexture>();
 		renderTex->create(32, 32);
 		renderTex->draw(itemsprite);
 
 		countText.setString(sf::String(std::to_string(iteminfo.count)));
-		countText.setPosition(sf::Vector2f(3,0));
+		countText.setPosition(sf::Vector2f(3, 0));
 		renderTex->draw(countText);
 		renderTex->display();
-		
+
 		items_textures.push_back(std::move(renderTex));
-		
+
 		itemsprite.setTexture(items_textures[count]->getTexture());
 		itemsprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
-		
+
 		itemsprite.setScale(sf::Vector2f(scale, scale));
 		sf::Vector2f pos = window.convertCoords(sf::Vector2i(ScreenX, ScreenY), view);
 		itemsprite.setPosition(pos);
 
-		ScreenX += 32 *scale;
+		ScreenX += 32 * scale;
 		if (ScreenX > 8 * 32 * scale)
 		{
 			ScreenY += 32 * scale;
@@ -144,7 +208,23 @@ void SceneInventory::OnActivate(unsigned int previousSceneID)
 	}
 
 	BankStash.setPosition(window.convertCoords(sf::Vector2i(0, 0), window.GetView()));
+
+
+	
+	panelptr->setVisible(true);
+
 }
+
+void SceneInventory::OnDeactivate()
+{
+	panelptr->setVisible(false);
+
+	if (shadersActivated)
+	{
+		window.isSnowing = true;
+	}
+}
+	
 
 void SceneInventory::SetSwitchToScene(unsigned int id)
 {
@@ -208,12 +288,14 @@ void SceneInventory::Update(float deltaTime)
 
 		if (selectedInv < items.size())
 		{
-			descriptionText.setString(items[selectedInv]->GetDescription());
+			//descriptionText.setString(items[selectedInv]->GetDescription());
+			descriptionBox->setText(items[selectedInv]->GetDescription());
 			
 		}
 		else
 		{
-			descriptionText.setString("");
+			//descriptionText.setString("");
+			descriptionBox->setText("");
 		}
 
 		if (input.IsKeyUp(Input::Key::SPACE))
@@ -319,6 +401,9 @@ void SceneInventory::InvalidateInventory()
 
 	}
 
+	
+	
+	
 }
 
 
@@ -328,9 +413,15 @@ void SceneInventory::Draw(Window& window)
 	sf::Vector2f windowCentre = window.GetView().getCenter();
 	
 	text.setPosition(windowCentre.x - 500, windowCentre.y + 200);
-	descriptionText.setPosition(windowCentre.x , windowCentre.y - 400);
+	//descriptionText.setPosition(windowCentre.x , windowCentre.y - 400);
 
-	window.Clear(sf::Color());
+	
+
+
+	
+
+
+	window.Clear(sf::Color(sf::Color::Black));
 
 	window.Draw(BankStash);
 
@@ -344,7 +435,10 @@ void SceneInventory::Draw(Window& window)
 
 	
 	window.Draw(text);
-	window.Draw(descriptionText);
+	//window.Draw(descriptionText);
+	
+	
+
 
 }
 

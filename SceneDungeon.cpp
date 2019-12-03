@@ -140,7 +140,7 @@ void SceneDungeon::CreatePlayer()
 
 	//cheating way to keep track of the player object
 	context.player = player;
-	player->transform->SetPosition(630, 815);
+	player->transform->SetPosition(128, 240);
 	player->tag->Set(Tag::Player);
 
 	//add interaction with objects

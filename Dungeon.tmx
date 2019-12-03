@@ -359,22 +359,22 @@
     <property name="npcType" value="Orc"/>
    </properties>
   </object>
-  <object id="5" name="NPC" x="385" y="383.333" width="30.6667" height="32.6667">
+  <object id="5" name="NPC" x="607.667" y="522" width="30.6667" height="32.6667">
    <properties>
     <property name="npcName" value="ENEMY"/>
     <property name="npcType" value="Orc"/>
    </properties>
   </object>
-  <object id="6" name="NPC" x="380.667" y="482.667" width="30.6667" height="32.6667">
+  <object id="6" name="NPC" x="536.667" y="632" width="30.6667" height="32.6667">
    <properties>
     <property name="npcName" value="ENEMY"/>
     <property name="npcType" value="Orc"/>
    </properties>
   </object>
-  <object id="7" name="NPC" x="257" y="548" width="30.6667" height="32.6667">
+  <object id="7" name="NPC" x="442.333" y="585.333" width="30.6667" height="32.6667">
    <properties>
     <property name="npcName" value="ENEMY"/>
-    <property name="npcType" value="Orc"/>
+    <property name="npcType" value="Skeleton"/>
    </properties>
   </object>
   <object id="8" name="ITEM" x="64.6666" y="223.667" width="30.6667" height="32.6667">

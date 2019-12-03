@@ -26,13 +26,18 @@ bool C_UIWorldLabel::ContinueToDraw() const
 void C_UIWorldLabel::LateUpdate(float deltaTime)
 {
     sf::Vector2f pos = owner->transform->GetPosition();
-    const sf::FloatRect& backBounds = background.getLocalBounds();
-    const sf::Vector2f centeredPosition = sf::Vector2f(pos.x - (backBounds.width * 0.5f), pos.y - (backBounds.height * 0.5f));
+	sf::View view = owner->context->window->GetView();
+    //const sf::FloatRect& backBounds = background.getLocalBounds();
+	const sf::FloatRect& backBounds = background.getGlobalBounds();
+    //const sf::Vector2f centeredPosition = sf::Vector2f(pos.x - (backBounds.width * 0.5f), pos.y - (backBounds.height * 0.5f));
+
+	sf::Vector2f centeredPosition = sf::Vector2f(view.getCenter());
+	centeredPosition.x -= 200;
     
     background.setPosition(centeredPosition);
     text.setPosition(centeredPosition);
 	float maxalive = 2.0f;
-	float holdtime =  2.0f;
+	float holdtime =  1.0f;
 	
 
 	

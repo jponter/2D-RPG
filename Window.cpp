@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include <imgui-SFML.h>
+#include <TGUI/TGUI.hpp>
 #include <imgui.h>
 #include <iostream>
 
@@ -33,20 +34,30 @@ Window::Window(const std::string& windowName)
 	}
 	else std::cout << "Snow Fragment Shader Loaded!" << std::endl;
 
+	gui.setTarget(window);
+	
+	
+	gui_global = &gui;
+
+}
+
+tgui::Gui* Window::getTgui()
+{
+	return gui_global;
 }
 
 void Window::Update()
 {
-	
+	this->pollEvent();
 
-	sf::Event event; // 3
-	if (window.pollEvent(event))
-	{
-		if (event.type == sf::Event::Closed)
-		{
-			window.close();
-		}
-	}
+	//sf::Event event; // 3
+	//if (window.pollEvent(event))
+	//{
+	//	if (event.type == sf::Event::Closed)
+	//	{
+	//		window.close();
+	//	}
+	//}
 }
 
 void Window::SetTitle(std::string title)
@@ -102,6 +113,12 @@ void Window::EndDraw()
 	{
 		window.clear();
 		window.draw(sprite);
+	
+		gui.setView(window.getView());
+		gui.draw();
+		
+
+	
 	}
 	window.display();
 }
@@ -158,6 +175,8 @@ void Window::pollEvent()
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		ImGui::SFML::ProcessEvent(event);
+		gui_global->handleEvent(event);
+		
 
 		/*if (event.type == sf::Event::KeyPressed)
 			if (event.key.code == sf::Keyboard::Escape)
@@ -185,6 +204,11 @@ void Window::imGuiRender()
 void Window::imGuiInit()
 {
 	ImGui::SFML::Init(window);
+}
+
+sf::RenderWindow& Window::Handle()
+{
+	return window;
 }
 
 sf::FloatRect Window::GetViewSpace() const

@@ -9,6 +9,8 @@
 #include "SharedContext.hpp"
 #include "Item.hpp"
 #include "Inventory.hpp"
+#include <TGUI/TGUI.hpp>
+
 
 class SceneInventory :
 	public Scene
@@ -19,7 +21,7 @@ class SceneInventory :
 		SceneStateMachine& sceneStateMachine,
 		Window& window,
 		ResourceAllocator<sf::Texture>& textureAllocator,
-		ResourceAllocator<sf::Font>& fontAllocator, HeroClass& hero, Input& input	);
+		ResourceAllocator<sf::Font>& fontAllocator, HeroClass& hero, Input& input);
 
 	void SetContext(SharedContext& context) { m_context = &context; }
 	void SetInventory(Inventory& inventory) { player_inventory = &inventory;  }
@@ -28,6 +30,7 @@ class SceneInventory :
 	void OnDestroy() override;
 
 	void OnActivate(unsigned int previousSceneID) override;
+	void OnDeactivate() override;
 
 	void SetSwitchToScene(unsigned int id);
 
@@ -54,6 +57,11 @@ private:
 	sf::Text countText;
 	sf::Text descriptionText;
 
+	tgui::Gui* gui;
+	tgui::Panel::Ptr panelptr;
+	tgui::TextBox::Ptr descriptionBox;
+	
+
 	unsigned int switchToState;
 
 	//std::vector<std::shared_ptr<Item>> items;
@@ -72,6 +80,8 @@ private:
 	int selectedRow;
 	int selectedCol;
 	int selectedInv;
+
+	bool shadersActivated;
 
 };
 

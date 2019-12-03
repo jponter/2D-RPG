@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <TGUI/TGUI.hpp>
 
 
 //static auto mylog = new ImGuiLog;
@@ -9,6 +10,10 @@
 
 Game::Game() : window("2D Game Engine") 
 {
+
+	
+
+
 	//set some pointers
 
 	S_Quests::g_script = &m_script;
@@ -41,6 +46,10 @@ Game::Game() : window("2D Game Engine")
 	std::shared_ptr<SceneDungeon> dungeonScene =
 		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, "dungeon.tmx", input);
 
+	std::shared_ptr<SceneDungeon> spookyScene =
+		std::make_shared<SceneDungeon>("Spooky Dungeon", workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,
+			"Spooky1F.tmx", input);
+
 	// add a test quest
 	//std::string QuestName = "Main Quest";
 	m_listQuests.push_front(new S_Quests_MainQuest());
@@ -49,11 +58,14 @@ Game::Game() : window("2D Game Engine")
 	unsigned int splashScreenID = sceneStateMachine.Add(splashScreen); //2
 	unsigned int gameSceneID = sceneStateMachine.Add(gameScene);
 	unsigned int dungeonSceneID = sceneStateMachine.Add(dungeonScene);
+	unsigned int spookySceneID = sceneStateMachine.Add(spookyScene);
 	unsigned int pauseSceneID = sceneStateMachine.Add(pauseScreen);
 	unsigned int inventorySceneID = sceneStateMachine.Add(inventoryScreen);
 	
 	sceneStateMachine.AddSceneName("House Exterior", gameSceneID);
 	sceneStateMachine.AddSceneName("Creepy Dungeon", dungeonSceneID);
+	sceneStateMachine.AddSceneName("Spooky Dungeon 1F", spookySceneID);
+
 	sceneStateMachine.AddSceneName("pauseScreen", pauseSceneID);
 	sceneStateMachine.AddSceneName("inventoryScreen", inventorySceneID);
 
@@ -73,6 +85,9 @@ Game::Game() : window("2D Game Engine")
 	
 
 	window.imGuiInit();
+
+
+
 
 
 	
@@ -111,7 +126,7 @@ void Game::Draw()
 	window.BeginDraw();
 	// add drawing code
 	sf::Clock deltaClock;
-	window.pollEvent();
+	//window.pollEvent();
 
 
 	sceneStateMachine.Draw(window);
