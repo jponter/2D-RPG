@@ -370,6 +370,51 @@ TileMapParser::Parse(const std::string& file, sf::Vector2i offset)
 
 			}
 
+			//DOORS!
+			if (std::string(node->first_attribute("name")->value()) == "DOOR")
+			{
+
+				//add an item from the map
+				std::cout << "Door Found!" << std::endl;
+				objX = std::atoi(node->first_attribute("x")->value());
+				objY = std::atoi(node->first_attribute("y")->value());
+				objWidth = 32;
+				objHeight = 32;
+
+				std::cout << "X = " << objX << std::endl;
+				std::cout << "Y = " << objY << std::endl;
+				std::cout << "Height = " << objHeight << std::endl;
+				std::cout << "Width = " << objWidth << std::endl;
+
+				for (xml_attribute<>* attr = node->first_attribute(); attr; attr = attr->next_attribute())
+				{
+					std::cout << "node Object Group has attribute " << attr->name() << " ";
+					std::cout << "with value " << attr->value() << "\n";
+
+				}
+				node = node->first_node("properties");
+
+				node = node->first_node("property");
+				std::cout << "Node Property has value " << node->value() << "\n";
+				unsigned int DoorKey = std::atoi(node->first_attribute("value")->value());
+				std::cout << "Key Required =  " << DoorKey << std::endl;
+
+				node = node->next_sibling("property");
+				unsigned int DoorType = std::atoi(node->first_attribute("value")->value());
+
+				node = nodecopy;
+
+				//todo: Add objects to the map!
+				float x = objX * tileScale + offset.x;
+				float y = objY * tileScale + offset.y;
+
+				context.currentScene->AddDoorToScene(DoorKey, x, y, true);
+
+				std::cout << "Call AddDoorToScene Key: " + std::to_string(DoorKey) + " DoorType :" + std::to_string(DoorType)  << endl;
+
+			}
+
+
 
 			//NPC's from the MAP!
 			if (std::string(node->first_attribute("name")->value()) == "NPC")

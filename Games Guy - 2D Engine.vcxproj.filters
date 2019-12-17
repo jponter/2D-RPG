@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Items">
       <UniqueIdentifier>{fda81928-14e0-40b7-89df-4334312a4e82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Doors">
+      <UniqueIdentifier>{37ae808b-180f-4794-91e1-53dd55a21405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Doors">
+      <UniqueIdentifier>{cb120fd6-0389-4293-ba2d-35c8017e3b7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -249,6 +255,15 @@
     <ClCompile Include="Item.cpp">
       <Filter>Source Files\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>Source Files\Doors</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldDoors.cpp">
+      <Filter>Source Files\Doors</Filter>
+    </ClCompile>
+    <ClCompile Include="C_DoorOnCollision.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -454,6 +469,15 @@
     </ClInclude>
     <ClInclude Include="Item.hpp">
       <Filter>Header Files\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.hpp">
+      <Filter>Header Files\Doors</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldDoors.hpp">
+      <Filter>Header Files\Doors</Filter>
+    </ClInclude>
+    <ClInclude Include="C_DoorOnCollision.hpp">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

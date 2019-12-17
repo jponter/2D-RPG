@@ -41,13 +41,13 @@ Game::Game() : window("2D Game Engine")
 	
 
 	std::shared_ptr<SceneDungeon> gameScene =
-		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,  "House Exterior Animated.tmx", input);
+		std::make_shared<SceneDungeon>("House Exterior",workingDir,textureAllocator,fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, m_WorldDoors,  "House Exterior Animated.tmx", input);
 
 	std::shared_ptr<SceneDungeon> dungeonScene =
-		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, "dungeon.tmx", input);
+		std::make_shared<SceneDungeon>("Creepy Dungeon",workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, m_WorldDoors, "dungeon.tmx", input);
 
 	std::shared_ptr<SceneDungeon> spookyScene =
-		std::make_shared<SceneDungeon>("Spooky Dungeon", workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory,
+		std::make_shared<SceneDungeon>("Spooky Dungeon", workingDir, textureAllocator, fontAllocator, window, sceneStateMachine, mylog, hero, m_script, m_listQuests, m_Inventory, m_WorldDoors,
 			"Spooky1F.tmx", input);
 
 	// add a test quest

@@ -40,6 +40,7 @@
 #include "AI_Chase.hpp"
 #include "C_ItemPickupOnCollision.hpp"
 #include "item.hpp"
+#include "Door.hpp"
 
 enum class npcTypes
 {
@@ -58,7 +59,8 @@ class SceneDungeon : public Scene
 public:
 	SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 		ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
-		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, Inventory& playerInventory, std::string level, Input& input);
+		Window& window, SceneStateMachine& stateMachine, ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor, list<S_Quests*>& listQuests, Inventory& playerInventory, WorldDoors& worldDoors,
+		std::string level, Input& input);
 
 	//void ChangeLevel(int level, ObjectCollection& objects, TileMapParser& mapParser);
 	void ChangeLevel1(std::string id, float posX, float posY);
@@ -88,6 +90,7 @@ public:
 
 	bool AddNpcToScene(std::string npcName, float x, float y, std::string npcType, bool persistant) override;
 	bool AddItemToScene(std::string name, float x, float y, std::string itemType, bool persistant) override;
+	bool AddDoorToScene(unsigned int KeyRequired, float x, float y, bool persistant) override;
 	bool inDialog() override;
 	void SetDialog(bool value) override;
 
@@ -130,6 +133,7 @@ private:
 	S_ScriptProcessor& m_script;
 
 	Inventory& playerInventory;
+	WorldDoors& worldDoors;
 	
 	std::string m_levelFile;
 	float newPosX;

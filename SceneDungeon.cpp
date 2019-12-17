@@ -7,6 +7,8 @@
 #include <SFML/Window/Event.hpp>
 #include "SharedContext.hpp"
 #include "C_Direction.hpp"
+#include "C_DoorOnCollision.hpp"
+
 
 //MACROS
 /*current commands
@@ -22,13 +24,13 @@ SceneDungeon::SceneDungeon(std::string LevelName, WorkingDirectory& workingDir,
 	ResourceAllocator<sf::Texture>& textureAllocator, ResourceAllocator<sf::Font>& fontAllocator,
 	Window& window, SceneStateMachine& stateMachine,
 	ImGuiLog& mylog, HeroClass& hero, S_ScriptProcessor& scriptProcessor,
-	list<S_Quests*>& listQuests, Inventory& playerInventory,
+	list<S_Quests*>& listQuests, Inventory& playerInventory, WorldDoors& worldDoors,
 	std::string level, Input& input)
 
 	: LevelName(LevelName), workingDir(workingDir),
 	textureAllocator(textureAllocator),
 	mapParser(textureAllocator, context),
-	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests), playerInventory(playerInventory),
+	window(window), stateMachine(stateMachine), mylog(mylog), hero(hero), m_script(scriptProcessor), listQuests(listQuests), playerInventory(playerInventory), worldDoors(worldDoors), 
 	m_levelFile(level), collisionSystem(collisionTree), objects(drawableSystem, collisionSystem), dynamicObjects(dynamicDrawableSystem, collisionSystem), raycast(collisionTree), boxcast(collisionTree),
 	fontAllocator(fontAllocator), input(input) {}
 
@@ -472,6 +474,7 @@ void SceneDungeon::OnCreate()
 	context.inDialog = false;
 	context.dynamicObjects = &dynamicObjects;
 	context.playerInventory = &playerInventory;
+	context.worldDoors = &worldDoors;
 
 	//update the context with mylog
 	//context.imguilog = mylog;
@@ -739,6 +742,73 @@ void SceneDungeon::SetSwitchToScene(unsigned int id)
 {
 	// Stores the id of the scene that we will transition to.
 	switchToState = id;
+}
+
+bool SceneDungeon::AddDoorToScene(unsigned int KeyRequired, float x, float y, bool persistant)
+{
+	std::shared_ptr<Object> item = std::make_shared<Object>(&context);
+	const unsigned int tileScale = 2;
+
+	item->transform->SetPosition(x, y);
+
+	auto sprite = item->AddComponent<C_Sprite>();
+	sprite->SetDrawLayer(DrawLayer::Entities);
+	sprite->SetSortOrder(0);
+	//sprite->SetScale(tileScale, tileScale);
+
+	int textureID = 0;
+
+
+	textureID = textureAllocator.Add(context.workingDir->Get() + "icons.png");
+	int row = 1;
+	int column = 1;
+
+	const unsigned int frameWidth = 64;
+	const unsigned int frameHeight = 64;
+
+	auto collider = item->AddComponent<C_BoxCollider>();
+
+	//collider->SetSize(frameWidth * 0.4f, frameHeight * 0.5f);
+	//collider->SetOffset(0.f, 14.f);
+
+	collider->SetSize(frameWidth * 2, frameHeight * 2); // 32x32 for items
+	collider->SetLayer(CollisionLayer::Tile);
+
+	sprite->Load(textureID);
+
+	// set the offset in the icon sheet we will want to calculate this based on the row and colum above which should be a switch on the item type as per the enemy type working below
+	// for now i'm hardcoding
+	row = (row - 1) * 32;
+	column = (column - 1) * 32;
+	sprite->SetTextureRect(column, row, 32, 32);
+
+
+	auto DoorComponent = item->AddComponent<C_DoorOnCollision>();
+	
+
+	if (!persistant)
+	{
+		dynamicObjects.Add(item);
+	}
+	else
+	{
+		item->makePersistant();
+		dynamicObjects.Add(item);
+	}
+
+
+	// we have the sprite loaded and positioned but now let's make  a door
+	auto DoorID = item->instanceID->Get();
+
+	std::shared_ptr<Door> door = std::make_shared<Door>(DoorID, LevelName, textureID, DoorStates::Locked, KeyRequired);
+	
+	auto WorldDoorID = worldDoors.Add(door);
+	door->SetWorldID(WorldDoorID);
+	DoorComponent->worldDoorID = WorldDoorID;
+
+
+	return true;
+
 }
 
 bool SceneDungeon::AddItemToScene(std::string itemName, float x, float y, std::string itemType, bool persistant)

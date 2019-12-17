@@ -26,6 +26,8 @@
 #include "Inventory.hpp"
 #include "Input.hpp"
 
+#include "WorldDoors.hpp"
+
 
 
 
@@ -67,8 +69,14 @@ private:
 	HeroClass hero;
 	//ObjectCollection m_Inventory;
 
+	//Inventory
 	Inventory m_Inventory;
 
+	//World Doors
+	WorldDoors m_WorldDoors;
+
+
+	//Quests
 	list<S_Quests*> m_listQuests;
 
 	Input input;

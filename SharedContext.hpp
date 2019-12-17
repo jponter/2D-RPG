@@ -25,6 +25,7 @@ class S_ScriptProcessor;
 class DrawText;
 class S_Quests;
 class Inventory;
+class WorldDoors;
 
 struct SharedContext
 {
@@ -49,6 +50,7 @@ struct SharedContext
 	std::list<S_Quests*> *listQuests;
 	std::string levelName;
 	Inventory* playerInventory;
+	WorldDoors* worldDoors;
 	bool inDialog;
 	
 	//SceneStateMachine* sceneStateMachine;

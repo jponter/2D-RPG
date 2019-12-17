@@ -146,6 +146,7 @@
     <ClCompile Include="C_Collidable.cpp" />
     <ClCompile Include="C_Collider.cpp" />
     <ClCompile Include="C_Direction.cpp" />
+    <ClCompile Include="C_DoorOnCollision.cpp" />
     <ClCompile Include="C_Drawable.cpp" />
     <ClCompile Include="C_EnemyHealth.cpp" />
     <ClCompile Include="C_InstanceID.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="C_Velocity.cpp" />
     <ClCompile Include="C_WarpLevelOnCollision.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Door.cpp" />
     <ClCompile Include="DrawText.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HeroClass.cpp" />
@@ -201,6 +203,7 @@
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WorkingDirectory.cpp" />
+    <ClCompile Include="WorldDoors.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI_Chase.hpp" />
@@ -218,6 +221,7 @@
     <ClInclude Include="C_Collidable.hpp" />
     <ClInclude Include="C_Collider.hpp" />
     <ClInclude Include="C_Direction.hpp" />
+    <ClInclude Include="C_DoorOnCollision.hpp" />
     <ClInclude Include="C_Drawable.hpp" />
     <ClInclude Include="C_EnemyHealth.hpp" />
     <ClInclude Include="C_InstanceID.hpp" />
@@ -237,6 +241,7 @@
     <ClInclude Include="C_Velocity.hpp" />
     <ClInclude Include="C_WarpLevelOnCollision.hpp" />
     <ClInclude Include="Debug.hpp" />
+    <ClInclude Include="Door.hpp" />
     <ClInclude Include="DrawText.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HeroClass.h" />
@@ -271,6 +276,7 @@
     <ClInclude Include="Utilities.hpp" />
     <ClInclude Include="Window.hpp" />
     <ClInclude Include="WorkingDirectory.hpp" />
+    <ClInclude Include="WorldDoors.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="that_games_guy_logo.png" />
